@@ -236,6 +236,7 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         'terraform',
         'puppet',
         'chef',
+        'twilio'
     ],
     'testing': [
         'jest',
@@ -247,7 +248,8 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         'karma',
         'enzyme',
         'junit',
-        'pytest', 
+        'pytest',
+        'postman'
     ],
     'cache': [
         'valkey',
@@ -286,6 +288,7 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         'sentry',
         'tableau',
         'power-bi',
+        'kibana',
     
         'datadog',
         'prometheus',
@@ -356,6 +359,7 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         'red-hat-virtualization',
     ],
     'ci_cd': [
+        'gradle',
         'jenkins',          
         'circleci',         
         'travis-ci',        
@@ -365,5 +369,31 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         'teamcity',         
         'azure-devops',     
         'bitbucket-pipelines'
+    ],
+    'package-managers': [
+        'npm',        
+        'yarn',       
+        'pip',        
+        'conda',      
+        'maven',      
+        'gradle',     
+        'nuget',      
+        'composer',   
+        'gem',        
+        'cargo',      
+        'apt',        
+        'yum',        
+        'dnf',        
+        'zypper',     
+        'pacman',     
+        'homebrew',   
+        'chocolatey', 
+        'snap',       
+        'flatpak',    
+        'rpm',        
+        'brew',       
+        'apk',        
+        'pypi',       
+        'bower',      
     ]
 }
