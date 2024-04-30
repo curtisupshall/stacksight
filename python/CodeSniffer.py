@@ -19,51 +19,58 @@ class CodeSniffer:
 
     def find(self, options):
         # Compile the regexes based on provided options
-        self._file_regex = re.compile(options['knownFiles']) if options['knownFiles'] else None
-        self._content_regex = re.compile(options['knownContent']) if options['knownContent'] else None
-        self._package_manifest_regex = re.compile(options['belongsToManifest']) if options['belongsToManifest'] else None
-        self._package_name_regex = re.compile(options['hasPackageName']) if options['hasPackageName'] else None
+        self._file_regex = re.compile(options.get('knownFiles')) if options.get('knownFiles') else None
+        self._content_regex = re.compile(options.get('knownContent')) if options.get('knownContent') else None
+        self._package_manifest_regex = re.compile(options.get('belongsToManifest')) if options.get('belongsToManifest') else None
+        self._package_name_regex = re.compile(options.get('hasPackageName')) if options.get('hasPackageName') else None
         return self
 
     def compile(self):
         # Establish a base score for each type of check
-        file_base_score = 0.3
-        content_base_score = 0.4
-        package_base_score = 0.3
+        file_match_weight = 3 if self._file_regex else 0
+        content_match_weight = 3 if self._content_regex else 0
+        package_match_weight = 3 if self._package_name_regex else 0
+        
+        weight_total = file_match_weight + content_match_weight + package_match_weight
 
-        # Track successful matches
+        # Initialize match counters
         file_match_count = 0
         content_match_count = 0
-        package_match_count = 0
+
+        package_match_found = False
 
         # Check each file
         for file_path in self._files:
-            file_matched = False
-            content_matched = False
-
             # Check file pattern match
             if self._file_regex and self._file_regex.search(file_path):
-                file_matched = True
                 file_match_count += 1
                 with open(file_path, 'r') as file:
                     content = file.read()
                     # Check content pattern match
                     if self._content_regex and self._content_regex.search(content):
-                        content_matched = True
                         content_match_count += 1
 
             # Check package manifest and name
             if self._package_manifest_regex and self._package_manifest_regex.search(file_path):
                 with open(file_path, 'r') as file:
                     package_content = file.read()
+                    # Binary check for package name
                     if self._package_name_regex and self._package_name_regex.search(package_content):
-                        package_match_count += 1
+                        package_match_found = True
 
         # Calculate the final score
-        total_possible_matches = len(self._files) * (file_base_score + content_base_score) + 1 * package_base_score
-        actual_score = (file_match_count * file_base_score + content_match_count * content_base_score + package_match_count * package_base_score)
+        total_files_checked = len(self._files)
+        # total_possible_matches = (total_files_checked * file_base_score) + (total_files_checked * content_base_score) + package_base_score
+        # file_match_rate = 
+        
+        actual_score = \
+            + file_match_weight * (file_match_count / total_files_checked if total_files_checked > 0 else 0) \
+            + content_match_weight * (content_match_count / file_match_count if file_match_count > 0 else 0) \
+            + package_match_weight * (1 if package_match_found else 0)
 
-        return actual_score / total_possible_matches if total_possible_matches > 0 else 0
+        return actual_score / weight_total if weight_total > 0 else 0
+
+
 
 # # Example invocation
 # react_options = {
