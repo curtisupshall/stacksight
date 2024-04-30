@@ -59,22 +59,92 @@ LANG_FILE_PATTERNS = {
 }
 
 TECH_STACK_PATTERNS_BY_CATEGORY = {
-    'frontend': [
-        'react',
-        'vue',
-        'angular',
-        'material-ui',
-        'bootstrap',
-        'jquery',
-        'svelte',
-        'ember',
-        'tailwindcss',
-        'bulma',
-        'alpine.js',
-        'handlebars', 
-        'shad-cdn',
-        'sass'
-    ],
+    'frontend': {
+        'react': {
+            'knownFiles': r'.*\.(jsx|tsx)$',
+            'knownContent': r'import React', # Example of content to match in a JSX/TSX file
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*(react|react-dom)\s*"\s*":\s*".+?"'
+        },
+        'vue': {
+            'knownFiles': r'.*\.vue$',  # Matches files with a .vue extension
+            'knownContent': r'(<template>|<script>|import Vue from ["\']vue["\'])',  # Matches Vue component blocks or Vue import statements
+            'belongsToManifest': r'package\.json$',  # Matches package.json file
+            'hasPackageName': r'"\s*vue\s*"\s*:\s*".+?"'  # Matches Vue entry in package.json dependencies
+        },
+        'angular': {
+            'knownFiles': r'.*\.(ts|html)$',
+            'knownContent': r'@Component\(|import {.*} from ["\']@angular',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*(@angular/core|@angular/common)\s*"\s*":\s*".+?"'
+        },
+        'material-ui': {
+            'knownFiles': r'.*\.(js|jsx|tsx)$',
+            'knownContent': r'import {.*} from ["\']@material-ui/core',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*@material-ui/core\s*"\s*":\s*".+?"'
+        },
+        'bootstrap': {
+            'knownFiles': r'.*\.(css|scss|js)$',
+            'knownContent': r'import ["\']bootstrap["\'];|class=["\']btn btn-',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*bootstrap\s*"\s*":\s*".+?"'
+        },
+        'jquery': {
+            'knownFiles': r'.*\.js$',
+            'knownContent': r'import ["\']jquery["\'];|\$\(.*\)',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*jquery\s*"\s*":\s*".+?"'
+        },
+        'svelte': {
+            'knownFiles': r'.*\.svelte$',
+            'knownContent': r'<script>|import {.*} from ["\']svelte',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*svelte\s*"\s*":\s*".+?"'
+        },
+        'ember': {
+            'knownFiles': r'.*\.(js|hbs)$',
+            'knownContent': r'import Ember from ["\']ember["\'];|<Ember.Component>',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*ember-source\s*"\s*":\s*".+?"'
+        },
+        'tailwindcss': {
+            'knownFiles': r'.*\.(css|js)$',
+            'knownContent': r'@tailwind |import ["\']tailwindcss["\'];',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*tailwindcss\s*"\s*":\s*".+?"'
+        },
+        'bulma': {
+            'knownFiles': r'.*\.css$',
+            'knownContent': r'@import ["\']bulma',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*bulma\s*"\s*":\s*".+?"'
+        },
+        'alpine.js': {
+            'knownFiles': r'.*\.js$',
+            'knownContent': r'import Alpine from ["\']alpinejs["\'];|x-data=',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*alpinejs\s*"\s*":\s*".+?"'
+        },
+        'handlebars': {
+            'knownFiles': r'.*\.hbs$',
+            'knownContent': r'{{#each .*}}|{{#if .*}}',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*handlebars\s*"\s*":\s*".+?"'
+        },
+        'shad-cdn': {
+            'knownFiles': r'.*\.js$',
+            'knownContent': r'import {.*} from ["\']shadcdn["\'];',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*shadcdn\s*"\s*":\s*".+?"'
+        },
+        'sass': {
+            'knownFiles': r'.*\.(scss|sass)$',
+            'knownContent': r'@import ["\'].*["\'];|@use ["\'].*["\'];',
+            'belongsToManifest': r'package\.json$',
+            'hasPackageName': r'"\s*sass\s*"\s*":\s*".+?"'
+        }
+    },
     'backend': [
         'node.js',
         'flask',
