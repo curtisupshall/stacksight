@@ -26,38 +26,44 @@ class CodeSniffer:
         return self
 
     def compile(self):
+        # Establish a base score for each type of check
+        file_base_score = 0.3
+        content_base_score = 0.4
+        package_base_score = 0.3
+
+        # Track successful matches
         file_match_count = 0
-        manifest_match_count = 0
-        package_name_match_count = 0
-        total_checks = 0
+        content_match_count = 0
+        package_match_count = 0
 
+        # Check each file
         for file_path in self._files:
-            file_checked = False
+            file_matched = False
+            content_matched = False
 
+            # Check file pattern match
             if self._file_regex and self._file_regex.search(file_path):
-                file_checked = True
+                file_matched = True
                 file_match_count += 1
-                if self._content_regex:
-                    with open(file_path, 'r') as file:
-                        content = file.read()
-                        if self._content_regex.search(content):
-                            file_match_count += 1  # Increase confidence if content matches
-
-            if self._package_manifest_regex and self._package_manifest_regex.search(file_path):
-                manifest_match_count += 1
                 with open(file_path, 'r') as file:
                     content = file.read()
-                    if self._package_name_regex and self._package_name_regex.search(content):
-                        package_name_match_count += 1
+                    # Check content pattern match
+                    if self._content_regex and self._content_regex.search(content):
+                        content_matched = True
+                        content_match_count += 1
 
-            total_checks += file_checked
+            # Check package manifest and name
+            if self._package_manifest_regex and self._package_manifest_regex.search(file_path):
+                with open(file_path, 'r') as file:
+                    package_content = file.read()
+                    if self._package_name_regex and self._package_name_regex.search(package_content):
+                        package_match_count += 1
 
-        # Calculate the confidence score
-        score = 0
-        if total_checks > 0:
-            score = (file_match_count + manifest_match_count + package_name_match_count) / (3 * total_checks)
+        # Calculate the final score
+        total_possible_matches = len(self._files) * (file_base_score + content_base_score) + 1 * package_base_score
+        actual_score = (file_match_count * file_base_score + content_match_count * content_base_score + package_match_count * package_base_score)
 
-        return score
+        return actual_score / total_possible_matches if total_possible_matches > 0 else 0
 
 # # Example invocation
 # react_options = {

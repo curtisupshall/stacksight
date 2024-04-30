@@ -140,7 +140,7 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         },
         'sass': {
             'knownFiles': r'.*\.(scss|sass)$',
-            'knownContent': r'@import ["\'].*["\'];|@use ["\'].*["\'];',
+            'knownContent': r'@use|@import|@mixin|@include|\$[a-zA-Z\-_]+',
             'belongsToManifest': r'package\.json$',
             'hasPackageName': r'"\s*sass\s*"\s*":\s*".+?"'
         }
