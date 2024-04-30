@@ -60,152 +60,299 @@ LANG_FILE_PATTERNS = {
 
 TECH_STACK_PATTERNS_BY_CATEGORY = {
     'languages': {
-        'javascript': { 'knownFiles': r'.*\.js$' },
-        'typescript': { 'knownFiles': r'.*\.ts$' },
-        'python': { 'knownFiles': r'.*\.py$' },
-        'java': { 'knownFiles': r'.*\.java$' },
-        'php': { 'knownFiles': r'.*\.php$' },
-        'c': { 'knownFiles': r'.*\.c$' },
-        'c#': { 'knownFiles': r'.*\.cs$' },
-        'c++': { 'knownFiles': r'.*\.cpp$|.*\.cxx$|.*\.cc$' },
-        'ruby': { 'knownFiles': r'.*\.rb$' },
-        'swift': { 'knownFiles': r'.*\.swift$' },
-        'kotlin': { 'knownFiles': r'.*\.kt$' },
-        'go': { 'knownFiles': r'.*\.go$' },
-        'rust': { 'knownFiles': r'.*\.rs$' },
-        'scala': { 'knownFiles': r'.*\.scala$' },
-        'perl': { 'knownFiles': r'.*\.pl$' },
-        'lua': { 'knownFiles': r'.*\.lua$' },
-        'elixir': { 'knownFiles': r'.*\.ex$|.*\.exs$' },
-        'clojure': { 'knownFiles': r'.*\.clj$|.*\.cljs$' },
-        'dart': { 'knownFiles': r'.*\.dart$' },
-        'r': { 'knownFiles': r'.*\.r$' },
-        'matlab': { 'knownFiles': r'.*\.m$' },
-        'bash': { 'knownFiles': r'.*\.sh$' },
-        'shell': { 'knownFiles': r'.*\.sh$' },
-        'powershell': { 'knownFiles': r'.*\.ps1$' },
-        'groovy': { 'knownFiles': r'.*\.groovy$' },
-        'haskell': { 'knownFiles': r'.*\.hs$' },
-        'erlang': { 'knownFiles': r'.*\.erl$' },
-        'objective-c': { 'knownFiles': r'.*\.m$|.*\.mm$' },
-        'vb.net': { 'knownFiles': r'.*\.vb$' },
-        'assembly': { 'knownFiles': r'.*\.asm$' },
-        'f#': { 'knownFiles': r'.*\.fs$' },
-        'julia': { 'knownFiles': r'.*\.jl$' },
-        'smalltalk': { 'knownFiles': r'.*\.st$' },
-        'ada': { 'knownFiles': r'.*\.ada$|.*\.ads$|.*\.adb$' },
-        'fortran': { 'knownFiles': r'.*\.f$|.*\.f90$|.*\.f95$' },
-        'cobol': { 'knownFiles': r'.*\.cbl$|.*\.cob$' },
-        'pascal': { 'knownFiles': r'.*\.pas$' },
-        'vba': { 'knownFiles': r'.*\.bas$' },
-        'ocaml': { 'knownFiles': r'.*\.ml$|.*\.mli$' },
-        'apl': { 'knownFiles': r'.*\.apl$' },
-        'racket': { 'knownFiles': r'.*\.rkt$' },
-        'lisp': { 'knownFiles': r'.*\.lisp$|.*\.lsp$' },
-        'scheme': { 'knownFiles': r'.*\.scm$|.*\.ss$' },
-        'html': { 'knownFiles': r'.*\.html?$' },
-        'css': { 'knownFiles': r'.*\.css$' },
-        'codon': { 'knownFiles': r'.*\.codon$' },
+        'javascript': { 'content_file_types': r'.*\.js$' },
+        'typescript': { 'content_file_types': r'.*\.ts$' },
+        'python': { 'content_file_types': r'.*\.py$' },
+        'java': { 'content_file_types': r'.*\.java$' },
+        'php': { 'content_file_types': r'.*\.php$' },
+        'c': { 'content_file_types': r'.*\.c$' },
+        'c#': { 'content_file_types': r'.*\.cs$' },
+        'c++': { 'content_file_types': r'.*\.cpp$|.*\.cxx$|.*\.cc$' },
+        'ruby': { 'content_file_types': r'.*\.rb$' },
+        'swift': { 'content_file_types': r'.*\.swift$' },
+        'kotlin': { 'content_file_types': r'.*\.kt$' },
+        'go': { 'content_file_types': r'.*\.go$' },
+        'rust': { 'content_file_types': r'.*\.rs$' },
+        'scala': { 'content_file_types': r'.*\.scala$' },
+        'perl': { 'content_file_types': r'.*\.pl$' },
+        'lua': { 'content_file_types': r'.*\.lua$' },
+        'elixir': { 'content_file_types': r'.*\.ex$|.*\.exs$' },
+        'clojure': { 'content_file_types': r'.*\.clj$|.*\.cljs$' },
+        'dart': { 'content_file_types': r'.*\.dart$' },
+        'r': { 'content_file_types': r'.*\.r$' },
+        'matlab': { 'content_file_types': r'.*\.m$' },
+        'bash': { 'content_file_types': r'.*\.sh$' },
+        'shell': { 'content_file_types': r'.*\.sh$' },
+        'powershell': { 'content_file_types': r'.*\.ps1$' },
+        'groovy': { 'content_file_types': r'.*\.groovy$' },
+        'haskell': { 'content_file_types': r'.*\.hs$' },
+        'erlang': { 'content_file_types': r'.*\.erl$' },
+        'objective-c': { 'content_file_types': r'.*\.m$|.*\.mm$' },
+        'vb.net': { 'content_file_types': r'.*\.vb$' },
+        'assembly': { 'content_file_types': r'.*\.asm$' },
+        'f#': { 'content_file_types': r'.*\.fs$' },
+        'julia': { 'content_file_types': r'.*\.jl$' },
+        'smalltalk': { 'content_file_types': r'.*\.st$' },
+        'ada': { 'content_file_types': r'.*\.ada$|.*\.ads$|.*\.adb$' },
+        'fortran': { 'content_file_types': r'.*\.f$|.*\.f90$|.*\.f95$' },
+        'cobol': { 'content_file_types': r'.*\.cbl$|.*\.cob$' },
+        'pascal': { 'content_file_types': r'.*\.pas$' },
+        'vba': { 'content_file_types': r'.*\.bas$' },
+        'ocaml': { 'content_file_types': r'.*\.ml$|.*\.mli$' },
+        'apl': { 'content_file_types': r'.*\.apl$' },
+        'racket': { 'content_file_types': r'.*\.rkt$' },
+        'lisp': { 'content_file_types': r'.*\.lisp$|.*\.lsp$' },
+        'scheme': { 'content_file_types': r'.*\.scm$|.*\.ss$' },
+        'html': { 'content_file_types': r'.*\.html?$' },
+        'css': { 'content_file_types': r'.*\.css$' },
+        'codon': { 'content_file_types': r'.*\.codon$' },
     },  
     'frontend': {
         'react': {
-            'knownFiles': r'.*\.(jsx|tsx)$',
-            'knownContent': r'import React', # Example of content to match in a JSX/TSX file
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*(react|react-dom)\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"react"\s*":\s*".+?"|\s*"react-dom"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.(jsx?|tsx?)$',  # Includes both JSX and TypeScript React files typically under src directory
+                r'.*\/public\/index\.html$',  # Often includes the root HTML file where the React app mounts
+            ],
+            'content_file_types': r'.*\.(jsx?|tsx?)$',  # Matches JavaScript, JSX, TypeScript, and TSX files
+            'known_content': r'(?i)(import\s+React\s+from\s+["\']react["\'];|class\s+.*\s+extends\s+React\.Component|function\s+.*\s+\(\)\s+{\s+return\s+\(|const\s+.*\s+=\s+React\.use[State|Effect|Context|Reducer|Callback|Memo|Ref]|<>\s*|\s*<\/>\s*)'
         },
         'vue': {
-            'knownFiles': r'.*\.vue$',  # Matches files with a .vue extension
-            'knownContent': r'(<template>|<script>|import Vue from ["\']vue["\'])',  # Matches Vue component blocks or Vue import statements
-            'belongsToManifest': r'package\.json$',  # Matches package.json file
-            'hasPackageName': r'"\s*vue\s*"\s*:\s*".+?"'  # Matches Vue entry in package.json dependencies
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"vue"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.(vue|js)$',  # Includes both Vue component files and JS files under src directory
+            ],
+            'content_file_types': r'.*\.(vue|js)$',
+            'known_content': r'(?i)<template>|<script>\s*export\s*default\s*{'
         },
         'angular': {
-            'knownFiles': r'.*\.(ts|html)$',
-            'knownContent': r'@Component\(|import {.*} from ["\']@angular',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*(@angular/core|@angular/common)\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"@angular\/core"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.(ts|html)$',  # Includes TypeScript and HTML files typically part of Angular components
+            ],
+            'content_file_types': r'.*\.(ts|html)$',
+            'known_content': r'(?i)@Component\(|@NgModule\('
         },
         'material-ui': {
-            'knownFiles': r'.*\.(js|jsx|tsx)$',
-            'knownContent': r'import {.*} from ["\']@material-ui/core',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*@material-ui/core\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"@material-ui\/core"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.(jsx?|tsx?)$',  # Includes both JSX and TypeScript files where Material-UI components might be used
+            ],
+            'content_file_types': r'.*\.(jsx?|tsx?)$',
+            'known_content': r'(?i)from\s+["@]material-ui\/core'
         },
         'bootstrap': {
-            'knownFiles': r'.*\.(css|scss|js)$',
-            'knownContent': r'import ["\']bootstrap["\'];|class=["\']btn btn-',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*bootstrap\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"bootstrap"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.(css|scss|js)$',  # Bootstrap may be present in any CSS, SCSS, or JS file
+            ],
+            'content_file_types': r'.*\.(css|scss|js)$',
+            'known_content': r'(?i)\.container|\.row|\.col-'
         },
         'jquery': {
-            'knownFiles': r'.*\.js$',
-            'knownContent': r'import ["\']jquery["\'];|\$\(.*\)',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*jquery\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"jquery"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.js$',  # jQuery is typically used within JS files
+            ],
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)\$\('
         },
         'svelte': {
-            'knownFiles': r'.*\.svelte$',
-            'knownContent': r'<script>|import {.*} from ["\']svelte',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*svelte\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"svelte"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.svelte$',  # Svelte components are .svelte files
+            ],
+            'content_file_types': r'.*\.svelte$',
+            'known_content': r'(?i)<script>\s*export\s*let\s*'
         },
         'ember': {
-            'knownFiles': r'.*\.(js|hbs)$',
-            'knownContent': r'import Ember from ["\']ember["\'];|<Ember.Component>',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*ember-source\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"ember-source"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/app\/.*\.(js|hbs)$',  # Ember uses Handlebars (hbs) and JavaScript
+            ],
+            'content_file_types': r'.*\.(js|hbs)$',
+            'known_content': r'(?i)Ember\.Component|DS\.Model'
         },
         'tailwindcss': {
-            'knownFiles': r'.*\.(css|js)$',
-            'knownContent': r'@tailwind |import ["\']tailwindcss["\'];',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*tailwindcss\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"tailwindcss"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.(css|scss)$',  # Tailwind CSS classes are used within CSS or SCSS files
+            ],
+            'content_file_types': r'.*\.(css|scss)$',
+            'known_content': r'(?i)@tailwind\s+'
         },
         'bulma': {
-            'knownFiles': r'.*\.css$',
-            'knownContent': r'@import ["\']bulma',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*bulma\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"bulma"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.(css|scss)$',  # Bulma is a CSS framework used within CSS or SCSS files
+            ],
+            'content_file_types': r'.*\.(css|scss)$',
+            'known_content': r'(?i)\.is\-flex|\.column'
         },
         'alpine.js': {
-            'knownFiles': r'.*\.js$',
-            'knownContent': r'import Alpine from ["\']alpinejs["\'];|x-data=',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*alpinejs\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"alpinejs"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.js$',  # Alpine.js is typically used within JS files
+            ],
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)x-data|x-show'
         },
         'handlebars': {
-            'knownFiles': r'.*\.hbs$',
-            'knownContent': r'{{#each .*}}|{{#if .*}}',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*handlebars\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"handlebars"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.hbs$',  # Handlebars templates are .hbs files
+            ],
+            'content_file_types': r'.*\.hbs$',
+            'known_content': r'(?i)\{\{#each \w+\}\}|\{\{#if'
         },
         'shad-cdn': {
-            'knownFiles': r'.*\.js$',
-            'knownContent': r'import {.*} from ["\']shadcdn["\'];',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*shadcdn\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': '',
+            'known_artifacts': [],
+            'content_file_types': r'.*',
+            'known_content': ''
         },
         'sass': {
-            'knownFiles': r'.*\.(scss|sass)$',
-            'knownContent': r'@use|@import|@mixin|@include|\$[a-zA-Z\-_]+',
-            'belongsToManifest': r'package\.json$',
-            'hasPackageName': r'"\s*sass\s*"\s*":\s*".+?"'
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"sass"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/src\/.*\.(scss|sass)$',  # SASS stylesheets are .scss or .sass files
+            ],
+            'content_file_types': r'.*\.(scss|sass)$',
+            'known_content': r'(?i)\$[a-zA-Z\-]+:|@mixin|@include'
         }
     },
-    'backend': [
-        'node.js',
-        'flask',
-        'laravel',
-        'django',
-        'spring',
-        'express',
-        'rails',
-        'asp.net',
-        'fastapi', 
-        'phoenix',
-        
-    ],
+    'backend': {
+        'laravel': {
+            'content_file_types': r'.*\.(php|blade\.php)$',
+            'known_content': r'(?i)\b(Route|Auth|Session|Config|View)::|class\s+.+\s+extends\s+Controller\b',
+            'manifest_file_names': r'composer\.json$',  # PHP package management
+            'package_names': r'"\s*laravel/framework\s*"\s*":\s*".+?"',  # Specific Laravel package
+            'known_artifacts': [
+                r'.*\/artisan$',                 # Matches the Artisan command file at the root
+                r'.*\/composer\.json$',          # Matches the composer.json file
+                r'.*\/\.env$',                   # Matches the environment settings file
+                r'.*\/app\/Http\/Controllers\/.*\.php$',  # Matches PHP files in the Controllers directory
+                r'.*\/routes\/web\.php$',        # Matches the web routes file
+                r'.*\/routes\/api\.php$',        # Matches the API routes file
+                r'.*\/config\/.*\.php$',         # Matches any PHP file in the config directory
+                r'.*\/resources\/views\/.*\.blade\.php$', # Matches Blade template files
+                r'.*\/database\/migrations\/.*\.php$',    # Matches migration files
+                r'.*\/public\/.*',               # Matches any file in the public directory
+                r'.*\/storage\/.*',              # Matches any file in the storage directory
+                r'.*\/tests\/.*\.php$',          # Matches PHP test files
+            ]
+        },
+        'node.js': {
+            # 'manifest_file_names': r'package\.json$',
+            # 'package_names': r'"\s*express\s*"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/package\.json$',
+                r'.*\/.npmrc$',
+                r'.*\/.nvmrc$',
+            ],
+            # 'content_file_types': r'.*\.(js|json)$',
+            # 'known_content': r'(?i)\brequire\s*\(\s*["\']express["\']\s*\)|import\s+.*\s+from\s+["\']express["\']'
+        },
+        'flask': {
+            'manifest_file_names': r'requirements\.txt$',
+            'package_names': r'flask\s*==\s*.+',
+            'known_artifacts': [
+                r'.*\/app\.py$',
+                r'.*\/requirements\.txt$',
+            ],
+            'content_file_types': r'.*\.py$',
+            'known_content': r'(?i)from\s+flask\s+import\s+Flask'
+        },
+        'django': {
+            'manifest_file_names': r'requirements\.txt$',
+            'package_names': r'django\s*==\s*.+',
+            'known_artifacts': [
+                r'.*\/manage\.py$',
+                r'.*\/requirements\.txt$',
+            ],
+            'content_file_types': r'.*\.py$',
+            'known_content': r'(?i)from\s+django\.conf\s+import\s+settings'
+        },
+        'spring': {
+            'manifest_file_names': r'pom\.xml$',
+            'package_names': r'<artifactId>spring\-framework</artifactId>',
+            'known_artifacts': [
+                r'.*\/pom\.xml$',
+                r'.*\/.*\.java$',
+            ],
+            'content_file_types': r'.*\.java$',
+            'known_content': r'(?i)@SpringBootApplication'
+        },
+        'express': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*express\s*"\s*":\s*".+?"',
+            'known_artifacts': [
+                r'.*\/package\.json$',
+                r'.*\/app\.js$',
+            ],
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)var\s+express\s+=\s+require\(["\']express["\']\);'
+        },
+        'rails': {
+            'manifest_file_names': r'Gemfile$',
+            'package_names': r'gem\s+["\']rails["\'],\s*["\'].+["\']',
+            'known_artifacts': [
+                r'.*\/Gemfile$',
+                r'.*\/config\/routes\.rb$',
+            ],
+            'content_file_types': r'.*\.rb$',
+            'known_content': r'(?i)Rails\.application\.routes\.draw\s+do'
+        },
+        'asp.net': {
+            'manifest_file_names': r'\.csproj$',
+            'package_names': r'<PackageReference\s+Include="Microsoft\.AspNetCore\..+"',
+            'known_artifacts': [
+                r'.*\/web\.config$',
+                r'.*\/.*\.csproj$',
+            ],
+            'content_file_types': r'.*\.cs$',
+            'known_content': r'(?i)using\s+Microsoft\.AspNetCore\.Mvc;'
+        },
+        'fastapi': {
+            'manifest_file_names': r'requirements\.txt$',
+            'package_names': r'fastapi\s*==\s*.+',
+            'known_artifacts': [
+                r'.*\/main\.py$',
+                r'.*\/requirements\.txt$',
+            ],
+            'content_file_types': r'.*\.py$',
+            'known_content': r'(?i)from\s+fastapi\s+import\s+FastAPI'
+        },
+        'phoenix': {
+            'manifest_file_names': r'mix\.exs$',
+            'package_names': r'{:\s*phoenix,\s*".+"}',
+            'known_artifacts': [
+                r'.*\/mix\.exs$',
+                r'.*\/lib\/.*\.ex$',
+            ],
+            'content_file_types': r'.*\.ex$',
+            'known_content': r'(?i)use\s+Phoenix\.Controller'
+        }
+    },
+    'web-stockets': {
+        'socketi',
+        'pusher',
+        'socket.io',
+        'laravel-reverb'
+    },
     'server': [
         'caddy',
         'apache',
