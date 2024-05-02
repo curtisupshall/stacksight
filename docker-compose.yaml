@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: cims
+      POSTGRES_USER: postgresuser
+      POSTGRES_PASSWORD: password
+    ports:
+      - "3690:3690"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  nextjs:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3692:3692"
+    environment:
+      - DATABASE_URL=postgres://postgresuser:password@postgres:5432/cims
+    depends_on:
+      - postgres
+
+  localstack:
+    image: localstack/localstack
+    environment:
+      SERVICES: sqs
+      DEFAULT_REGION: us-west-1
+      EDGE_PORT: 4566
+    ports:
+      - "4566:4566"
+      - "4571:4571" # Legacy port for SQS
+
+volumes:
+  postgres-data:
