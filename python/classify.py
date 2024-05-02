@@ -6,7 +6,7 @@ from CodeSniffer import CodeSniffer
 directory_path = '.cims/'
 
 categories = [
-    # 'languages',
+    'languages',
     'frontend',
     # 'backend'
 ]

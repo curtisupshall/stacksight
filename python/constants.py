@@ -499,6 +499,7 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         'mailgun',
         'mailchimp',
         'amazon-ses',
+        'gc-notify',
     ],
     'analytics-and-monitoring': [
         # Analytics
