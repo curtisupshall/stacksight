@@ -11,9 +11,14 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.16",
+    "install": "^0.13.0",
     "next": "^14.2.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.23.5"
   },
   "scripts": {
     "dev": "next"
