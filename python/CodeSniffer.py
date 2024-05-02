@@ -1,13 +1,15 @@
 import os
 import re
 from typing import Optional, List
+import sys
 
 # A class used to determine the presence of a particular software library in
 # a code repository.
 class CodeSniffer:
-    def __init__(self, project_directory):
+    def __init__(self, project_directory, debug=False):
         self._project_directory = project_directory
         self._files = []
+        self._debug = debug
 
         # Initialize regex properties
         self._known_artifacts_regexes = None
@@ -19,7 +21,6 @@ class CodeSniffer:
         self._known_artifacts_weight = 1.0
         self._known_content_weight = 1.0
         self._content_file_types_weight = 1.0
-        self._manifest_file_names_weight = 1.0
         self._package_names_weight = 1.0
 
         # Populate self._files with all files in the project directory
@@ -33,7 +34,7 @@ class CodeSniffer:
         # Array of regex strings matching on particular known files for a given
         # technology; Typically not source code files.
         known_artifacts: Optional[List[str]] = None,
-        known_artifacts_weight: Optional[float] = 1.0,
+        known_artifacts_weight: Optional[float] = 1.5,
         
         # Matches on source code or content associated with the given technology.
         known_content: Optional[str] = None,
@@ -46,11 +47,10 @@ class CodeSniffer:
         # Matches on known manifest/package manager files associated with the given
         # technology.
         manifest_file_names: Optional[str] = None,
-        manifest_file_names_weight: Optional[float] = 1.0,
         
         # Matches on known package names within the known manifest file
         package_names: Optional[str] = None,
-        # package_names_weight: Optional[float] = 1.0,
+        package_names_weight: Optional[float] = 1.5,
     ):
         # Compile the regexes based on provided options
         self._known_artifacts_regexes = [re.compile(pattern) for pattern in known_artifacts] if known_artifacts else None
@@ -62,8 +62,7 @@ class CodeSniffer:
         self._known_artifacts_weight = known_artifacts_weight
         self._content_file_types_weight = content_file_types_weight
         self._known_content_weight = known_content_weight
-        # self._package_names_weight = package_names_weight
-        self._manifest_file_names_weight = manifest_file_names_weight
+        self._package_names_weight = package_names_weight
 
         return self
 
@@ -72,15 +71,13 @@ class CodeSniffer:
         known_artifacts_weight = self._known_artifacts_weight if self._known_artifacts_regexes else 0
         content_file_types_weight = self._content_file_types_weight if self._content_file_types_regex else 0
         known_content_weight = self._known_content_weight if self._known_content_regex else 0
-        # package_names_weight = self._package_names_weight if self._package_names_regex else 0
-        manifest_file_names_weight = self._manifest_file_names_weight if self._manifest_file_names_regex else 0
+        package_names_weight = self._package_names_weight if self._package_names_regex else 0
 
         weight_total = sum([
             known_artifacts_weight,
             content_file_types_weight,
             known_content_weight,
-            # package_names_weight,
-            manifest_file_names_weight,
+            package_names_weight,
         ])
 
         # Initialize match counters
@@ -90,12 +87,17 @@ class CodeSniffer:
 
         package_match_found = False
 
-        # Check each file
-        for file_path in self._files:
-            # Check if the file is a matching artifact
-            if self._known_artifacts_regexes and any(pattern.search(file_path) for pattern in self._known_artifacts_regexes):
-                artifact_file_match_count += 1
+        # Check all artifact regexes
+        if self._known_artifacts_regexes:
+            for pattern in self._known_artifacts_regexes:
+                for file_path in self._files:
+                    # Check if the file is a matching artifact
+                    if pattern.search(file_path):
+                        artifact_file_match_count += 1
+                        break
 
+        # Check each file for contents
+        for file_path in self._files:
             # Check if the file might contain matching content
             if self._content_file_types_regex and self._content_file_types_regex.search(file_path):
                 content_file_match_count += 1
@@ -109,12 +111,21 @@ class CodeSniffer:
                         pass
 
             # Check package manifest and name
-            if self._manifest_file_names_regex and self._manifest_file_names_regex.search(file_path):
-                with open(file_path, 'r') as file:
-                    package_content = file.read()
-                    # Binary check for package name
-                    if self._package_names_regex and self._package_names_regex.search(package_content):
-                        package_match_found = True
+            if self._manifest_file_names_regex:
+                
+                if self._manifest_file_names_regex.search(file_path):
+                    with open(file_path, 'r') as file:
+                        package_content = file.read()
+                        # Binary check for package name
+                        if self._package_names_regex:
+                            # if self._debug:
+                            #     print(package_content)
+                            #     # sys.exit()
+                            if self._package_names_regex.search(package_content):
+                                # print('count package match.')
+                                # sys.exit()
+                                
+                                package_match_found = True
 
         # Calculate the final score
         total_files_checked = len(self._files)
@@ -125,7 +136,7 @@ class CodeSniffer:
             known_artifacts_weight * (artifact_file_match_count / len(self._known_artifacts_regexes) if self._known_artifacts_regexes else 0),
             content_file_types_weight * (content_file_match_count / total_files_checked if total_files_checked > 0 else 0),
             known_content_weight * (content_parsing_match_count / content_file_match_count if content_file_match_count > 0 else 0),
-            manifest_file_names_weight * (1 if package_match_found else 0),
+            package_names_weight * (1 if package_match_found else 0),
         ]
 
         return [actual_scores, weight_total]

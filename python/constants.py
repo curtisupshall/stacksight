@@ -1,3 +1,5 @@
+from utils import *
+
 PROJECT_TYPE_DESCRIPTIONS = {
     'web-app': 'web application repository',
     'desktop-app': 'desktop application repository',
@@ -110,126 +112,119 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
     'frontend': {
         'react': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"react"\s*":\s*".+?"|\s*"react-dom"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.(jsx?|tsx?)$',  # Includes both JSX and TypeScript React files typically under src directory
-                r'.*\/public\/index\.html$',  # Often includes the root HTML file where the React app mounts
-            ],
+            'package_names': get_npm_package_regex(['react', 'react-dom']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.(jsx?|tsx?)$',  # Includes both JSX and TypeScript React files typically under src directory
+            #     r'.*\/public\/index\.html$',  # Often includes the root HTML file where the React app mounts
+            # ],
             'content_file_types': r'.*\.(jsx?|tsx?)$',  # Matches JavaScript, JSX, TypeScript, and TSX files
             'known_content': r'(?i)(import\s+React\s+from\s+["\']react["\'];|class\s+.*\s+extends\s+React\.Component|function\s+.*\s+\(\)\s+{\s+return\s+\(|const\s+.*\s+=\s+React\.use[State|Effect|Context|Reducer|Callback|Memo|Ref]|<>\s*|\s*<\/>\s*)'
         },
         'vue': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"vue"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.(vue|js)$',  # Includes both Vue component files and JS files under src directory
-            ],
+            'package_names': get_npm_package_regex(['vue']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.(vue|js)$',  # Includes both Vue component files and JS files under src directory
+            # ],
             'content_file_types': r'.*\.(vue|js)$',
             'known_content': r'(?i)<template>|<script>\s*export\s*default\s*{'
         },
         'angular': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"@angular\/core"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.(ts|html)$',  # Includes TypeScript and HTML files typically part of Angular components
-            ],
+            'package_names': get_npm_package_regex(['@angular\/core']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.(ts|html)$',  # Includes TypeScript and HTML files typically part of Angular components
+            # ],
             'content_file_types': r'.*\.(ts|html)$',
             'known_content': r'(?i)@Component\(|@NgModule\('
         },
         'material-ui': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"@material-ui\/core"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.(jsx?|tsx?)$',  # Includes both JSX and TypeScript files where Material-UI components might be used
-            ],
+            'package_names': get_npm_package_regex(['@material-ui\/core', '@mui\/material']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.(jsx?|tsx?)$',  # Includes both JSX and TypeScript files where Material-UI components might be used
+            # ],
             'content_file_types': r'.*\.(jsx?|tsx?)$',
             'known_content': r'(?i)from\s+["@]material-ui\/core'
         },
         'bootstrap': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"bootstrap"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.(css|scss|js)$',  # Bootstrap may be present in any CSS, SCSS, or JS file
-            ],
+            'package_names': get_npm_package_regex(['bootstrap']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.(css|scss|js)$',  # Bootstrap may be present in any CSS, SCSS, or JS file
+            # ],
             'content_file_types': r'.*\.(css|scss|js)$',
             'known_content': r'(?i)\.container|\.row|\.col-'
         },
         'jquery': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"jquery"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.js$',  # jQuery is typically used within JS files
-            ],
+            'package_names': get_npm_package_regex(['jquery']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.js$',  # jQuery is typically used within JS files
+            # ],
             'content_file_types': r'.*\.js$',
             'known_content': r'(?i)\$\('
         },
         'svelte': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"svelte"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.svelte$',  # Svelte components are .svelte files
-            ],
+            'package_names': get_npm_package_regex(['svelte']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.svelte$',  # Svelte components are .svelte files
+            # ],
             'content_file_types': r'.*\.svelte$',
             'known_content': r'(?i)<script>\s*export\s*let\s*'
         },
         'ember': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"ember-source"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/app\/.*\.(js|hbs)$',  # Ember uses Handlebars (hbs) and JavaScript
-            ],
+            'package_names': get_npm_package_regex(['ember-source']),
+            # 'known_artifacts': [
+            #     r'.*\/app\/.*\.(js|hbs)$',  # Ember uses Handlebars (hbs) and JavaScript
+            # ],
             'content_file_types': r'.*\.(js|hbs)$',
             'known_content': r'(?i)Ember\.Component|DS\.Model'
         },
         'tailwindcss': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"tailwindcss"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.(css|scss)$',  # Tailwind CSS classes are used within CSS or SCSS files
-            ],
+            'package_names': get_npm_package_regex(['tailwindcss']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.(css|scss)$',  # Tailwind CSS classes are used within CSS or SCSS files
+            # ],
             'content_file_types': r'.*\.(css|scss)$',
             'known_content': r'(?i)@tailwind\s+'
         },
         'bulma': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"bulma"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.(css|scss)$',  # Bulma is a CSS framework used within CSS or SCSS files
-            ],
+            'package_names': get_npm_package_regex(['bulma']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.(css|scss)$',  # Bulma is a CSS framework used within CSS or SCSS files
+            # ],
             'content_file_types': r'.*\.(css|scss)$',
             'known_content': r'(?i)\.is\-flex|\.column'
         },
         'alpine.js': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"alpinejs"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.js$',  # Alpine.js is typically used within JS files
-            ],
+            'package_names': get_npm_package_regex(['alpinejs']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.js$',  # Alpine.js is typically used within JS files
+            # ],
             'content_file_types': r'.*\.js$',
             'known_content': r'(?i)x-data|x-show'
         },
         'handlebars': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"handlebars"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.hbs$',  # Handlebars templates are .hbs files
-            ],
+            'package_names': get_npm_package_regex(['handlebars']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.hbs$',  # Handlebars templates are .hbs files
+            # ],
             'content_file_types': r'.*\.hbs$',
             'known_content': r'(?i)\{\{#each \w+\}\}|\{\{#if'
         },
-        'shad-cdn': {
-            'manifest_file_names': r'package\.json$',
-            'package_names': '',
-            'known_artifacts': [],
-            'content_file_types': r'.*',
-            'known_content': ''
-        },
         'sass': {
             'manifest_file_names': r'package\.json$',
-            'package_names': r'"\s*"sass"\s*":\s*".+?"',
-            'known_artifacts': [
-                r'.*\/src\/.*\.(scss|sass)$',  # SASS stylesheets are .scss or .sass files
-            ],
+            'package_names': get_npm_package_regex(['sass']),
+            # 'known_artifacts': [
+            #     r'.*\/src\/.*\.(scss|sass)$',  # SASS stylesheets are .scss or .sass files
+            # ],
             'content_file_types': r'.*\.(scss|sass)$',
             'known_content': r'(?i)\$[a-zA-Z\-]+:|@mixin|@include'
         }
