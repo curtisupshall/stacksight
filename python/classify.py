@@ -20,10 +20,11 @@ for org in orgs:
         print(f'\n----------------\n{org}/{repo}\n----------------')
         project_path = os.path.join(org_path, repo)
 
+        libraries = []
         for category in categories:
-            print(f'\n{category.upper()}')
-            for frontend_lib_name, options in constants.TECH_STACK_PATTERNS_BY_CATEGORY[category].items():
-                debug = frontend_lib_name == 'react' and repo == 'ftt-spotlight'
+            # print(f'\n{category.upper()}')
+            for library_name, options in constants.TECH_STACK_PATTERNS_BY_CATEGORY[category].items():
+                debug = library_name == 'react' and repo == 'ftt-spotlight'
                 actual_scores, weight_total = CodeSniffer(project_path, debug=debug).find(
                     content_file_types=options.get('content_file_types'),
                     known_artifacts=options.get('known_artifacts'),
@@ -37,9 +38,13 @@ for org in orgs:
                 if (score <= 0.05):
                     continue
                 
-                scores_str = ', '.join([str(x) for x in actual_scores])
-                print(f'{frontend_lib_name}: {score}')
-                
+                libraries.append(library_name)
+
+                # scores_str = ', '.join([str(x) for x in actual_scores])
+                # print(f'{library_name}: {score}')
+            
+        print(', '.join([f"\'{lib}\'" for lib in libraries]))
+    
         # sys.exit()
     
 

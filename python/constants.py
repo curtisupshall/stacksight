@@ -514,7 +514,7 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         'tableau',
         'power-bi',
         'kibana',
-    
+        # Monitoring
         'datadog',
         'prometheus',
         'grafana',
@@ -572,7 +572,6 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
         'seaborn',   
         'scipy',
         'hadoop',
-        'map-reduce'   
     ],
     'virtualization': [
         'docker',
