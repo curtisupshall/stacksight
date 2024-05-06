@@ -22,8 +22,11 @@ setup: env
 close: 
 	docker-compose down
 
-web: setup close
+backend: setup close
 	@echo "Running the project..."
 	docker-compose up --build -d
+
+web: env
+	cd web && npm run dev
 
 .PHONY: clean env setup close web

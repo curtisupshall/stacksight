@@ -1,46 +1,46 @@
 version: '3.8'
 
 services:
-  # postgres:
-  #   image: postgres:16.2
-  #   environment:
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #   ports:
-  #     - "${POSTGRES_PORT}:5432"
-  #   volumes:
-  #     - postgres-data:/var/lib/postgresql/data
-
-  web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-    container_name: web
-    restart: always
-    volumes:
-      - .:/app
-      # - /app/src
-      # - /app/node_modules
-      # - /app/.next
-    ports:
-      - "3692:3692"
+  postgres:
+    image: postgres:16.2
     environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}:5432/${POSTGRES_DB}
-      - WATCHPACK_POLLING=true
-      - CHOKIDAR_USEPOLLING=true
-    # depends_on:
-    #   - postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
-  # localstack:
-  #   image: localstack/localstack
-  #   environment:
-  #     SERVICES: sqs
-  #     DEFAULT_REGION: us-west-1
-  #     EDGE_PORT: 4566
+  # web:
+  #   build:
+  #     context: ./web
+  #     dockerfile: Dockerfile
+  #   container_name: web
+  #   restart: always
+  #   volumes:
+  #     - .:/app
+  #     # - /app/src
+  #     # - /app/node_modules
+  #     # - /app/.next
   #   ports:
-  #     - "4566:4566"
-  #     - "4571:4571" # Legacy port for SQS
+  #     - "3692:3692"
+  #   environment:
+  #     - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}:5432/${POSTGRES_DB}
+  #     - WATCHPACK_POLLING=true
+  #     - CHOKIDAR_USEPOLLING=true
+  #   depends_on:
+  #     - postgres
 
-# volumes:
-#   postgres-data:
+  localstack:
+    image: localstack/localstack
+    environment:
+      SERVICES: sqs
+      DEFAULT_REGION: us-west-1
+      EDGE_PORT: 4566
+    ports:
+      - "4566:4566"
+      - "4571:4571" # Legacy port for SQS
+
+volumes:
+  postgres-data:
