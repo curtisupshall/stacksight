@@ -12,7 +12,7 @@ export async function up(knex: Knex): Promise<void> {
             "description"           VARCHAR(1024) NOT NULL,
             "html_url"              VARCHAR(1024) NOT NULL,
             "created_at"            TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "updated_at"            TIMESTAMP(3) NOT NULL
+            "updated_at"            TIMESTAMP(3)
         );
     `);
 
@@ -24,7 +24,7 @@ export async function up(knex: Knex): Promise<void> {
             "software_project_scan_id"  SERIAL PRIMARY KEY,
             "software_project_id"       INTEGER NOT NULL,
             "dispatched_at"             TIMESTAMP(3) NOT NULL,
-            "completed_at"              TIMESTAMP(3) NOT NULL,
+            "completed_at"              TIMESTAMP(3),
         
             FOREIGN KEY ("software_project_id") REFERENCES "software_project" ("software_project_id")
         );
@@ -40,7 +40,7 @@ export async function up(knex: Knex): Promise<void> {
             "software_project_id"       INTEGER NOT NULL,
             "tag"                       VARCHAR(255),
             "created_at"                TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "updated_at"                TIMESTAMP(3) NOT NULL,
+            "updated_at"                TIMESTAMP(3),
             
             FOREIGN KEY ("software_project_id") REFERENCES "software_project" ("software_project_id")
         );

@@ -3,44 +3,21 @@
 import { List, ListItem, Typography } from "@mui/material";
 // import { db } from "../../database/db";
 import { useEffect } from "react";
-
-import { Client } from 'pg'
-import knex from "knex";
-
-const connection = {
-    host: process.env.POSTGRES_DATABASE_HOST,
-    user: process.env.POSTGRES_USER,
-    port: process.env.POSTGRES_PORT ? Number(process.env.POSTGRES_PORT) : undefined,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB
-}
-
-const db = knex({
-    client: 'mysql',
-    connection
-})
-
-const client = new Client(connection)
-
-console.log('connection config:', connection)
+import { DbConnection } from "../../database/db";
+import type { ISoftwareProject } from "../../types/software-project";
+import type { ApiResponse } from "../../types/api";
+import DispatchProjectForm from "../../components/DispatchProjectForm";
 
 export default async function ProjectsPage() {
-    const projects: any[] = [];
-    
-    client.connect();
-
-    await client.query(`
-        SELECT * FROM software_project
-    `, (err, res) => {
-        console.error(err)
-        console.log(res.rows)
-    })
-       
-    // client.end();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/projects`)
+    const json = await response.json() as ApiResponse<ISoftwareProject[]>
+    const projects = json.data;
 
     return (
         <div>
             <Typography variant='h6'>My Projects</Typography>
+            <DispatchProjectForm />
+            {JSON.stringify(projects)}
             <List>
                 {projects.map((project: any) => {
                     return (

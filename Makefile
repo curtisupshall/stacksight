@@ -29,4 +29,7 @@ backend: setup close
 web: setup
 	cd web && npm run dev
 
+migrate:
+	cd database && npm run migrate-latest
+
 .PHONY: clean env setup close web
