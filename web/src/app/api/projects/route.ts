@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { DbConnection } from "../../../database/db";
 
 export async function GET() {
@@ -6,7 +7,16 @@ export async function GET() {
     try {
         await connection.open();
 
-        const response = await connection.query(`SELECT * FROM software_project`);
+        const response = await connection.query(`
+            SELECT
+                sp.*,
+                sps.dispatched_at AS last_scan_dispatched_at,
+                sps.completed_at AS last_scan_completed_at
+            FROM software_project sp
+            LEFT JOIN software_project_scan sps
+            ON sp.software_project_id = sps.software_project_id
+            ORDER BY sp.created_at DESC
+        `);
 
         await connection.commit();
 

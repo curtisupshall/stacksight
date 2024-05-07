@@ -2,11 +2,11 @@ import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { addNewProject } from "../app/projects/actions";
 
-interface IDispatchProjectFormProps {
+interface IAddProjectFormProps {
     // onSubmit: (value: string) => Promise<void>;
 }
 
-export default function DispatchProjectForm(props: IDispatchProjectFormProps) {
+export default function AddProjectForm(props: IAddProjectFormProps) {
     return (
         <form action={addNewProject}>
             <Box>
