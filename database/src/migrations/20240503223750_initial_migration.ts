@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<void> {
             "software_project_id"   SERIAL PRIMARY KEY,
             "owner_name"            VARCHAR(255) NOT NULL,
             "project_name"          VARCHAR(255) NOT NULL,
+            "full_name"             VARCHAR(255) NOT NULL UNIQUE,
             "description"           VARCHAR(1024) NOT NULL,
             "html_url"              VARCHAR(1024) NOT NULL,
             "created_at"            TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

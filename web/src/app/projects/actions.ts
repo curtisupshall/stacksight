@@ -15,14 +15,28 @@ export async function addNewProject(formData: FormData) {
 
     try {
         await connection.open();
+
+        // Check if the project is already added.
+
+        const response = await connection.query(
+            `SELECT COUNT(*) as project_count FROM software_project WHERE full_name ILIKE $1`,
+            [repoFullName]
+        )
+
+        if (response.rows[0].project_count > 0) {
+            throw new Error('Project has already been added.')
+        }
+
         await connection.query(
             `INSERT INTO software_project (
+                full_name,
                 owner_name,
                 project_name,
                 description,
                 html_url
-            ) VALUES ($1, $2, $3, $4)`,
+            ) VALUES ($1, $2, $3, $4, $5)`,
             [
+                json.full_name,
                 json.owner.login,
                 json.name,
                 json.description,
