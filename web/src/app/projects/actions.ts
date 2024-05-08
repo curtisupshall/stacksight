@@ -1,8 +1,9 @@
 'use server'
-// Server Action
 
+import { SQS } from 'aws-sdk';
 import { revalidatePath } from "next/cache";
 import { DbConnection } from "../../database/db";
+import type { ISoftwareProject } from '../../types/software-project';
 
 export async function addNewProject(formData: FormData) {
     const repoFullName = formData.get('repoFullName');
@@ -46,6 +47,21 @@ export async function scanProject(formData: FormData) {
     const connection = new DbConnection();
 
     try {
+        // Open database connection
+        await connection.open();
+
+        // Fetch data about the project
+        const response = await connection.query(
+            `SELECT * FROM software_project WHERE software_project_id = $1`, 
+            [softwareProjectId]
+        );
+
+        const softwareProject: ISoftwareProject = response.rows[0];
+        if (!softwareProject) {
+            throw new Error(`Failed to find project with ID: ${softwareProjectId}`)
+        }
+
+        // Persist the dispatched scan in the database
         await connection.open();
         await connection.query(
             `INSERT INTO software_project_scan (
@@ -56,6 +72,36 @@ export async function scanProject(formData: FormData) {
             ]
         );
 
+        const sqsConfig = {
+            region: process.env.AWS_SQS_REGION,
+            endpoint: process.env.AWS_SQS_ENDPOINT,
+            accessKeyId: 'na',
+            secretAccessKey: 'na', // Deprecated?
+        }
+
+        console.log('sqs config:', sqsConfig)
+
+        // Add the scan to the repo scan queue
+        const sqs = new SQS(sqsConfig);
+
+        if (!process.env.AWS_REPO_SCAN_QUEUE_URL) {
+            throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
+        }
+        
+        const messageParams = {
+            MessageBody: `${softwareProject.owner_name}/${softwareProject.project_name}`,
+            QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL
+        }
+
+        sqs.sendMessage(messageParams, (error, data) => {
+            if (error) {
+                throw error;
+            }
+
+            console.log(data);
+        })
+
+        // Commit the transaction
         await connection.commit();
 
         revalidatePath('/projects');

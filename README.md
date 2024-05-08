@@ -1,15 +1,16 @@
 # Code Inventory Management System (CIMS)
 
-To install dependencies:
+### Prerequisites
+1. Docker
+2. AWS CLI
+
+### Setting up LocalStack
 
 ```bash
-cd web
-bun install
+pip3 install awscli-local
 ```
-
-To run:
-
+Create a queue:
 ```bash
-cd web
-bun run dev
+awslocal sqs create-queue --queue-name RepoScanQueue
 ```
+Replace the queue URL in your `.env`.

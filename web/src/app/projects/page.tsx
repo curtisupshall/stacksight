@@ -13,7 +13,7 @@ export default async function ProjectsPage() {
     let projects: ISoftwareProject[] = [];
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/projects`, { next: { cache: 'no-store' } })
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/projects`, { next: { revalidate: 5 } })
 
         const json = await response.json() as ApiResponse<ISoftwareProject[]>
         projects = json.data;
