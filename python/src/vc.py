@@ -1,6 +1,7 @@
 from git import Repo
+from typing import List
 
-def clone_repo(repo_full_names):
+def clone_repos(repo_full_names: List[str]):
     for repo_full_name in repo_full_names:
         repo_url = f'git@github.com:{repo_full_name}.git'
         clone_dir = f'.cims/{repo_full_name}'
@@ -10,13 +11,4 @@ def clone_repo(repo_full_names):
             print(f"Repository cloned successfully into {clone_dir}")
         except Exception as e:
             print(f"Failed to clone repository: {e}")
-
-
-clone_repo([
-    'curtisupshall/mandelbrot-ascii',
-    'focustimetech/ftt-spotlight',
-    'bcgov/pims',
-    'bcgov/biohubbc',
-    'bcgov/biohub-platform',
-    'bcgov/performance',
-])
+            raise e

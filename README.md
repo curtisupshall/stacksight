@@ -3,6 +3,7 @@
 ### Prerequisites
 1. Docker
 2. AWS CLI
+3. zip: `sudo apt-get install zip`
 
 ### Setting up LocalStack
 

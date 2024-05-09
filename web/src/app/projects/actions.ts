@@ -88,9 +88,9 @@ export async function scanProject(formData: FormData) {
 
         const sqsConfig = {
             region: process.env.AWS_SQS_REGION,
-            endpoint: process.env.AWS_SQS_ENDPOINT,
-            accessKeyId: 'na',
-            secretAccessKey: 'na', // Deprecated?
+            // endpoint: process.env.AWS_SQS_ENDPOINT,
+            accessKeyId: process.env.AWS_SQS_USER_ACCESS_KEY,
+            secretAccessKey: process.env.AWS_SQS_USER_SECRET_KEY
         }
 
         console.log('sqs config:', sqsConfig)

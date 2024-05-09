@@ -36,9 +36,14 @@ services:
   localstack:
     image: localstack/localstack
     environment:
-      SERVICES: sqs
+      SERVICES: sqs,lambda
       DEFAULT_REGION: us-west-1
       EDGE_PORT: 4566
+      DEBUG: 1
+      DATA_DIR: /tmp/localstack/data
+    volumes:
+      - "./localstack_data:/var/lib/localstack" # Mounts the local directory to the container
+      - "/var/run/docker.sock:/var/run/docker.sock" # Mounts the docker socke
     ports:
       - "4566:4566"
       - "4571:4571" # Legacy port for SQS
