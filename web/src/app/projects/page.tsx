@@ -24,11 +24,11 @@ export default async function ProjectsPage() {
         await connection.commit();
 
         return (
-            <main>
+            <section>
                 <Typography variant='h6'>My Projects</Typography>
                 <DispatchProjectForm />
                 <ProjectsList projects={projects} />
-            </main>
+            </section>
         )
     } catch (error) {
         connection.rollback();

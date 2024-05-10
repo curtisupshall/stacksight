@@ -8,7 +8,7 @@ interface IProjectsListProps {
 
 export default function ProjectsList(props: IProjectsListProps) {
     return (
-        <Stack component='ul' gap={2}>
+        <Stack component='ul' gap={2} sx={{ p: 0, m: 0 }}>
             {props.projects.map((project) => {
                 return (
                     <ProjectsListCard {...project} />
