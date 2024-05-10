@@ -14,7 +14,7 @@ export default function AddProjectForm(props: IAddProjectFormProps) {
                     variant='filled'
                     name='repoFullName'
                     label='Add a Project'
-                    placeholder='username/repo'
+                    placeholder='username/repo@branch'
                 />
                 <Button type='submit'>Submit</Button>
             </Box>

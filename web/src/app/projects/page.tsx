@@ -21,6 +21,8 @@ export default async function ProjectsPage() {
         const softwareProjectService = new SoftwareProjectService(connection);
         const projects = await softwareProjectService.listProjects();
 
+        await connection.commit();
+
         return (
             <main>
                 <Typography variant='h6'>My Projects</Typography>
@@ -29,6 +31,7 @@ export default async function ProjectsPage() {
             </main>
         )
     } catch (error) {
+        connection.rollback();
         throw error
     } finally {
         connection.release();

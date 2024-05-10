@@ -5,11 +5,11 @@ import relativeTime from "dayjs/plugin/relativeTime"
 
 dayjs.extend(relativeTime)
 
-import { Box, Card, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Card, Chip, IconButton, Stack, Typography } from "@mui/material";
 import type { ISoftwareProject } from "../../types/software-project";
 import Link from "next/link";
 import ProjectsListCardActions from "./ProjectsListCardActions";
-import { Print } from '@mui/icons-material';
+import { ForkRight, Print } from '@mui/icons-material';
 
 export default async function ProjectsListCard(props: ISoftwareProject) {
     const repoFullName = `${props.owner_name}/${props.project_name}`;
@@ -19,9 +19,12 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
         <Card component='li' key={props.software_project_id} sx={{ p: 2 }}>
             <Stack direction='row'>
                 <Box flex={1}>
-                    <Link target="_blank" href={props.html_url}>
-                        <Typography variant='h6'>{repoFullName}</Typography>
-                    </Link>
+                    <Stack direction='row' gap={1}>
+                        <Link target="_blank" href={props.html_url}>
+                            <Typography variant='h6'>{repoFullName}</Typography>
+                        </Link>
+                        <Chip icon={<ForkRight />} label={props.branch_name} />
+                    </Stack>
                     <Typography variant='body2'>{props.description}</Typography>
                     <Typography variant='caption'>
                         <span>Last scanned: </span>
