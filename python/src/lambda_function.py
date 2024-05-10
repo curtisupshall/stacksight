@@ -1,25 +1,26 @@
-from vc import clone_repos
 from classify import classify
 from download import download_and_unzip_repo
+from upload import upload_results
+import json
 
 def lambda_handler(event, context):
-    repo_fullname = 'bcgov/biohubbc'
+    records = event.get('Records')
 
-    # Clone the repo
-    branch = 'dev'
-    path_to_repo = download_and_unzip_repo(repo_fullname, branch)
+    for index, record in enumerate(records):
+        body = json.loads(record.get('body'))
+        print(f'Found record {index}')
 
-    # Process the repos
-    processed = []
+        # Clone the repo
+        repo_fullname = body.get('repoFullName')
+        branch = body.get('branchName')
+        path_to_repo = download_and_unzip_repo(repo_fullname, branch)
 
-    libraries = classify(path_to_repo)
-    processed.append({
-        'fullName': repo_fullname,
-        'tags': libraries
-    })
+        # Process the repos
+        tags = classify(path_to_repo)
+        upload_results(body, tags)
 
     return {
         'statusCode': 200,
-        'body': processed
+        'body': 'Done.'
     }
 

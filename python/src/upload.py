@@ -21,15 +21,15 @@ def upload_results(project, tags):
     data = json.dumps({
         'tags': tags
     })
-    
-    print('Sending now...')
+
     # Send the request
+    print('Sending now...')
     requests.patch(request_url, data=data, headers=headers)
     print('Sent.')
 
-upload_results(
-    {
-        'softwareProjectId': 2,
-    },
-    ['javascript']
-)
+# upload_results(
+#     {
+#         'softwareProjectId': 2,
+#     },
+#     ['javascript']
+# )
