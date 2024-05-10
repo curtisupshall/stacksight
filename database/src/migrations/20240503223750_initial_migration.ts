@@ -29,6 +29,7 @@ export async function up(knex: Knex): Promise<void> {
             "software_project_id"       INTEGER NOT NULL,
             "dispatched_at"             TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "completed_at"              TIMESTAMP(3),
+            "aborted_at"                TIMESTAMP(3),
         
             FOREIGN KEY ("software_project_id") REFERENCES "software_project" ("software_project_id")
         );
