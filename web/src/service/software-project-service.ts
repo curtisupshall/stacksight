@@ -127,6 +127,7 @@ export class SoftwareProjectService extends BaseService {
     }
 
     async recordProjectTags (softwareProjectId: number, tags: string[]) {
+        // Step 1. Persist the software tags in the database
         await this.connection.query(`
             INSERT INTO software_project_tag
                 (software_project_id, tag)
@@ -138,6 +139,7 @@ export class SoftwareProjectService extends BaseService {
             ]
         );
 
-        return;
+        // Step 2. End-date the current scan
+        // TODO
     }
 }

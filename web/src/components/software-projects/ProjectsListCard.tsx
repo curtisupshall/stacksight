@@ -10,6 +10,7 @@ import type { ISoftwareProject } from "../../types/software-project";
 import Link from "next/link";
 import ProjectsListCardActions from "./ProjectsListCardActions";
 import { ForkRight, Print } from '@mui/icons-material';
+import StatusDot from '../ui/StatusDot';
 
 export default async function ProjectsListCard(props: ISoftwareProject) {
     const repoFullName = `${props.owner_name}/${props.project_name}`;
@@ -19,10 +20,11 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
         <Card component='li' key={props.software_project_id} sx={{ p: 2 }}>
             <Stack direction='row'>
                 <Box flex={1}>
-                    <Stack direction='row' gap={1}>
+                    <Stack direction='row' gap={1} alignItems='center'>
                         <Link target="_blank" href={props.html_url}>
                             <Typography variant='h6'>{repoFullName}</Typography>
                         </Link>
+                        <StatusDot />
                         <Chip icon={<ForkRight />} label={props.branch_name} />
                     </Stack>
                     <Typography variant='body2'>{props.description}</Typography>
