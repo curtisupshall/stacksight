@@ -10,3 +10,8 @@ export interface ISoftwareProject {
     last_scan_completed_at: string;
 }
 
+export type SoftwareProjectStatus =
+    | 'PENDING'
+    | 'SUCCEEDED'
+    | 'FAILED'
+    | 'UNKNOWN'

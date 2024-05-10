@@ -2,6 +2,7 @@ import { SQS } from "aws-sdk";
 import type { DbConnection } from "../database/db";
 import type { ISoftwareProject } from "../types/software-project";
 import { BaseService } from "./base-service";
+import { revalidatePath } from "next/cache";
 
 const sqsConfig = {
     region: process.env.AWS_SQS_REGION,
@@ -128,18 +129,21 @@ export class SoftwareProjectService extends BaseService {
 
     async recordProjectTags (softwareProjectId: number, tags: string[]) {
         // Step 1. Persist the software tags in the database
+        const queryValues = tags.map(tag => [softwareProjectId, tag]);
         await this.connection.query(`
             INSERT INTO software_project_tag
                 (software_project_id, tag)
             VALUES
-                ($1, $2)`,
-            [
-                softwareProjectId,
-                tags[0] // TODO
-            ]
-        );
+                ${queryValues.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(',')}
+        `, queryValues.flat());
 
         // Step 2. End-date the current scan
-        // TODO
+        // TODO need to add specifier! Currently sets the completion time for all entries
+        await this.connection.query(`
+            UPDATE software_project_scan
+            SET completed_at = NOW()
+        `);
+
+        revalidatePath('/projects');
     }
 }

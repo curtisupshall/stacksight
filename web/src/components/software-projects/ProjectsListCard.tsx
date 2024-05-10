@@ -6,15 +6,28 @@ import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime)
 
 import { Box, Card, Chip, IconButton, Stack, Typography } from "@mui/material";
-import type { ISoftwareProject } from "../../types/software-project";
+import type { ISoftwareProject, SoftwareProjectStatus } from "../../types/software-project";
 import Link from "next/link";
 import ProjectsListCardActions from "./ProjectsListCardActions";
 import { ForkRight, Print } from '@mui/icons-material';
 import StatusDot from '../ui/StatusDot';
+import StatusIndicator from '../ui/StatusIndicator';
 
 export default async function ProjectsListCard(props: ISoftwareProject) {
     const repoFullName = `${props.owner_name}/${props.project_name}`;
-    const lastScanDispatchDate = dayjs(props.last_scan_dispatched_at);
+    let lastScanDispatchDay = null;
+    let lastScanCompletionDay = null;
+    let status: SoftwareProjectStatus = 'UNKNOWN';
+
+    if (props.last_scan_dispatched_at) {
+        lastScanDispatchDay = dayjs(props.last_scan_dispatched_at);
+        status = 'PENDING'
+    }
+
+    if (props.last_scan_completed_at) {
+        lastScanCompletionDay = dayjs(props.last_scan_completed_at)
+        status = 'SUCCEEDED'
+    }
 
     return (
         <Card component='li' key={props.software_project_id} sx={{ p: 2 }}>
@@ -24,18 +37,24 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
                         <Link target="_blank" href={props.html_url}>
                             <Typography variant='h6'>{repoFullName}</Typography>
                         </Link>
-                        <StatusDot />
+                        <StatusIndicator status={status} />
                         <Chip icon={<ForkRight />} label={props.branch_name} />
                     </Stack>
                     <Typography variant='body2'>{props.description}</Typography>
                     <Typography variant='caption'>
                         <span>Last scanned: </span>
-                        {props.last_scan_dispatched_at ? (
-                            <span title={lastScanDispatchDate.format('MMM D, YYYY h:mmA')}>
-                                {lastScanDispatchDate.fromNow()}
-                            </span>
-                        ) : (
+                        {!lastScanCompletionDay ? (
                             <span>Never</span>
+                        ) : (                        
+                            lastScanCompletionDay ? (
+                                <span title={lastScanCompletionDay.format('MMM D, YYYY h:mmA')}>
+                                    Completed {lastScanCompletionDay.fromNow()}
+                                </span>
+                            ) : (
+                                <span title={lastScanDispatchDay.format('MMM D, YYYY h:mmA')}>
+                                    Started {lastScanDispatchDay.fromNow()}
+                                </span>
+                            )
                         )}
                     </Typography>
                 </Box>
