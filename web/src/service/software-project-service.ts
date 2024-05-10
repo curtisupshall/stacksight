@@ -125,4 +125,19 @@ export class SoftwareProjectService extends BaseService {
             console.log(data);
         })
     }
+
+    async recordProjectTags (softwareProjectId: number, tags: string[]) {
+        await this.connection.query(`
+            INSERT INTO software_project_tag
+                (software_project_id, tag)
+            VALUES
+                ($1, $2)`,
+            [
+                softwareProjectId,
+                tags[0] // TODO
+            ]
+        );
+
+        return;
+    }
 }

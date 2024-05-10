@@ -35,4 +35,4 @@ migrate:
 tunnel:
 	ngrok http http://localhost:3692
 
-.PHONY: clean env setup close web
+.PHONY: clean env setup close web tunnel

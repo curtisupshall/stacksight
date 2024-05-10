@@ -30,7 +30,7 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
                         <span>Last scanned: </span>
                         {props.last_scan_dispatched_at ? (
                             <span title={lastScanDispatchDate.format('MMM D, YYYY h:mmA')}>
-                                {lastScanDispatchDate.toNow()}
+                                {lastScanDispatchDate.fromNow()}
                             </span>
                         ) : (
                             <span>Never</span>

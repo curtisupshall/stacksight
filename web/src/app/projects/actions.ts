@@ -45,6 +45,12 @@ export async function addNewProject(formData: FormData) {
 export async function scanProject(formData: FormData) {
     const softwareProjectIdFormValue = formData.get('softwareProjectId');
 
+    if (!softwareProjectIdFormValue) {
+        throw new Error('A software project ID must be provided.')
+    }
+
+    const softwareProjectId = Number(softwareProjectIdFormValue);
+
     const connection = new DbConnection();
 
     try {
@@ -52,6 +58,7 @@ export async function scanProject(formData: FormData) {
         await connection.open();
         
         const softwareProjectService = new SoftwareProjectService(connection);
+        await softwareProjectService.scanProject(softwareProjectId);
 
         // Commit the transaction
         await connection.commit();
