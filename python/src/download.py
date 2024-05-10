@@ -3,7 +3,12 @@ import zipfile
 import os
 
 def download_and_unzip_repo(fullname, branch='master', destination_folder='.cims/'):
-    os.makedirs(destination_folder)
+    # Create the folder used to store the repo
+    if os.path.exists(destination_folder):
+        os.rmdir(destination_folder)
+    else:
+        os.makedirs(destination_folder)
+
     # Form the URL to download the repository zip
     download_url = f"https://github.com/{fullname}/archive/refs/heads/{branch}.zip"
     zip_path = os.path.join(destination_folder, f"tmp.zip")
