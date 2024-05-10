@@ -4,18 +4,15 @@ import constants
 from typing import List
 from CodeSniffer import CodeSniffer
 
-directory_path = '.cims/'
-
 categories = [
     'languages',
     'frontend',
     'backend'
 ]
 
-def classify(repo_fullname) -> List[str]:
-    project_path = os.path.join(directory_path, repo_fullname)
-
+def classify(project_path) -> List[str]:
     libraries = []
+
     for category in categories:
         # print(f'\n{category.upper()}')
         for library_name, options in constants.TECH_STACK_PATTERNS_BY_CATEGORY[category].items():
