@@ -8,25 +8,29 @@ import type { ISoftwareProject } from "../../types/software-project";
 import type { ApiResponse } from "../../types/api";
 import DispatchProjectForm from "../../components/AddProjectForm";
 import ProjectsList from "../../components/software-projects/ProjectsList";
+import { SoftwareProjectService } from "../../service/software-project-service";
 
 export default async function ProjectsPage() {
-    let projects: ISoftwareProject[] = [];
+    const connection = new DbConnection();
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/projects`, { next: { revalidate: 5 } })
+        // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/projects`, { next: { revalidate: 5 } })
 
-        const json = await response.json() as ApiResponse<ISoftwareProject[]>
-        projects = json.data;
+        await connection.open();
 
+        const softwareProjectService = new SoftwareProjectService(connection);
+        const projects = await softwareProjectService.listProjects();
+
+        return (
+            <main>
+                <Typography variant='h6'>My Projects</Typography>
+                <DispatchProjectForm />
+                <ProjectsList projects={projects} />
+            </main>
+        )
     } catch (error) {
         throw error
+    } finally {
+        connection.release();
     }
-
-    return (
-        <main>
-            <Typography variant='h6'>My Projects</Typography>
-            <DispatchProjectForm />
-            <ProjectsList projects={projects} />
-        </main>
-    )
 }

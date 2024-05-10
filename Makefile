@@ -32,4 +32,7 @@ web: setup
 migrate:
 	cd database && npm run migrate-latest
 
+tunnel:
+	ngrok http http://localhost:3692
+
 .PHONY: clean env setup close web
