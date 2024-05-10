@@ -21,7 +21,8 @@ export class SoftwareProjectService extends BaseService {
             SELECT
                 sp.*,
                 sps.dispatched_at AS last_scan_dispatched_at,
-                sps.completed_at AS last_scan_completed_at
+                sps.completed_at AS last_scan_completed_at,
+                sps.aborted_at AS last_scan_aborted_at
             FROM software_project sp
             LEFT JOIN (
                 SELECT
@@ -55,7 +56,7 @@ export class SoftwareProjectService extends BaseService {
         const githubResponse = await fetch(`https://api.github.com/repos/${repoFullName}`);
         const gitHubJson = await githubResponse.json() as any;
 
-        // 2. Persist the new project in the database
+        // Step 3. Persist the new project in the database
         const response = await this.connection.query(
             `INSERT INTO software_project (
                 full_name,
@@ -75,6 +76,11 @@ export class SoftwareProjectService extends BaseService {
                 gitHubJson.html_url
             ]
         );
+
+        const softwareProject = response.rows[0];
+
+        // Step 4. Dispatch a new scan of the repo.
+        await this.scanProject(softwareProject.software_project_id);
 
         return response.rows[0];
     }

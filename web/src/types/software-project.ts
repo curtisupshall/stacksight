@@ -7,7 +7,8 @@ export interface ISoftwareProject {
     description: string;
     html_url: string;
     last_scan_dispatched_at: string;
-    last_scan_completed_at: string;
+    last_scan_completed_at: string | null;
+    last_scan_aborted_at: string | null;
 }
 
 export type SoftwareProjectStatus =

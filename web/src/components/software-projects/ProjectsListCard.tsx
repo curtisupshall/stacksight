@@ -17,16 +17,31 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
     const repoFullName = `${props.owner_name}/${props.project_name}`;
     let lastScanDispatchDay = null;
     let lastScanCompletionDay = null;
+    let lastScanAbortedDay = null;
+
     let status: SoftwareProjectStatus = 'UNKNOWN';
+    let lastScanText = 'Never'
+    let lastScanTooltip: string | undefined = undefined;
 
     if (props.last_scan_dispatched_at) {
         lastScanDispatchDay = dayjs(props.last_scan_dispatched_at);
         status = 'PENDING'
+        lastScanTooltip = lastScanDispatchDay.format('MMM D, YYYY h:mmA')
+        lastScanText = `Started ${lastScanDispatchDay.fromNow()}`
     }
 
     if (props.last_scan_completed_at) {
         lastScanCompletionDay = dayjs(props.last_scan_completed_at)
         status = 'SUCCEEDED'
+        lastScanTooltip = lastScanCompletionDay.format('MMM D, YYYY h:mmA')
+        lastScanText = `Completed ${lastScanCompletionDay.fromNow()}`;
+    }
+
+    if (props.last_scan_aborted_at) {
+        lastScanAbortedDay = dayjs(props.last_scan_aborted_at)
+        status = 'FAILED'
+        lastScanTooltip = lastScanAbortedDay.format('MMM D, YYYY h:mmA')
+        lastScanText = `Failed ${lastScanAbortedDay.fromNow()}`
     }
 
     return (
@@ -43,19 +58,9 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
                     <Typography variant='body2'>{props.description}</Typography>
                     <Typography variant='caption'>
                         <span>Last scanned: </span>
-                        {!lastScanCompletionDay ? (
-                            <span>Never</span>
-                        ) : (                        
-                            lastScanCompletionDay ? (
-                                <span title={lastScanCompletionDay.format('MMM D, YYYY h:mmA')}>
-                                    Completed {lastScanCompletionDay.fromNow()}
-                                </span>
-                            ) : (
-                                <span title={lastScanDispatchDay.format('MMM D, YYYY h:mmA')}>
-                                    Started {lastScanDispatchDay.fromNow()}
-                                </span>
-                            )
-                        )}
+                        <span title={lastScanTooltip}>
+                            {lastScanText}
+                        </span>
                     </Typography>
                 </Box>
                 <Box>
