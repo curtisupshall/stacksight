@@ -18,3 +18,7 @@ export const getProjectStatus = (project: ISoftwareProject): SoftwareProjectStat
 
     return status;
 }
+
+export const categorizeProjectTags = (tags: string[]) => {
+    
+}

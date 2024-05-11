@@ -11,7 +11,6 @@ interface IProjectScanStatusProps {
 }
 
 export default function ProjectScanStatus(props: IProjectScanStatusProps) {
-    // console.log('props:', props)
     let lastScanDispatchDay = null;
     let lastScanCompletionDay = null;
     let lastScanAbortedDay = null;

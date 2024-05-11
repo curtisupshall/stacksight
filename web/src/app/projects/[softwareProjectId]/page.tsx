@@ -8,6 +8,7 @@ import ProjectBranch from "../../../components/software-projects/ProjectBranch";
 import ProjectStatusIndicator from "../../../components/software-projects/ProjectStatusIndicator";
 import ProjectScanStatus from "../../../components/software-projects/ProjectScanStatus";
 import { getProjectStatus } from "../../../utils/Utils";
+import ProjectTechStack from "../../../components/tech-stack/ProjectTechStackList";
 
 export default async function AtelierPage({ params }: { params: { softwareProjectId: string }}) {
     
@@ -39,6 +40,7 @@ export default async function AtelierPage({ params }: { params: { softwareProjec
                         <ProjectStatusIndicator status={getProjectStatus(project)} />
                     </Stack>
                 </Box>
+                <ProjectTechStack tags={project.tags} />
             </section>
         )
     } catch (error) {
