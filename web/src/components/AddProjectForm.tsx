@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import { addNewProject } from "../app/projects/actions";
 
@@ -9,15 +9,19 @@ interface IAddProjectFormProps {
 export default function AddProjectForm(props: IAddProjectFormProps) {
     return (
         <form action={addNewProject}>
-            <Box>
+            <Stack direction='row' alignItems='center' gap={1}>
                 <TextField
                     variant='filled'
+                    size="small"
                     name='repoFullName'
                     label='Add a Project'
                     placeholder='username/repo@branch'
+                    sx={{
+                        minWidth: '400px'
+                    }}
                 />
-                <Button type='submit'>Submit</Button>
-            </Box>
+                <Button variant='outlined' type='submit'>Add</Button>
+            </Stack>
         </form>
     )
 }

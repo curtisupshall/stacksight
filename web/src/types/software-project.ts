@@ -9,6 +9,7 @@ export interface ISoftwareProject {
     last_scan_dispatched_at: string;
     last_scan_completed_at: string | null;
     last_scan_aborted_at: string | null;
+    tags: string[];
 }
 
 export type SoftwareProjectStatus =

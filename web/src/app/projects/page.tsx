@@ -1,6 +1,6 @@
 'use server'
 
-import { Box, Link, List, ListItem, Typography } from "@mui/material";
+import { Box, Link, List, ListItem, Stack, Typography } from "@mui/material";
 // import { db } from "../../database/db";
 import { useEffect } from "react";
 import { DbConnection } from "../../database/db";
@@ -14,8 +14,6 @@ export default async function ProjectsPage() {
     const connection = new DbConnection();
 
     try {
-        // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/projects`, { next: { revalidate: 5 } })
-
         await connection.open();
 
         const softwareProjectService = new SoftwareProjectService(connection);
@@ -25,8 +23,10 @@ export default async function ProjectsPage() {
 
         return (
             <section>
-                <Typography variant='h6'>My Projects</Typography>
-                <DispatchProjectForm />
+                <Typography variant='h3' mb={6}><strong>My Projects</strong></Typography>
+                <Box mb={2}>
+                    <DispatchProjectForm />
+                </Box>
                 <ProjectsList projects={projects} />
             </section>
         )

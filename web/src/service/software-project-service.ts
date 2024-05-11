@@ -22,7 +22,8 @@ export class SoftwareProjectService extends BaseService {
                 sp.*,
                 sps.dispatched_at AS last_scan_dispatched_at,
                 sps.completed_at AS last_scan_completed_at,
-                sps.aborted_at AS last_scan_aborted_at
+                sps.aborted_at AS last_scan_aborted_at,
+                array_agg(spt.tag) AS tags
             FROM software_project sp
             LEFT JOIN (
                 SELECT
@@ -33,6 +34,8 @@ export class SoftwareProjectService extends BaseService {
             ) latest_sps ON sp.software_project_id = latest_sps.software_project_id
             LEFT JOIN software_project_scan sps ON sp.software_project_id = sps.software_project_id
                 AND sps.dispatched_at = latest_sps.max_dispatched_at
+            LEFT JOIN software_project_tag spt ON sp.software_project_id = spt.software_project_id
+            GROUP BY sp.software_project_id, sps.dispatched_at, sps.completed_at, sps.aborted_at
             ORDER BY sp.created_at DESC
         `;
 

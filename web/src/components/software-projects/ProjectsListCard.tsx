@@ -5,7 +5,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 
 dayjs.extend(relativeTime)
 
-import { Box, Card, Chip, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Card, Chip, Divider, IconButton, Stack, Typography } from "@mui/material";
 import type { ISoftwareProject, SoftwareProjectStatus } from "../../types/software-project";
 import Link from "next/link";
 import ProjectsListCardActions from "./ProjectsListCardActions";
@@ -46,9 +46,9 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
 
     return (
         <Card component='li' key={props.software_project_id} sx={{ p: 2 }}>
-            <Stack direction='row'>
-                <Box flex={1}>
-                    <Stack direction='row' gap={1} alignItems='center'>
+            <Stack direction='row' gap={1}>
+                <Box flex={2}>
+                    <Stack direction='row' gap={1.5} alignItems='center'>
                         <Link target="_blank" href={props.html_url}>
                             <Typography variant='h6'>{repoFullName}</Typography>
                         </Link>
@@ -63,6 +63,12 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
                         </span>
                     </Typography>
                 </Box>
+                {/* <Divider orientation='vertical' /> */}
+                <Stack direction='row' gap={1} flex={3} pt={0.5}>
+                    {props.tags.filter(Boolean).map((tag) => (
+                        <Chip size='small' label={tag} />
+                    ))}
+                </Stack>
                 <Box>
                     <ProjectsListCardActions {...props} />
                 </Box>
