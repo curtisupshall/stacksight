@@ -11,7 +11,7 @@ interface IStatusIndicatorProps {
     status: SoftwareProjectStatus
 }
 
-export default function StatusIndicator(props: IStatusIndicatorProps) {
+export default function ProjectStatusIndicator(props: IStatusIndicatorProps) {
     switch (props.status) {
         case 'FAILED':
             return (

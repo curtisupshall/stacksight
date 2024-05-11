@@ -44,6 +44,35 @@ export class SoftwareProjectService extends BaseService {
         return response.rows;
     }
 
+    async getProjectById(softwareProjectId: number): Promise<ISoftwareProject | undefined> {
+        const sqlQuery = `
+            SELECT
+                sp.*,
+                sps.dispatched_at AS last_scan_dispatched_at,
+                sps.completed_at AS last_scan_completed_at,
+                sps.aborted_at AS last_scan_aborted_at,
+                array_agg(spt.tag) AS tags
+            FROM software_project sp
+            LEFT JOIN (
+                SELECT
+                    software_project_id,
+                    MAX(dispatched_at) AS max_dispatched_at
+                FROM software_project_scan
+                GROUP BY software_project_id
+            ) latest_sps ON sp.software_project_id = latest_sps.software_project_id
+            LEFT JOIN software_project_scan sps ON sp.software_project_id = sps.software_project_id
+                AND sps.dispatched_at = latest_sps.max_dispatched_at
+            LEFT JOIN software_project_tag spt ON sp.software_project_id = spt.software_project_id
+            WHERE sp.software_project_id = $1
+            GROUP BY sp.software_project_id, sps.dispatched_at, sps.completed_at, sps.aborted_at
+            ORDER BY sp.created_at DESC
+        `;
+
+        const response = await this.connection.query(sqlQuery, [softwareProjectId]);
+
+        return response.rows[0];
+    }
+
     async addNewProject(repoFullName: string, branchName: string) {
         // Step 1. Check if the project is already added. If it has been, throw an error
         const databaseResponse = await this.connection.query(
