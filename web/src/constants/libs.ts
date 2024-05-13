@@ -84,9 +84,9 @@ export const SOFTWARE_CATEGORIES = {
     }
 } as const;
 
-export type SoftwareCategorySlug = keyof typeof SOFTWARE_CATEGORIES;
+export type SoftwareCategorySlug = string; // keyof typeof SOFTWARE_CATEGORIES;
 
-export const SOFTWARE_LIBRARIES = {
+export const SOFTWARE_LIBRARIES: Record<string, SoftwareLibrary> = {
     // Frontend
     'react': {
         name: 'React.js',
@@ -1408,9 +1408,9 @@ export const SOFTWARE_LIBRARIES = {
         description: 'A package manager for the web that allows you to install front-end libraries, frameworks, assets, and utilities. It operates over Git and is optimized for the front-end.',
         docsUrl: 'https://bower.io'
     },
-} as const;
+}// as const;
 
-export type SoftwareLibrarySlug = keyof typeof SOFTWARE_LIBRARIES;
+export type SoftwareLibrarySlug = string; //  | keyof typeof SOFTWARE_LIBRARIES;
 
 export const SOFTWARE_LIBRARIES_BY_CATEGORY: Record<SoftwareCategorySlug, SoftwareLibrarySlug[]> = {
     'analytics-and-monitoring': [
