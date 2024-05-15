@@ -1,4 +1,4 @@
-# Code Inventory Management System (CIMS)
+# StackSight
 
 ### Prerequisites
 1. Docker

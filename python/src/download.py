@@ -2,7 +2,7 @@ import requests
 import zipfile
 import os
 
-def download_and_unzip_repo(fullname, branch='master', destination_folder='.cims/'):
+def download_and_unzip_repo(fullname, branch='master', destination_folder='.stacksight/'):
     # Create the folder used to store the repo
     if os.path.exists(destination_folder):
         os.rmdir(destination_folder)

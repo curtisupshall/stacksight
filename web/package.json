@@ -1,5 +1,5 @@
 {
-  "name": "cims",
+  "name": "stacksight",
   "module": "index.ts",
   "devDependencies": {
     "@types/bun": "latest",

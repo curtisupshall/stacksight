@@ -8,7 +8,7 @@ ENV_FILE := .env
 ENV_EXAMPLE_FILE := .env.example
 
 clean:
-# rm -rf python/.cims
+# rm -rf python/.stacksight
 	docker-compose down -v
 
 env:

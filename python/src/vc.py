@@ -4,7 +4,7 @@ from typing import List
 def clone_repos(repo_full_names: List[str]):
     for repo_full_name in repo_full_names:
         repo_url = f'git@github.com:{repo_full_name}.git'
-        clone_dir = f'.cims/{repo_full_name}'
+        clone_dir = f'.stacksight/{repo_full_name}'
 
         try:
             Repo.clone_from(repo_url, clone_dir)

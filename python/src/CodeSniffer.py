@@ -162,7 +162,7 @@ laravel_code_sniffer = CodeSniffer('./test_project').find(
                 r'.*\/tests\/.*\.php$',          # Matches PHP test files
             ]
 )
-# vue_code_sniffer = CodeSniffer('./.cims/curtisupshall/ftt-spotlight').find(vue_options)
+# vue_code_sniffer = CodeSniffer('./.stacksight/curtisupshall/ftt-spotlight').find(vue_options)
 
 # confidence_score = vue_code_sniffer.compile()
 # print(confidence_score)  # Will print a score between 0 and 1 based on the presence of React

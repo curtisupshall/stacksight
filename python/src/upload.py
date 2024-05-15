@@ -14,7 +14,7 @@ def upload_results(project, tags):
     # Prepare the request
     request_url = f'{api_host}/{endpoint}'
     
-    authorization = f"Bearer {os.environ.get('CIMS_SECRET_KEY')}"
+    authorization = f"Bearer {os.environ.get('STACKSIGHT_SECRET_KEY')}"
     headers = {
         'Authorization': authorization
     }
