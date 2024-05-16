@@ -2,9 +2,9 @@
 
 import { SQS } from 'aws-sdk';
 import { revalidatePath } from "next/cache";
-import { DbConnection } from "../../database/db";
+import { DbConnection } from "../../server/database/db";
 import type { ISoftwareProject } from '../../types/software-project';
-import { SoftwareProjectService } from '../../service/software-project-service';
+import { SoftwareProjectService } from '../../server/services/software-project-service';
 
 export async function addNewProject(formData: FormData) {
     const repoFullNameWithBranchFormValue = formData.get('repoFullName');

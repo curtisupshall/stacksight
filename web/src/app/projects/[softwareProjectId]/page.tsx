@@ -1,8 +1,8 @@
 'use server'
 
 import { Box, Link, List, ListItem, Stack, Typography } from "@mui/material";
-import { DbConnection } from "../../../database/db";
-import { SoftwareProjectService } from "../../../service/software-project-service";
+import { DbConnection } from "../../../server/database/db";
+import { SoftwareProjectService } from "../../../server/services/software-project-service";
 import { notFound } from "next/navigation";
 import ProjectBranch from "../../../components/software-projects/ProjectBranch";
 import ProjectStatusIndicator from "../../../components/software-projects/ProjectStatusIndicator";

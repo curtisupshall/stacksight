@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
-import { DbConnection } from "../../../../database/db";
-import { SoftwareProjectService } from "../../../../service/software-project-service";
+import { DbConnection } from "../../../../server/database/db";
+import { SoftwareProjectService } from "../../../../server/services/software-project-service";
 
 export async function PATCH(
     request: Request,
