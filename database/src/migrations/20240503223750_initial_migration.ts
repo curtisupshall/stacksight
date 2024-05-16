@@ -53,6 +53,9 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.raw(``);
+    await knex.raw(`
+        DROP TABLE "software_project_tag";
+        DROP TABLE "software_project_scan";
+        DROP TABLE "software_project";
+    `);
 }
-
