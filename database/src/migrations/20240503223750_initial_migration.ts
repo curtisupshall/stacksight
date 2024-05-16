@@ -42,12 +42,12 @@ export async function up(knex: Knex): Promise<void> {
     await knex.raw(`
         CREATE TABLE "software_project_tag" (
             "software_project_tag_id"   SERIAL PRIMARY KEY,
-            "software_project_id"       INTEGER NOT NULL,
+            "software_project_scan_id"  INTEGER NOT NULL,
             "tag"                       VARCHAR(255),
             "created_at"                TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "updated_at"                TIMESTAMP(3),
             
-            FOREIGN KEY ("software_project_id") REFERENCES "software_project" ("software_project_id")
+            FOREIGN KEY ("software_project_scan_id") REFERENCES "software_project_scan" ("software_project_scan_id")
         );
     `);
 }

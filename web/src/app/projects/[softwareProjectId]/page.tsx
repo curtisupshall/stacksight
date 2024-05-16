@@ -10,7 +10,7 @@ import ProjectScanStatus from "../../../components/software-projects/ProjectScan
 import { getProjectStatus } from "../../../utils/Utils";
 import ProjectTechStack from "../../../components/tech-stack/ProjectTechStackList";
 
-export default async function AtelierPage({ params }: { params: { softwareProjectId: string }}) {
+export default async function SoftwareProjectPage({ params }: { params: { softwareProjectId: string }}) {
     
     const softwareProjectId = Number(params.softwareProjectId);
 
