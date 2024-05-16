@@ -58,7 +58,7 @@ export async function scanProject(formData: FormData) {
         await connection.open();
         
         const softwareProjectService = new SoftwareProjectService(connection);
-        await softwareProjectService.scanProject(softwareProjectId);
+        await softwareProjectService.scanProjectById(softwareProjectId);
 
         // Commit the transaction
         await connection.commit();

@@ -1,15 +1,15 @@
 import { revalidatePath } from "next/cache";
-import { DbConnection } from "../../../../server/database/db";
-import { SoftwareProjectService } from "../../../../server/services/software-project-service";
+import { DbConnection } from "../../../../../../server/database/db";
+import { SoftwareProjectService } from "../../../../../../server/services/software-project-service";
 
 export async function PATCH(
     request: Request,
-    { params }: { params: { softwareProjectId: string } }
+    { params }: { params: { softwareProjectId: string, softwareProjectScanId: string } }
 ) {
 
     const body = await request.json() as any;
 
-    const softwareProjectId = Number(params.softwareProjectId);
+    const softwareProjectScanId = Number(params.softwareProjectScanId);
     const tags = body.tags as string[];
 
     const connection = new DbConnection();
@@ -19,7 +19,7 @@ export async function PATCH(
 
         const softwareProjectService = new SoftwareProjectService(connection);
         
-        await softwareProjectService.recordProjectTags(softwareProjectId, tags);
+        await softwareProjectService.recordProjectScanTags(softwareProjectScanId, tags);
 
         connection.commit();
 

@@ -18,7 +18,7 @@ export class SoftwareProjectRepository extends BaseRepository {
                 sps.dispatched_at AS last_scan_dispatched_at,
                 sps.completed_at AS last_scan_completed_at,
                 sps.aborted_at AS last_scan_aborted_at,
-                array_agg(spt.tag) AS tags
+                array_agg(spt.tag) FILTER (WHERE spt.tag IS NOT NULL) AS tags
             FROM software_project sp
             LEFT JOIN (
                 SELECT
@@ -29,7 +29,9 @@ export class SoftwareProjectRepository extends BaseRepository {
             ) latest_sps ON sp.software_project_id = latest_sps.software_project_id
             LEFT JOIN software_project_scan sps ON sp.software_project_id = sps.software_project_id
                 AND sps.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_tag spt ON sp.software_project_id = spt.software_project_id
+            LEFT JOIN software_project_scan sps2 ON sps2.software_project_id = sp.software_project_id
+                AND sps2.dispatched_at = latest_sps.max_dispatched_at
+            LEFT JOIN software_project_tag spt ON sps2.software_project_scan_id = spt.software_project_scan_id
             GROUP BY sp.software_project_id, sps.dispatched_at, sps.completed_at, sps.aborted_at
             ORDER BY sp.created_at DESC
         `;
@@ -46,7 +48,7 @@ export class SoftwareProjectRepository extends BaseRepository {
                 sps.dispatched_at AS last_scan_dispatched_at,
                 sps.completed_at AS last_scan_completed_at,
                 sps.aborted_at AS last_scan_aborted_at,
-                array_agg(spt.tag) AS tags
+                array_agg(spt.tag) FILTER (WHERE spt.tag IS NOT NULL) AS tags
             FROM software_project sp
             LEFT JOIN (
                 SELECT
@@ -57,7 +59,9 @@ export class SoftwareProjectRepository extends BaseRepository {
             ) latest_sps ON sp.software_project_id = latest_sps.software_project_id
             LEFT JOIN software_project_scan sps ON sp.software_project_id = sps.software_project_id
                 AND sps.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_tag spt ON sp.software_project_id = spt.software_project_id
+            LEFT JOIN software_project_scan sps2 ON sps2.software_project_id = sp.software_project_id
+                AND sps2.dispatched_at = latest_sps.max_dispatched_at
+            LEFT JOIN software_project_tag spt ON sps2.software_project_scan_id = spt.software_project_scan_id
             WHERE sp.software_project_id = $1
             GROUP BY sp.software_project_id, sps.dispatched_at, sps.completed_at, sps.aborted_at
             ORDER BY sp.created_at DESC
@@ -83,7 +87,7 @@ export class SoftwareProjectRepository extends BaseRepository {
                 sps.dispatched_at AS last_scan_dispatched_at,
                 sps.completed_at AS last_scan_completed_at,
                 sps.aborted_at AS last_scan_aborted_at,
-                array_agg(spt.tag) AS tags
+                array_agg(spt.tag) FILTER (WHERE spt.tag IS NOT NULL) AS tags
             FROM software_project sp
             LEFT JOIN (
                 SELECT
@@ -94,7 +98,9 @@ export class SoftwareProjectRepository extends BaseRepository {
             ) latest_sps ON sp.software_project_id = latest_sps.software_project_id
             LEFT JOIN software_project_scan sps ON sp.software_project_id = sps.software_project_id
                 AND sps.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_tag spt ON sp.software_project_id = spt.software_project_id
+            LEFT JOIN software_project_scan sps2 ON sps2.software_project_id = sp.software_project_id
+                AND sps2.dispatched_at = latest_sps.max_dispatched_at
+            LEFT JOIN software_project_tag spt ON sps2.software_project_scan_id = spt.software_project_scan_id
             WHERE sp.full_name ILIKE $1
             AND sp.branch_name ILIKE $2
             GROUP BY sp.software_project_id, sps.dispatched_at, sps.completed_at, sps.aborted_at
