@@ -1,4 +1,4 @@
-import { SQS } from "aws-sdk";
+import { SQS, SendMessageCommandOutput } from "@aws-sdk/client-sqs";
 import type { DbConnection } from "../database/db";
 import type { ISoftwareProject, ISoftwareProjectRecord } from "../../types/software-project";
 import { BaseService } from "./base-service";
@@ -93,9 +93,9 @@ export class SoftwareProjectService extends BaseService {
             QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL
         }
 
-        sqs.sendMessage(messageParams, (error, data) => {
-            if (error) {
-                throw error;
+        sqs.sendMessage(messageParams, (err: any, data?: SendMessageCommandOutput | undefined) => {
+            if (err) {
+                throw err;
             }
         })
     }

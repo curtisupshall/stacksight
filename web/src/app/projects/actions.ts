@@ -1,9 +1,7 @@
 'use server'
 
-import { SQS } from 'aws-sdk';
 import { revalidatePath } from "next/cache";
 import { DbConnection } from "../../server/database/db";
-import type { ISoftwareProject } from '../../types/software-project';
 import { SoftwareProjectService } from '../../server/services/software-project-service';
 
 export async function addNewProject(formData: FormData) {

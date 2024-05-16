@@ -1,7 +1,5 @@
-import { SQS } from "aws-sdk";
 import type { DbConnection } from "../database/db";
 import type { ICreateSoftwareProjectRecord, ISoftwareProject, ISoftwareProjectRecord } from "../../types/software-project";
-import { revalidatePath } from "next/cache";
 import { BaseRepository } from "./base-repository";
 import { IProjectScanRecord } from "../../types/project-scan";
 
@@ -140,7 +138,9 @@ export class SoftwareProjectRepository extends BaseRepository {
         const response = await this.connection.query(`
             INSERT INTO software_project_scan (
                 software_project_id
-            ) VALUES ($1)`,
+            )
+            VALUES ($1)
+            RETURNING *`,
             [
                 softwareProjectId
             ]
