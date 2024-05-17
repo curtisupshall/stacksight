@@ -16,7 +16,7 @@ export const SOFTWARE_CATEGORIES = {
     'backend': {
         name: 'Backend',
     },
-    'web-stockets': {
+    'web-sockets': {
         name: 'Web Sockets',
     },
     'server': {
@@ -1708,14 +1708,10 @@ export const SOFTWARE_LIBRARIES_BY_CATEGORY: Record<SoftwareCategorySlug, Softwa
         'qemu',
         'red-hat-virtualization',
     ],
-    'web-stockets': [
+    'web-sockets': [
         'socketi',
         'pusher',
         'socket.io',
         'laravel-reverb',
-        'caddy',
-        'apache',
-        'nginx',
-        'tomcat',
     ]
 }

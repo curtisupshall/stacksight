@@ -5,9 +5,13 @@ from typing import List
 from CodeSniffer import CodeSniffer
 
 categories = [
-    'languages',
+    # 'languages',
     'frontend',
-    'backend'
+    'backend',
+    'web-sockets',
+    'server',
+    'general',
+    'authentication',
 ]
 
 def classify(project_path) -> List[str]:

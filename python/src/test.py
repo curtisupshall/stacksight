@@ -1,6 +1,8 @@
-from lambda_function import lambda_handler
+from classify import classify
 
-result = lambda_handler(None, None)
+path_to_repo = '.stacksight/biohubbc-dev'
+tags = classify(path_to_repo)
 
 print('Result:')
-print(result)
+for (library, actual_scores) in tags:
+    print(f"{library}: {actual_scores}")

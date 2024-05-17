@@ -342,37 +342,167 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
             'known_content': r'(?i)use\s+Phoenix\.Controller'
         }
     },
-    'web-stockets': {
-        'socketi',
-        'pusher',
-        'socket.io',
-        'laravel-reverb'
+    'web-sockets': {
+        'socket.io': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"socket.io"\s*":\s*".+?"',
+            'known_content': r'(?i)require\(["\']socket.io["\']\)|import\s+.*\s+from\s+["\']socket.io["\']'
+        },
+        'pusher': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"pusher"\s*":\s*".+?"',
+            'known_content': r'(?i)new\s+Pusher\('
+        },
+        'socketi': {
+            'manifest_file_names': r'package\.json$',  # Assuming it's a Node.js library, otherwise adjust accordingly
+            'package_names': r'"\s*"socketi"\s*":\s*".+?"',  # Placeholder, replace with actual package name if different
+            'known_content': r'(?i)require\(["\']socketi["\']\)|import\s+.*\s+from\s+["\']socketi["\']'
+        }
     },
-    'server': [
-        'caddy',
-        'apache',
-        'nginx',
-        'tomcat',
-    ],
-    'general': [
-        'dot-net',
-        'dot-net-core',
-    ],
-    'authentication': [
-        'keycloak',
-        'laravel-passport',
-        'next-auth',
-        'oauth2',
-        'auth0',
-        'aws-cognito',
-        'firebase-auth', 
-        'okta',
-        'jwt',
-        'saml',
-        'azure-ad',
-        'openid-connect',
-        'apache-shiro',
-    ],
+    'server': {
+        'caddy': {
+            'known_artifacts': [
+                r'.*\/Caddyfile$'
+            ],
+            'content_file_types': r'.*Caddyfile$',
+            'known_content': r'(?i)http:\/\/|https:\/\/'
+        },
+        'apache': {
+            'manifest_file_names': r'httpd\.conf$|\.htaccess$',
+            'known_artifacts': [
+                r'.*\/httpd\.conf$',
+                r'.*\/\.htaccess$'
+            ],
+            'content_file_types': r'.*\.conf$|.*\.htaccess$',
+            'known_content': r'(?i)<VirtualHost|<Directory|RewriteEngine On'
+        },
+        'nginx': {
+            'manifest_file_names': r'nginx\.conf$',
+            'known_artifacts': [
+                r'.*\/nginx\.conf$',
+                r'.*\/sites-available\/.*',
+                r'.*\/sites-enabled\/.*'
+            ],
+            'content_file_types': r'.*\.conf$',
+            'known_content': r'(?i)server {'
+        },
+        'tomcat': {
+            'manifest_file_names': r'server\.xml$',
+            'known_artifacts': [
+                r'.*\/conf\/server\.xml$',
+                r'.*\/webapps\/.*'
+            ],
+            'content_file_types': r'.*\.xml$',
+            'known_content': r'(?i)<Connector|<Host'
+        }
+    },
+    'general': {
+        'dot-net': {
+            'manifest_file_names': r'\.csproj$|\.vbproj$|\.fsproj$',
+            'package_names': r'<PackageReference Include="Microsoft\.NETFramework\..*" Version=".*" />',
+            'known_artifacts': [
+                r'.*\/web\.config$',
+                r'.*\/app\.config$',
+                r'.*\/.*\.csproj$',
+                r'.*\/.*\.vbproj$',
+                r'.*\/.*\.fsproj$'
+            ],
+            'content_file_types': r'.*\.(cs|vb|fs)$',
+            'known_content': r'(?i)using\s+System;|<asp:|<configuration>'
+        },
+        'dot-net-core': {
+            'manifest_file_names': r'\.csproj$|\.fsproj$',
+            'package_names': r'<PackageReference Include="Microsoft\.AspNetCore\..*" Version=".*" />',
+            'known_artifacts': [
+                r'.*\/appsettings\.json$',
+                r'.*\/.*\.csproj$',
+                r'.*\/.*\.fsproj$'
+            ],
+            'content_file_types': r'.*\.(cs|fs)$',
+            'known_content': r'(?i)using\s+Microsoft\.AspNetCore;|WebHost\.CreateDefaultBuilder\('
+        }
+    },
+    'authentication': {
+        'keycloak': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"keycloak-js"\s*":\s*".+?"',
+            'content_file_types': r'.*\.(js|json|py|php)$',
+            'known_content': r'(?i)Keycloak'
+        },
+        'laravel-passport': {
+            'manifest_file_names': r'composer\.json$',
+            'package_names': r'"\s*"laravel\/passport"\s*":\s*".+?"',
+            'content_file_types': r'.*\.php$',
+            'known_content': r'(?i)Passport::routes\('
+        },
+        'next-auth': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"next-auth"\s*":\s*".+?"',
+            # 'known_artifacts': [
+            #     r'.*\/\[...nextauth\]\.js$'
+            # ],
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)NextAuth\('
+        },
+        # 'oauth2': {
+        #     'manifest_file_names': '',
+        #     'package_names': '',
+        #     'known_artifacts': [],
+        #     'content_file_types': r'.*\.(js|php|py)$',
+        #     'known_content': r'(?i)oauth2'
+        # },
+        'auth0': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"auth0-js"\s*":\s*".+?"|\s*"@auth0\/nextjs-auth0"\s*":\s*".+?"',
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)auth0'
+        },
+        'aws-cognito': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"amazon-cognito-identity-js"\s*":\s*".+?"',
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)CognitoUserPool'
+        },
+        'firebase-auth': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"firebase"\s*":\s*".+?"',
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)firebase\.auth\('
+        },
+        'okta': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"@okta\/okta-sdk-nodejs"\s*":\s*".+?"|\s*"@okta\/okta-auth-js"\s*":\s*".+?"',
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)OktaAuth\('
+        },
+        'jwt': {
+            'content_file_types': r'.*\.js$|.*\.php$|.*\.py$',
+            'known_content': r'(?i)jsonwebtoken|JWT'
+        },
+        'saml': {
+            'content_file_types': r'.*\.xml$',
+            'known_content': r'(?i)<saml'
+        },
+        'azure-ad': {
+            'manifest_file_names': r'package\.json$',
+            'package_names': r'"\s*"@azure\/msal-node"\s*":\s*".+?"',
+            'content_file_types': r'.*\.js$',
+            'known_content': r'(?i)Msal\('
+        },
+        'openid-connect': {
+            'content_file_types': r'.*\.js$|.*\.php$',
+            'known_content': r'(?i)openid-client'
+        },
+        'apache-shiro': {
+            'manifest_file_names': r'pom\.xml$',
+            'package_names': r'<artifactId>shiro-core</artifactId>',
+            'known_artifacts': [
+                r'.*\/shiro\.ini$'
+            ],
+            'content_file_types': r'.*\.java$',
+            'known_content': r'(?i)new\s+IniRealm\('
+        }
+    },
     'database': [
         'postgres',
         'couchdb', 

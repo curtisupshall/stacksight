@@ -38,11 +38,11 @@ class CodeSniffer:
         
         # Matches on source code or content associated with the given technology.
         known_content: Optional[str] = None,
-        known_content_weight: Optional[float] = 1.0,
+        known_content_weight: Optional[float] = 2.0,
         
         # Matches on source code file names associated with the given technology.
         content_file_types: Optional[str] = None,
-        content_file_types_weight: Optional[float] = 1.0,
+        content_file_types_weight: Optional[float] = 0.25,
         
         # Matches on known manifest/package manager files associated with the given
         # technology.
