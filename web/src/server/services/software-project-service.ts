@@ -4,6 +4,7 @@ import type { ISoftwareProject, ISoftwareProjectRecord } from "../../types/softw
 import { BaseService } from "./base-service";
 import { revalidatePath } from "next/cache";
 import { SoftwareProjectRepository } from "../repositories/software-project-repository";
+import { IProjectScanRecord } from "../../types/project-scan";
 
 const sqsConfig = {
     region: process.env.AWS_SQS_REGION,
@@ -69,10 +70,17 @@ export class SoftwareProjectService extends BaseService {
         }
 
         // Step 2. Dispatch the scan
-        return this.disaptchProjectScan(softwareProjectRecord)
+        const scanRecord = await this.disaptchProjectScan(softwareProjectRecord);
+
+        // Step 3. Record the current language statistics for the repo
+        const githubResponse = await fetch(`https://api.github.com/repos/${softwareProjectRecord.full_name}/langauges`);
+        const gitHubJson = await githubResponse.json() as Record<string, number>;
+        await this.softwareProjectRepository.addLanguagesToProjectScan(scanRecord.software_project_scan_id, gitHubJson);
+
+        return scanRecord;        
     }
 
-    async disaptchProjectScan(projectRecord: ISoftwareProjectRecord) {
+    async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{
         // Step 1. Persist the scan in the database
         const scanRecord = await this.softwareProjectRepository.createProjectScanRecord(projectRecord.software_project_id)
 
@@ -97,7 +105,9 @@ export class SoftwareProjectService extends BaseService {
             if (err) {
                 throw err;
             }
-        })
+        });
+
+        return scanRecord;
     }
 
     async recordProjectScanTags(softwareProjectScanId: number, tags: string[]) {
