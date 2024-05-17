@@ -40,7 +40,7 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                         <ProjectStatusIndicator status={getProjectStatus(project)} />
                     </Stack>
                 </Box>
-                <ProjectTechStack tags={project.tags} />
+                <ProjectTechStack tags={project.tags ?? []} />
             </section>
         )
     } catch (error) {

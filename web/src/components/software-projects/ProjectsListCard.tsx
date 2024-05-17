@@ -30,7 +30,7 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
                 </Box>
                 {/* <Divider orientation='vertical' /> */}
                 <Stack direction='row' gap={1} flex={3} pt={0.5}>
-                    {props.tags.filter(Boolean).map((tag) => (
+                    {props.tags?.filter(Boolean).map((tag) => (
                         <Chip size='small' label={tag} />
                     ))}
                 </Stack>
