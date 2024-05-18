@@ -1,4 +1,4 @@
-import type { DbConnection } from "../database/db";
+import { getKnex, type DbConnection } from "../database/db";
 import type { ICreateSoftwareProjectRecord, ISoftwareProject, ISoftwareProjectRecord } from "../../types/software-project";
 import { BaseRepository } from "./base-repository";
 import { IProjectScanRecord } from "../../types/project-scan";
@@ -10,31 +10,38 @@ export class SoftwareProjectRepository extends BaseRepository {
     }
 
     async listProjects() {
-        const sqlQuery = `
-            SELECT
-                sp.*,
-                sps.dispatched_at AS last_scan_dispatched_at,
-                sps.completed_at AS last_scan_completed_at,
-                sps.aborted_at AS last_scan_aborted_at,
-                array_agg(spt.tag) FILTER (WHERE spt.tag IS NOT NULL) AS tags
-            FROM software_project sp
-            LEFT JOIN (
-                SELECT
-                    software_project_id,
-                    MAX(dispatched_at) AS max_dispatched_at
-                FROM software_project_scan
-                GROUP BY software_project_id
-            ) latest_sps ON sp.software_project_id = latest_sps.software_project_id
-            LEFT JOIN software_project_scan sps ON sp.software_project_id = sps.software_project_id
-                AND sps.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_scan sps2 ON sps2.software_project_id = sp.software_project_id
-                AND sps2.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_tag spt ON sps2.software_project_scan_id = spt.software_project_scan_id
-            GROUP BY sp.software_project_id, sps.dispatched_at, sps.completed_at, sps.aborted_at
-            ORDER BY sp.created_at DESC
-        `;
+        const knex = getKnex();
+        
+        // Subquery to find the latest dispatch times for each software project
+        const subquery = knex
+            .table('software_project_scan')
+            .select('software_project_id')
+            .max('dispatched_at as max_dispatched_at')
+            .groupBy('software_project_id')
+            .as('latest_sps');
 
-        const response = await this.connection.query(sqlQuery);
+        // Main query
+        const query = knex
+            .table('software_project as sp')
+            .select('sp.*')
+            .select('sps.dispatched_at as last_scan_dispatched_at')
+            .select('sps.completed_at as last_scan_completed_at')
+            .select('sps.aborted_at as last_scan_aborted_at')
+            .select(knex.raw('array_agg(spt.tag) filter (where spt.tag is not null) as tags'))
+            .leftJoin(subquery, 'sp.software_project_id', 'latest_sps.software_project_id')
+            .leftJoin('software_project_scan as sps', function() {
+            this.on('sp.software_project_id', '=', 'sps.software_project_id')
+                .andOn('sps.dispatched_at', '=', 'latest_sps.max_dispatched_at');
+            })
+            .leftJoin('software_project_scan as sps2', function() {
+            this.on('sps2.software_project_id', '=', 'sp.software_project_id')
+                .andOn('sps2.dispatched_at', '=', 'latest_sps.max_dispatched_at');
+            })
+            .leftJoin('software_project_tag as spt', 'sps2.software_project_scan_id', 'spt.software_project_scan_id')
+            .groupBy('sp.software_project_id', 'sps.dispatched_at', 'sps.completed_at', 'sps.aborted_at')
+            .orderBy('sp.created_at', 'desc');
+
+        const response = await this.connection.knex(query);
 
         return response.rows;
     }
