@@ -9,70 +9,67 @@ export class SoftwareProjectRepository extends BaseRepository {
         super(connection);
     }
 
-    async listProjects() {
+    _getListProjectsQuery() {
         const knex = getKnex();
-        
-        // Subquery to find the latest dispatch times for each software project
-        const subquery = knex
-            .table('software_project_scan')
-            .select('software_project_id')
-            .max('dispatched_at as max_dispatched_at')
-            .groupBy('software_project_id')
-            .as('latest_sps');
 
-        // Main query
-        const query = knex
-            .table('software_project as sp')
+        // Define the CTE for the latest scans of each project
+        const latestScans = knex('software_project_scan')
+            .select('software_project_id', knex.raw('MAX(dispatched_at) as max_dispatched_at'))
+            .groupBy('software_project_id')
+            .as('latest_scans');
+
+        // CTE for details of the latest scans
+        const latestScanDetails = knex('software_project_scan as sps')
+            .select('sps.software_project_id', 'sps.software_project_scan_id', 'sps.dispatched_at', 'sps.completed_at', 'sps.aborted_at')
+            .join(latestScans, function() {
+                this.on('sps.software_project_id', '=', 'latest_scans.software_project_id')
+                    .andOn('sps.dispatched_at', '=', 'latest_scans.max_dispatched_at');
+            })
+            .as('latest_scan_details');
+
+        // CTE for tags associated with the latest scans
+        const tags = knex('software_project_tag as spt')
+            .select('spt.software_project_scan_id')
+            .select(knex.raw('array_agg(distinct spt.tag) filter (where spt.tag is not null) as tags'))
+            .join(latestScanDetails, 'spt.software_project_scan_id', '=', 'latest_scan_details.software_project_scan_id')
+            .groupBy('spt.software_project_scan_id')
+            .as('tags');
+
+        // CTE for languages associated with the latest scans
+        const languages = knex('software_project_language as spl')
+            .select('spl.software_project_scan_id')
+            .select(knex.raw('json_agg(json_build_object(\'language\', spl.language, \'num_lines\', spl.num_lines)) as languages'))
+            .join(latestScanDetails, 'spl.software_project_scan_id', '=', 'latest_scan_details.software_project_scan_id')
+            .groupBy('spl.software_project_scan_id')
+            .as('languages');
+
+        // Final query assembling all the pieces
+        const projects = knex('software_project as sp')
             .select('sp.*')
-            .select('sps.dispatched_at as last_scan_dispatched_at')
-            .select('sps.completed_at as last_scan_completed_at')
-            .select('sps.aborted_at as last_scan_aborted_at')
-            .select(knex.raw('array_agg(spt.tag) filter (where spt.tag is not null) as tags'))
-            .leftJoin(subquery, 'sp.software_project_id', 'latest_sps.software_project_id')
-            .leftJoin('software_project_scan as sps', function() {
-            this.on('sp.software_project_id', '=', 'sps.software_project_id')
-                .andOn('sps.dispatched_at', '=', 'latest_sps.max_dispatched_at');
-            })
-            .leftJoin('software_project_scan as sps2', function() {
-            this.on('sps2.software_project_id', '=', 'sp.software_project_id')
-                .andOn('sps2.dispatched_at', '=', 'latest_sps.max_dispatched_at');
-            })
-            .leftJoin('software_project_tag as spt', 'sps2.software_project_scan_id', 'spt.software_project_scan_id')
-            .groupBy('sp.software_project_id', 'sps.dispatched_at', 'sps.completed_at', 'sps.aborted_at')
+            .select('latest_scan_details.dispatched_at as last_scan_dispatched_at')
+            .select('latest_scan_details.completed_at as last_scan_completed_at')
+            .select('latest_scan_details.aborted_at as last_scan_aborted_at')
+            .select('tags.tags')
+            .select('languages.languages')
+            .leftJoin(latestScanDetails, 'sp.software_project_id', 'latest_scan_details.software_project_id')
+            .leftJoin(tags, 'latest_scan_details.software_project_scan_id', 'tags.software_project_scan_id')
+            .leftJoin(languages, 'latest_scan_details.software_project_scan_id', 'languages.software_project_scan_id')
             .orderBy('sp.created_at', 'desc');
 
-        const response = await this.connection.knex(query);
+        return projects;
+    }
+
+    async listProjects() {
+        const response = await this.connection.knex(this._getListProjectsQuery());
 
         return response.rows;
     }
 
     async getProjectById(softwareProjectId: number): Promise<ISoftwareProject | undefined> {
-        const sqlQuery = `
-            SELECT
-                sp.*,
-                sps.dispatched_at AS last_scan_dispatched_at,
-                sps.completed_at AS last_scan_completed_at,
-                sps.aborted_at AS last_scan_aborted_at,
-                array_agg(spt.tag) FILTER (WHERE spt.tag IS NOT NULL) AS tags
-            FROM software_project sp
-            LEFT JOIN (
-                SELECT
-                    software_project_id,
-                    MAX(dispatched_at) AS max_dispatched_at
-                FROM software_project_scan
-                GROUP BY software_project_id
-            ) latest_sps ON sp.software_project_id = latest_sps.software_project_id
-            LEFT JOIN software_project_scan sps ON sp.software_project_id = sps.software_project_id
-                AND sps.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_scan sps2 ON sps2.software_project_id = sp.software_project_id
-                AND sps2.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_tag spt ON sps2.software_project_scan_id = spt.software_project_scan_id
-            WHERE sp.software_project_id = $1
-            GROUP BY sp.software_project_id, sps.dispatched_at, sps.completed_at, sps.aborted_at
-            ORDER BY sp.created_at DESC
-        `;
+        const query = this._getListProjectsQuery()
+            .where('sp.software_project_id', softwareProjectId);
 
-        const response = await this.connection.query(sqlQuery, [softwareProjectId]);
+        const response = await this.connection.knex(query);
 
         return response.rows[0];
     }
@@ -86,33 +83,12 @@ export class SoftwareProjectRepository extends BaseRepository {
     }
 
     async getProjectByFullNameAndBranchName(repoFullName: string, branchName: string): Promise<ISoftwareProject | undefined> {
-        const sqlQuery = `
-            SELECT
-                sp.*,
-                sps.dispatched_at AS last_scan_dispatched_at,
-                sps.completed_at AS last_scan_completed_at,
-                sps.aborted_at AS last_scan_aborted_at,
-                array_agg(spt.tag) FILTER (WHERE spt.tag IS NOT NULL) AS tags
-            FROM software_project sp
-            LEFT JOIN (
-                SELECT
-                    software_project_id,
-                    MAX(dispatched_at) AS max_dispatched_at
-                FROM software_project_scan
-                GROUP BY software_project_id
-            ) latest_sps ON sp.software_project_id = latest_sps.software_project_id
-            LEFT JOIN software_project_scan sps ON sp.software_project_id = sps.software_project_id
-                AND sps.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_scan sps2 ON sps2.software_project_id = sp.software_project_id
-                AND sps2.dispatched_at = latest_sps.max_dispatched_at
-            LEFT JOIN software_project_tag spt ON sps2.software_project_scan_id = spt.software_project_scan_id
-            WHERE sp.full_name ILIKE $1
-            AND sp.branch_name ILIKE $2
-            GROUP BY sp.software_project_id, sps.dispatched_at, sps.completed_at, sps.aborted_at
-            ORDER BY sp.created_at DESC
-        `;
+        
+        const query = this._getListProjectsQuery()
+            .whereILike('sp.full_name', repoFullName)
+            .andWhereILike('sp.branch_name', branchName);
 
-        const response = await this.connection.query(sqlQuery, [repoFullName, branchName]);
+        const response = await this.connection.knex(query);
 
         return response.rows[0];
     }

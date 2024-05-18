@@ -25,7 +25,9 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
                         <ProjectStatusIndicator status={status} />
                         <ProjectBranch {...props} />
                     </Stack>
-                    <Typography variant='body2'>{props.description}</Typography>
+                    <Typography variant='body2'>
+                        {props.description}
+                    </Typography>
                     <ProjectScanStatus project={props} />
                 </Box>
                 {/* <Divider orientation='vertical' /> */}
