@@ -7,7 +7,6 @@ interface IProjectsListProps {
 }
 
 export default function ProjectsList(props: IProjectsListProps) {
-    console.log('Project:', props)
     return (
         <Stack component='ul' gap={2} sx={{ p: 0, m: 0 }}>
             {props.projects.map((project) => {

@@ -1,4 +1,4 @@
-import { SQS, SendMessageCommandOutput } from "@aws-sdk/client-sqs";
+import { SQS, SQSClient, SendMessageCommand, SendMessageCommandOutput, SendMessageRequest } from "@aws-sdk/client-sqs";
 import type { DbConnection } from "../database/db";
 import type { ISoftwareProject, ISoftwareProjectRecord } from "../../types/software-project";
 import { BaseService } from "./base-service";
@@ -7,9 +7,11 @@ import { SoftwareProjectRepository } from "../repositories/software-project-repo
 import { IProjectScanRecord } from "../../types/project-scan";
 
 const sqsConfig = {
-    region: process.env.AWS_SQS_REGION,
-    accessKeyId: process.env.AWS_SQS_USER_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SQS_USER_SECRET_KEY
+    region: process.env.AWS_SQS_REGION ?? '',
+    credentials: {
+        accessKeyId: process.env.AWS_SQS_USER_ACCESS_KEY ?? '',
+        secretAccessKey: process.env.AWS_SQS_USER_SECRET_KEY ?? ''
+    }
 }
 
 export class SoftwareProjectService extends BaseService {
@@ -70,22 +72,21 @@ export class SoftwareProjectService extends BaseService {
         }
 
         // Step 2. Dispatch the scan
-        const scanRecord = await this.disaptchProjectScan(softwareProjectRecord);
-
-        // Step 3. Record the current language statistics for the repo
-        const githubResponse = await fetch(`https://api.github.com/repos/${softwareProjectRecord.full_name}/langauges`);
-        const gitHubJson = await githubResponse.json() as Record<string, number>;
-        await this.softwareProjectRepository.addLanguagesToProjectScan(scanRecord.software_project_scan_id, gitHubJson);
-
-        return scanRecord;        
+        return await this.disaptchProjectScan(softwareProjectRecord);
     }
 
     async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{
         // Step 1. Persist the scan in the database
         const scanRecord = await this.softwareProjectRepository.createProjectScanRecord(projectRecord.software_project_id)
 
-        // Step 2. Dispatch the scan to the repo scan queue
-        const sqs = new SQS(sqsConfig);
+        // Step 2. Record the current language statistics for the repo
+        const githubResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/languages`);
+        const gitHubJson = await githubResponse.json() as Record<string, number>;
+        await this.softwareProjectRepository.addLanguagesToProjectScan(scanRecord.software_project_scan_id, gitHubJson);
+
+
+        // Step 3. Dispatch the scan to the repo scan queue
+        const sqsClient = new SQSClient(sqsConfig);
         if (!process.env.AWS_REPO_SCAN_QUEUE_URL) {
             throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
         }
@@ -95,17 +96,18 @@ export class SoftwareProjectService extends BaseService {
             softwareProjectScanId: scanRecord.software_project_scan_id,
             repoFullName: `${projectRecord.owner_name}/${projectRecord.project_name}`,
             branchName: projectRecord.branch_name
-        }
-        const messageParams = {
+        }        
+        const messageRequest: SendMessageRequest = {
+            QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL,
             MessageBody: JSON.stringify(messageBody),
-            QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL
         }
 
-        sqs.sendMessage(messageParams, (err: any, data?: SendMessageCommandOutput | undefined) => {
-            if (err) {
-                throw err;
-            }
-        });
+        try {
+            const sqsResponse = await sqsClient.send(new SendMessageCommand(messageRequest));
+            console.log(sqsResponse);
+        } catch (error: any) {
+            throw new Error('Failed to dispatch message to SQS:', error);
+        }
 
         return scanRecord;
     }

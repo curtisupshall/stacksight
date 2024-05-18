@@ -176,6 +176,6 @@ export class SoftwareProjectRepository extends BaseRepository {
             INSERT INTO software_project_language
                 (software_project_scan_id, language, num_lines)
             VALUES
-                ${queryValues.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(',')}
+                ${queryValues.map((_, i) => `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`).join(',')}
         `, queryValues.flat());
     }}
