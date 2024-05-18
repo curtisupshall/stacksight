@@ -1,6 +1,10 @@
-import pg, { Client, Pool } from 'pg'
+import xx, { knex, Knex } from 'knex';
+import pg, { Pool } from 'pg'
 
-const DB_CONNECTION_CONFIG = Object.freeze({
+export const DB_CLIENT = 'pg';
+
+// const DB_CONNECTION_CONFIG = Object.freeze({ // TODO revert?
+    const DB_CONNECTION_CONFIG = ({
     host: process.env.POSTGRES_DATABASE_HOST,
     user: process.env.POSTGRES_USER,
     port: process.env.POSTGRES_PORT ? Number(process.env.POSTGRES_PORT) : undefined,
@@ -113,4 +117,37 @@ export class DbConnection {
 
         return this._client.query<T>(text, values ?? []);
     };
+
+    /**
+     * Performs a knex query against this connection, returning the results.
+     *
+     * @template T
+     * @param {Knex.QueryBuilder} queryBuilder SQL query builder object
+     * @throws {Error} if the connection is not open
+     * @return {*}  {Promise<pg.QueryResult<T>>}
+     */
+    async knex<T extends pg.QueryResultRow = any>(
+        queryBuilder: Knex.QueryBuilder,
+    ): Promise<pg.QueryResult<T>> {
+        if (!this._client || !this._isOpen) {
+            throw Error('Database connection was not open');
+        }
+
+        const { sql, bindings } = queryBuilder.toSQL().toNative();
+        return this._client.query<T>(sql, bindings as any);
+    };
 }
+
+/**
+ * Get a Knex instance.
+ *
+ * @template TRecord
+ * @template TResult
+ * @return {*}  {Knex<TRecord,TResult>}
+ */
+export const getKnex = <TRecord extends Record<string, any> = any, TResult = Record<string, any>[]>(): Knex<
+  TRecord,
+  TResult
+> => {
+  return knex<TRecord, TResult>({ client: DB_CLIENT });
+};
