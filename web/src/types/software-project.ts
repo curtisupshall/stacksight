@@ -1,3 +1,4 @@
+import { IProjectLanguage } from "./project-scan";
 
 export interface ISoftwareProjectRecord {
     software_project_id: number;
@@ -14,6 +15,7 @@ export interface ISoftwareProject extends ISoftwareProjectRecord {
     last_scan_completed_at: string | null;
     last_scan_aborted_at: string | null;
     tags: string[] | null;
+    languages: IProjectLanguage[] | null;
 }
 
 export type ICreateSoftwareProjectRecord = Pick<ISoftwareProjectRecord,

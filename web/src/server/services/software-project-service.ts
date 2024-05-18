@@ -1,4 +1,4 @@
-import { SQS, SQSClient, SendMessageCommand, SendMessageCommandOutput, SendMessageRequest } from "@aws-sdk/client-sqs";
+import { SQSClient, SendMessageCommand, SendMessageCommandOutput, SendMessageRequest } from "@aws-sdk/client-sqs";
 import type { DbConnection } from "../database/db";
 import type { ISoftwareProject, ISoftwareProjectRecord } from "../../types/software-project";
 import { BaseService } from "./base-service";

@@ -9,6 +9,7 @@ import ProjectStatusIndicator from "../../../components/software-projects/Projec
 import ProjectScanStatus from "../../../components/software-projects/ProjectScanStatus";
 import { getProjectStatus } from "../../../utils/Utils";
 import ProjectTechStack from "../../../components/tech-stack/ProjectTechStackList";
+import ProjectLanguages from "../../../components/tech-stack/ProjectLanguages";
 
 export default async function SoftwareProjectPage({ params }: { params: { softwareProjectId: string }}) {
     
@@ -40,6 +41,7 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                         <ProjectStatusIndicator status={getProjectStatus(project)} />
                     </Stack>
                 </Box>
+                <ProjectLanguages languages={project.languages ?? []} />
                 <ProjectTechStack tags={project.tags ?? []} />
             </section>
         )

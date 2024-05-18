@@ -12,6 +12,12 @@ export interface IProjectLanguageRecord {
     updated_at: string | null;
 }
 
+export type IProjectLanguage = Pick<IProjectLanguageRecord,
+    | 'langauge'
+    | 'num_lines'
+>
+
+
 export type ICreateProjectLanguageRecord = Pick<IProjectLanguageRecord,
     | 'software_project_scan_id'
     | 'langauge'
