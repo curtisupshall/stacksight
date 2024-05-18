@@ -6,20 +6,20 @@ export interface IProjectScanRecord {
 export interface IProjectLanguageRecord {
     software_project_language_id: number;
     software_project_scan_id: number;
-    langauge: string;
+    language: string;
     num_lines: number;
     created_at: string;
     updated_at: string | null;
 }
 
 export type IProjectLanguage = Pick<IProjectLanguageRecord,
-    | 'langauge'
+    | 'language'
     | 'num_lines'
 >
 
 
 export type ICreateProjectLanguageRecord = Pick<IProjectLanguageRecord,
     | 'software_project_scan_id'
-    | 'langauge'
+    | 'language'
     | 'num_lines'
 >

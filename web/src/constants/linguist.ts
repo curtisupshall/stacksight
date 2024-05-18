@@ -1,4 +1,19 @@
-export const languages = {
+export interface LinguistLanguage {
+    type: string
+    tm_scope: string
+    ace_mode: string
+    language_id: number
+    color?: string
+    // aliases?: string[]
+    // codemirror_mode?: string
+    // codemirror_mime_type?: string
+    // interpreters?: string[]
+    // extensions?: string[]
+    // group?: string
+    // filenames?: string[]
+}
+
+export const languages: Record<string, any> = {
     "1C Enterprise": {
         "type": "programming",
         "color": "#814CCC",
