@@ -19,7 +19,7 @@ export default function ProjectTechStack(props: IProjectTechStackProps) {
             {categories.map((category) => {
                 return (
                     <li>
-                        <Typography variant='h5'>{category.name}</Typography>
+                        <Typography variant='h6'>{category.name}</Typography>
                         <ul>
                             {category.libraries.map((library) => {
                                 return (

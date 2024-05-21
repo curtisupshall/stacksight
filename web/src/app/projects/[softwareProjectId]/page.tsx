@@ -1,6 +1,6 @@
 'use server'
 
-import { Box, Link, List, ListItem, Stack, Typography } from "@mui/material";
+import { Box, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
 import { DbConnection } from "../../../server/database/db";
 import { SoftwareProjectService } from "../../../server/services/software-project-service";
 import { notFound } from "next/navigation";
@@ -41,8 +41,17 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                         <ProjectStatusIndicator status={getProjectStatus(project)} />
                     </Stack>
                 </Box>
-                <ProjectLanguages languages={project.languages ?? []} />
-                <ProjectTechStack tags={project.tags ?? []} />
+                <Grid container columns={2}>
+                    <Grid item xs={1}>
+                        
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Typography variant='h5'>Languages</Typography>
+                        <ProjectLanguages languages={project.languages ?? []} />
+                        <Typography variant='h5'>Frameworks</Typography>
+                        <ProjectTechStack tags={project.tags ?? []} />
+                    </Grid>
+                </Grid>
             </section>
         )
     } catch (error) {

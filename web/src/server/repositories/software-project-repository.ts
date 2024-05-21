@@ -38,7 +38,7 @@ export class SoftwareProjectRepository extends BaseRepository {
         // CTE for languages associated with the latest scans
         const languages = knex('software_project_language as spl')
             .select('spl.software_project_scan_id')
-            .select(knex.raw('json_agg(json_build_object(\'language\', spl.language, \'num_lines\', spl.num_lines)) as languages'))
+            .select(knex.raw('json_agg(json_build_object(\'language_name\', spl.language_name, \'num_lines\', spl.num_lines)) as languages'))
             .join(latestScanDetails, 'spl.software_project_scan_id', '=', 'latest_scan_details.software_project_scan_id')
             .groupBy('spl.software_project_scan_id')
             .as('languages');
@@ -157,7 +157,7 @@ export class SoftwareProjectRepository extends BaseRepository {
 
         await this.connection.query(`
             INSERT INTO software_project_language
-                (software_project_scan_id, language, num_lines)
+                (software_project_scan_id, language_name, num_lines)
             VALUES
                 ${queryValues.map((_, i) => `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`).join(',')}
         `, queryValues.flat());

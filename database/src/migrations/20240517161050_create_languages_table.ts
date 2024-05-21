@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<void> {
         CREATE TABLE "software_project_language" (
             "software_project_language_id"   SERIAL PRIMARY KEY,
             "software_project_scan_id"       INTEGER NOT NULL,
-            "language"                       VARCHAR(255),
+            "language_name"                  VARCHAR(255),
             "num_lines"                      INTEGER,
             "created_at"                     TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "updated_at"                     TIMESTAMP(3),
