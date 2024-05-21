@@ -10,3 +10,5 @@
 // export const config = {
 //   matcher: '/about/:path*',
 // }
+
+export { auth as middleware } from "@/auth"
