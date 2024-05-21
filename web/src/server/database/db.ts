@@ -1,30 +1,8 @@
-import xx, { knex, Knex } from 'knex';
+import { knex, Knex } from 'knex';
 import pg, { Pool } from 'pg'
+import { getDbPool, initializeDbPool } from './pool';
 
 export const DB_CLIENT = 'pg';
-
-// const DB_CONNECTION_CONFIG = Object.freeze({ // TODO revert?
-    const DB_CONNECTION_CONFIG = ({
-    host: process.env.POSTGRES_DATABASE_HOST,
-    user: process.env.POSTGRES_USER,
-    port: process.env.POSTGRES_PORT ? Number(process.env.POSTGRES_PORT) : undefined,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB
-});
-
-let _dbPool: pg.Pool | undefined;
-
-const initializeDbPool = () => {
-    if (_dbPool) {
-        return;
-    }
-
-    _dbPool = new Pool(DB_CONNECTION_CONFIG)
-}
-
-export const getDbPool = function (): pg.Pool | undefined {
-    return _dbPool;
-  };
 
 export class DbConnection {
     _client: pg.PoolClient | undefined = undefined;
