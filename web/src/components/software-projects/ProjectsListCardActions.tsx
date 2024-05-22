@@ -4,7 +4,7 @@ import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import type { ISoftwareProject } from "../../types/software-project";
 import { MoreVert } from "@mui/icons-material";
 import { useState } from "react";
-import { scanProject } from "../../app/projects/actions";
+import { scanProject } from "../../server/actions/projectActions";
 
 export default function ProjectsListCardActions(props: ISoftwareProject) {
     const [anchorEl, setAnchorEl] = useState<EventTarget | null>(null);
