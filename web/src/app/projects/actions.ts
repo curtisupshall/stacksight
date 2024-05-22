@@ -23,9 +23,6 @@ export async function addNewProject(formData: FormData) {
         if (!repoFullName) {
             throw new Error('A repo name is required.')
         }
-        if (!branchName) {
-            throw new Error('A git branch name is required.')
-        }
 
         await softwareProjectService.addNewProject(repoFullName, branchName);
 

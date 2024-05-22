@@ -35,23 +35,24 @@ export class SoftwareProjectService extends BaseService {
         return this.softwareProjectRepository.getProjectRecordById(softwareProjectId);
     }
 
-    async addNewProject(repoFullName: string, branchName: string): Promise<ISoftwareProjectRecord> {
-        // Step 1. Check if the project is already added. If it has been, throw an error
-        const project = await this.softwareProjectRepository.getProjectByFullNameAndBranchName(repoFullName, branchName);
+    async addNewProject(repoFullName: string, branchName: string | null): Promise<ISoftwareProjectRecord> {
+        // Step 1. Fetch information about the repo from GitHub
+        const githubResponse = await fetch(`https://api.github.com/repos/${repoFullName}`);
+        const gitHubJson = await githubResponse.json() as any;
+        const branchOrDefaultName = branchName ?? gitHubJson.default_branch
+        
+        // Step 2. Check if the project is already added. If it has been, throw an error
+        const project = await this.softwareProjectRepository.getProjectByFullNameAndBranchName(repoFullName, branchOrDefaultName);
 
         if (project) {
             throw new Error('Project has already been added.')
         }
 
-        // Step 2. Fetch information about the repo from GitHub
-        const githubResponse = await fetch(`https://api.github.com/repos/${repoFullName}`);
-        const gitHubJson = await githubResponse.json() as any;
-
         // Step 3. Persist the new project in the database
         const projectRecord = await this.softwareProjectRepository.addNewProject({
             full_name: gitHubJson.full_name,
             owner_name: gitHubJson.owner.login,
-            branch_name: branchName,
+            branch_name: branchOrDefaultName,
             project_name: gitHubJson.name,
             description: gitHubJson.description,
             html_url: gitHubJson.html_url

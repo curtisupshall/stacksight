@@ -441,7 +441,7 @@ TECH_STACK_PATTERNS_BY_CATEGORY = {
             # 'known_artifacts': [
             #     r'.*\/\[...nextauth\]\.js$'
             # ],
-            'content_file_types': r'.*\.js$',
+            'content_file_types': r'.*\.(js|ts)$',
             'known_content': r'(?i)NextAuth\('
         },
         # 'oauth2': {
