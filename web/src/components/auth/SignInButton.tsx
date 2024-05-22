@@ -1,14 +1,10 @@
-import { signIn } from "@/auth.ts"
+import { handleSignIn } from "@/server/actions/authActions"
+import { MenuItem } from "@mui/material"
  
 export default function SignInButton() {
   return (
-    <form
-      action={async () => {
-        "use server"
-        await signIn("github")
-      }}
-    >
-      <button type="submit">Signin with GitHub</button>
+    <form action={handleSignIn}>
+      <MenuItem component='button' type='submit' sx={{ width: '100%' }}>Sign in with GitHub</MenuItem>
     </form>
   )
 }

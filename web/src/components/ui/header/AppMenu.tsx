@@ -1,3 +1,5 @@
+'use client'
+
 import { Avatar, Badge, Button, Menu, MenuItem, Typography } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from "next/link";
@@ -8,6 +10,9 @@ import { auth } from "@/auth"
 import { Session } from "next-auth";
 import { GetServerSidePropsContext } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
+import UserAvatar from "@/components/auth/UserAvatar";
+import SignInButton from "@/components/auth/SignInButton";
+import SignOutButton from "@/components/auth/SignOutButton";
 
 interface IAppMenuProps {
     session: Session | undefined
@@ -15,11 +20,12 @@ interface IAppMenuProps {
 
 const AppMenu = (props: IAppMenuProps) => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+    
+    const session = useSession();
+    console.log('session:', session)
 
-    const { session } = props;
-
-    const isSignedIn = Boolean(session?.user)
-    const avatarSrc = session?.user?.image ?? undefined
+    const isSignedIn = session.status === 'authenticated'
+    const avatarSrc = session.data?.user?.image ?? undefined
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -71,12 +77,16 @@ const AppMenu = (props: IAppMenuProps) => {
                         //     </Badge>
                         // </MenuItem>),
                         // (<MenuItem onClick={handleClose} component={Link} href='/account' key='account'>Account</MenuItem>),
-                        (<MenuItem onClick={handleLogout} key='logout'>Log out</MenuItem>),
+                        (
+                            <SignOutButton key='sign-out-button' />
+                        ),
                         
                     ]
                 ) : (
                     [
-                        <MenuItem onClick={handleSignIn} key='signin'>Sign in</MenuItem>,
+                        (
+                            <SignInButton key='sign-in-button' />
+                        ),
                     ]
                 )}
             </Menu>

@@ -1,14 +1,10 @@
-import { signOut } from "@/auth"
+import { handleSignOut } from "@/server/actions/authActions"
+import { MenuItem } from "@mui/material"
  
-export default function SignOut() {
+export default function SignOutButton() {
   return (
-    <form
-      action={async () => {
-        "use server"
-        await signOut()
-      }}
-    >
-      <button type="submit">Sign Out</button>
+    <form action={handleSignOut}>
+      <MenuItem component='button' type='submit' sx={{ width: '100%' }}>Sign out</MenuItem>
     </form>
   )
 }
