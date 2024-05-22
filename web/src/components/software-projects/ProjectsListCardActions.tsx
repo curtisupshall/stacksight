@@ -7,7 +7,7 @@ import { useState } from "react";
 import { scanProject } from "../../server/actions/projectActions";
 
 export default function ProjectsListCardActions(props: ISoftwareProject) {
-    const [anchorEl, setAnchorEl] = useState<EventTarget | null>(null);
+    const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
     const handleClose = () => {
         setAnchorEl(null);

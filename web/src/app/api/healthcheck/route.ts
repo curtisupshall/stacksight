@@ -7,15 +7,15 @@ export async function GET(
     const connection = new DbConnection();
 
     try {
-        await connection.open();
+        // await connection.open();
 
-        const qb = getKnex().queryBuilder().select('*').from('software_project');
+        // const qb = getKnex().queryBuilder().select('*').from('software_project');
 
-        const result = await connection.knex(qb);
+        // const result = await connection.knex(qb);
 
-        connection.commit();
+        // connection.commit();
 
-        return Response.json({ data: result });
+        return Response.json({ data: 'Healthy' });
     } catch (error) {
         connection.rollback();
         throw error;

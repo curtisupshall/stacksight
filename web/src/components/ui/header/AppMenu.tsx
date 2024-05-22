@@ -14,15 +14,10 @@ import UserAvatar from "@/components/auth/UserAvatar";
 import SignInButton from "@/components/auth/SignInButton";
 import SignOutButton from "@/components/auth/SignOutButton";
 
-interface IAppMenuProps {
-    session: Session | undefined
-}
-
-const AppMenu = (props: IAppMenuProps) => {
+const AppMenu = () => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     
     const session = useSession();
-    console.log('session:', session)
 
     const isSignedIn = session.status === 'authenticated'
     const avatarSrc = session.data?.user?.image ?? undefined
@@ -31,15 +26,15 @@ const AppMenu = (props: IAppMenuProps) => {
         setAnchorEl(null);
     }
 
-    const handleSignIn = () => {
-        signIn('github')
-        handleClose();
-    }
+    // const handleSignIn = () => {
+    //     signIn('github')
+    //     handleClose();
+    // }
 
-    const handleLogout = () => {
-        signOut();
-        handleClose()
-    }
+    // const handleLogout = () => {
+    //     signOut();
+    //     handleClose()
+    // }
 
     return (
         <>
