@@ -23,7 +23,7 @@ export default async function ProjectsPage() {
 
         return (
             <section>
-                <Typography variant='h3' mb={6}><strong>My Projects</strong></Typography>
+                <Typography variant='h3' mb={6}><strong>Projects</strong></Typography>
                 <Box mb={2}>
                     <DispatchProjectForm />
                 </Box>

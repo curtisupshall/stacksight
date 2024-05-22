@@ -5,7 +5,12 @@ import os
 def download_and_unzip_repo(fullname, branch='master', destination_folder='.stacksight/'):
     # Create the folder used to store the repo
     if os.path.exists(destination_folder):
-        os.rmdir(destination_folder)
+        # Recursively delete everything
+        for root, dirs, files in os.walk(destination_folder, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
     else:
         os.makedirs(destination_folder)
 
