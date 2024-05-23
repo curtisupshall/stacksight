@@ -13,7 +13,7 @@ const Search = (props: ISearchProps) => {
     }
 
     return (
-        <form style={{ width: '100%' }} onSubmit={handleSubmit}>
+        <form style={{ flex: 1 }} onSubmit={handleSubmit}>
             <TextField
                 placeholder='Search projects or technologies'
                 name='app-search'

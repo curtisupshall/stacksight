@@ -1,14 +1,11 @@
 'use server'
 
-import { Box, Link, List, ListItem, Stack, Typography } from "@mui/material";
-// import { db } from "../../database/db";
-import { useEffect } from "react";
-import { DbConnection } from "../../server/database/db";
+import { Box, Typography } from "@mui/material";
 import type { ISoftwareProject } from "../../types/software-project";
-import type { ApiResponse } from "../../types/api";
 import DispatchProjectForm from "../../components/AddProjectForm";
 import ProjectsList from "../../components/software-projects/ProjectsList";
 import { SoftwareProjectService } from "../../server/services/software-project-service";
+import { DbConnection } from "@/server/database/db";
 
 export default async function ProjectsPage() {
     const connection = new DbConnection();

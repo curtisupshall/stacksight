@@ -1,5 +1,5 @@
-import { Box, Stack, Typography } from "@mui/material"
-import Link from "next/link";
+import { Box, Breadcrumbs, Link, Stack, Typography } from "@mui/material"
+import NextLink from "next/link";
 
 const AppLogo = () => {
     return (
@@ -7,23 +7,27 @@ const AppLogo = () => {
             direction='row'
             gap={1}
             alignItems='center'
-            component={Link}
-            href='/projects'
             sx={{
                 color: 'inherit',
-                textDecoration: 'none'
+                textDecoration: 'none',
             }}
         >
-            <img src={`/logo.png`} style={{ width: '56px', height: 'auto'  }} />
-            <Typography
-                variant='h1'
-                fontSize={'2rem'}
-                fontWeight={500}
-                fontFamily={`"Red Hat Display", sans-serif`}
-                lineHeight='unset'
-            >
-                StackSight
-            </Typography>
+            <Breadcrumbs aria-label="breadcrumb">
+                <NextLink href={'/'}>
+                    <img src={`/logo.png`} style={{ width: '48px', height: 'auto'  }} />
+                </NextLink>
+                <Link underline="hover" color="inherit" href="/">
+                    Projects
+                </Link>
+                <Link
+                    underline="hover"
+                    color="inherit"
+                    href="/material-ui/getting-started/installation/"
+                >
+                    bcgov
+                </Link>
+                <Typography color="text.primary">biohubbc</Typography>
+            </Breadcrumbs>
         </Stack>
     );
 }

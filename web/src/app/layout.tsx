@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from 'react'
 import '../styles/main.scss'
-import { Box, ThemeProvider } from '@mui/material'
+import { Box, Stack, ThemeProvider } from '@mui/material'
 import appTheme from '../theme/appTheme'
 import Header from '../components/ui/header/Header'
 import { SessionProvider } from 'next-auth/react'
@@ -20,19 +20,15 @@ export default async (props: PropsWithChildren) => {
 					rel="stylesheet"
 					href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap"
 				/>
-				<link
-					rel="stylesheet"
-					href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap"
-				/>
 				<title>StackSight</title>
 			</head>
 			<body>
 				<ThemeProvider theme={appTheme}>
 					<SessionProvider session={session}>
-						<Box component='main' id='root' minHeight='100vh' display='flex' flexDirection='column'>
+						<Stack component='main' id='root' minHeight='100vh'>
 							<Header maxWidth='xl' disableGutters sx={{ px: 8 }} />
 							{props.children}
-						</Box>
+						</Stack>
 					</SessionProvider>
 				</ThemeProvider>
 			</body>

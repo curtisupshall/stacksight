@@ -35,7 +35,7 @@ export class SoftwareProjectService extends BaseService {
         return this.softwareProjectRepository.getProjectRecordById(softwareProjectId);
     }
 
-    async addNewProject(repoFullName: string, branchName: string | null): Promise<ISoftwareProjectRecord> {
+    async addNewProject(repoFullName: string, branchName: string | ''): Promise<ISoftwareProjectRecord> {
         // Step 1. Fetch information about the repo from GitHub
         const githubResponse = await fetch(`https://api.github.com/repos/${repoFullName}`);
         const gitHubJson = await githubResponse.json() as any;

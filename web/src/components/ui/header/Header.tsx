@@ -11,11 +11,11 @@ const Header = (props: ContainerProps) => {
     const showFavorites = true;
     const showSearch = true;
     const stickyHeader = false;
-    const paperProps = stickyHeader ? { position: 'sticky', top: 0, zIndex: 10 } : {}
+    const headerProps = stickyHeader ? { position: 'sticky', top: 0, zIndex: 10 } : {}
 
     return (
         <>
-            <Paper elevation={0} square sx={{ mb: 4, ...paperProps }}>
+            <Box sx={{ mb: 0, ...headerProps }}>
                 <Container {...props}>
                     <Box py={2} display='flex' alignItems='center' justifyContent='space-between' gap={4}>
                         <AppLogo />
@@ -42,7 +42,7 @@ const Header = (props: ContainerProps) => {
                     )} */}
                     {/*<Divider orientation="horizontal" />*/}
                 </Container>
-            </Paper>
+            </Box>
         </>
     );
 }
