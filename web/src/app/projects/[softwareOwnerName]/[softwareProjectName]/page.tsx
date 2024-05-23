@@ -11,9 +11,10 @@ import { getProjectStatus } from "../../../../utils/Utils";
 import ProjectTechStack from "../../../../components/tech-stack/ProjectTechStackList";
 import ProjectLanguages from "../../../../components/tech-stack/ProjectLanguages";
 
-export default async function SoftwareProjectPage({ params }: { params: { softwareProjectId: string }}) {
+export default async function SoftwareProjectPage({ params }: { params: { softwareProjectName: string, softwareOwnerName: string }}) {
     
-    const softwareProjectId = Number(params.softwareProjectId);
+    const { softwareProjectName, softwareOwnerName } = params;
+    const repoFullName = [softwareOwnerName, softwareProjectName].join('/')
 
     const connection = new DbConnection();
 
@@ -21,14 +22,13 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
         await connection.open();
 
         const softwareProjectService = new SoftwareProjectService(connection);
-        const project = await softwareProjectService.getProjectById(softwareProjectId);
+        const project = await softwareProjectService.getProjectByFullName(repoFullName);
+
         if (!project) {
             return notFound();
         }
 
         await connection.commit();
-
-        const repoFullName = `${project.owner_name}/${project.project_name}`;
 
         return (
             <section>

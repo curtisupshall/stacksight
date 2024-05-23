@@ -29,6 +29,10 @@ export class SoftwareProjectService extends BaseService {
         return this.softwareProjectRepository.getProjectById(softwareProjectId);
     }
 
+    async getProjectByFullName(fullName: string): Promise<ISoftwareProject | undefined> {
+        return this.softwareProjectRepository.getProjectByFullName(fullName);
+    }
+
     async getProjectRecordById(softwareProjectId: number): Promise<ISoftwareProjectRecord | undefined> {
         return this.softwareProjectRepository.getProjectRecordById(softwareProjectId);
     }

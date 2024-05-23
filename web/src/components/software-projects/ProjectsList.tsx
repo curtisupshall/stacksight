@@ -20,4 +20,5 @@ export default function ProjectsList(props: IProjectsListProps) {
                 })}
             </Stack>
         </Box>
-)}
+    )
+}

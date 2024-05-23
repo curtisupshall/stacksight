@@ -9,22 +9,24 @@ import { notFound } from "next/navigation";
 
 export default async function SoftwareOwnerPage({ params }: { params: { softwareOwnerName: string }}) {
     const connection = new DbConnection();
+    const { softwareOwnerName } = params;
 
     try {
         await connection.open();
 
         const softwareProjectService = new SoftwareProjectService(connection);
-        const projects = await softwareProjectService.listProjectsByOwnerName(params.softwareOwnerName)
+        const projects = await softwareProjectService.listProjectsByOwnerName(softwareOwnerName)
 
         if (!projects.length) {
-            // notFound(); // Un-comment
+            notFound();
         }
 
         await connection.commit();
 
         return (
             <section>
-                <Typography variant='h4' mb={6}><strong>Projects</strong></Typography>
+                <Typography variant='h4' mb={6}><strong>{softwareOwnerName}</strong></Typography>
+                <Typography variant='h6' mb={2}>Projects</Typography>
                 <Box mb={2}>
                     <AddProjectForm />
                 </Box>
