@@ -1,5 +1,5 @@
-export default function HelloWorldPage() {
-    return (
-        <h1>Hello world!</h1>
-    )
+import { redirect } from "next/navigation";
+
+export default function HomePage() {
+    return redirect('/projects');
 }
