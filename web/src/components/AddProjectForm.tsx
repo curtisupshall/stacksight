@@ -1,6 +1,6 @@
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
-import { addNewProject } from "../app/projects/actions";
+import { addNewProject } from "../server/actions/projectActions";
 
 interface IAddProjectFormProps {
     // onSubmit: (value: string) => Promise<void>;
