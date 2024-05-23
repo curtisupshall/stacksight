@@ -92,11 +92,10 @@ export class SoftwareProjectRepository extends BaseRepository {
         return response.rows[0];
     }
 
-    async getProjectByFullNameAndBranchName(repoFullName: string, branchName: string): Promise<ISoftwareProject | undefined> {
+    async getProjectByFullName(repoFullName: string): Promise<ISoftwareProject | undefined> {
         
         const query = this._getListProjectsQuery()
             .whereILike('sp.full_name', repoFullName)
-            .andWhereILike('sp.branch_name', branchName);
 
         const response = await this.connection.knex(query);
 

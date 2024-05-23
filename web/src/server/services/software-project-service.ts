@@ -42,10 +42,10 @@ export class SoftwareProjectService extends BaseService {
         const branchOrDefaultName = branchName ?? gitHubJson.default_branch
         
         // Step 2. Check if the project is already added. If it has been, throw an error
-        const project = await this.softwareProjectRepository.getProjectByFullNameAndBranchName(repoFullName, branchOrDefaultName);
+        const project = await this.softwareProjectRepository.getProjectByFullName(repoFullName);
 
         if (project) {
-            throw new Error('Project has already been added.')
+            throw new Error('Project has already been added. If you want to scan a different branch, you must delete this project first.')
         }
 
         // Step 3. Persist the new project in the database
