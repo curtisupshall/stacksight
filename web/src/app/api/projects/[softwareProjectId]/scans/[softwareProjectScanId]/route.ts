@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { DbConnection } from "../../../../../../server/database/db";
-import { SoftwareProjectService } from "../../../../../../server/services/software-project-service";
+import { ProjectScanService } from "@/server/services/project-scan-service";
 
 export async function PATCH(
     request: Request,
@@ -17,9 +17,11 @@ export async function PATCH(
     try {
         await connection.open();
 
-        const softwareProjectService = new SoftwareProjectService(connection);
+        const projectScanService = new ProjectScanService(connection);
         
-        await softwareProjectService.recordProjectScanTags(softwareProjectScanId, tags);
+        await projectScanService.recordProjectScanTags(softwareProjectScanId, tags);
+
+        revalidatePath('/projects');
 
         connection.commit();
 

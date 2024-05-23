@@ -32,6 +32,6 @@
   "scripts": {
     "dev": "PORT=3692 dotenv -e ../.env -- next dev",
     "build": "dotenv -e ../.env -- next build",
-    "start": "next start"
+    "start": "PORT=3692 next start"
   }
 }

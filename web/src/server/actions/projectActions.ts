@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { DbConnection } from "../database/db";
 import { SoftwareProjectService } from '../services/software-project-service';
+import { ProjectScanService } from "../services/project-scan-service";
 
 export async function addNewProject(formData: FormData) {
     const repoFullNameWithBranchFormValue = formData.get('repoFullName');
@@ -52,8 +53,8 @@ export async function scanProject(formData: FormData) {
         // Open database connection
         await connection.open();
         
-        const softwareProjectService = new SoftwareProjectService(connection);
-        await softwareProjectService.scanProjectById(softwareProjectId);
+        const projectScanService = new ProjectScanService(connection);
+        await projectScanService.scanProjectById(softwareProjectId);
 
         // Commit the transaction
         await connection.commit();
