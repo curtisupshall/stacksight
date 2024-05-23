@@ -66,6 +66,15 @@ export class SoftwareProjectRepository extends BaseRepository {
         return response.rows;
     }
 
+    async listProjectsByOwnerName(ownerName: string): Promise<ISoftwareProject[]> {
+        const query = this._getListProjectsQuery()
+            .where('sp.owner_name', ownerName);
+
+        const response = await this.connection.knex(query);
+
+        return response.rows;
+    }
+
     async getProjectById(softwareProjectId: number): Promise<ISoftwareProject | undefined> {
         const query = this._getListProjectsQuery()
             .where('sp.software_project_id', softwareProjectId);

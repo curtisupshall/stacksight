@@ -21,6 +21,10 @@ export class SoftwareProjectService extends BaseService {
         return this.softwareProjectRepository.listProjects();
     }
 
+    async listProjectsByOwnerName(ownerName: string) {
+        return this.softwareProjectRepository.listProjectsByOwnerName(ownerName);
+    }
+
     async getProjectById(softwareProjectId: number): Promise<ISoftwareProject | undefined> {
         return this.softwareProjectRepository.getProjectById(softwareProjectId);
     }

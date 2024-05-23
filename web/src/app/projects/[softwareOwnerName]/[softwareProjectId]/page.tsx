@@ -1,15 +1,15 @@
 'use server'
 
 import { Box, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
-import { DbConnection } from "../../../server/database/db";
-import { SoftwareProjectService } from "../../../server/services/software-project-service";
+import { DbConnection } from "../../../../server/database/db";
+import { SoftwareProjectService } from "../../../../server/services/software-project-service";
 import { notFound } from "next/navigation";
-import ProjectBranch from "../../../components/software-projects/ProjectBranch";
-import ProjectStatusIndicator from "../../../components/software-projects/ProjectStatusIndicator";
-import ProjectScanStatus from "../../../components/software-projects/ProjectScanStatus";
-import { getProjectStatus } from "../../../utils/Utils";
-import ProjectTechStack from "../../../components/tech-stack/ProjectTechStackList";
-import ProjectLanguages from "../../../components/tech-stack/ProjectLanguages";
+import ProjectBranch from "../../../../components/software-projects/ProjectBranch";
+import ProjectStatusIndicator from "../../../../components/software-projects/ProjectStatusIndicator";
+import ProjectScanStatus from "../../../../components/software-projects/ProjectScanStatus";
+import { getProjectStatus } from "../../../../utils/Utils";
+import ProjectTechStack from "../../../../components/tech-stack/ProjectTechStackList";
+import ProjectLanguages from "../../../../components/tech-stack/ProjectLanguages";
 
 export default async function SoftwareProjectPage({ params }: { params: { softwareProjectId: string }}) {
     

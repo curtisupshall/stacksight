@@ -2,7 +2,7 @@
 
 import { Box, Typography } from "@mui/material";
 import type { ISoftwareProject } from "../../types/software-project";
-import DispatchProjectForm from "../../components/AddProjectForm";
+import AddProjectForm from "../../components/AddProjectForm";
 import ProjectsList from "../../components/software-projects/ProjectsList";
 import { SoftwareProjectService } from "../../server/services/software-project-service";
 import { DbConnection } from "@/server/database/db";
@@ -22,7 +22,7 @@ export default async function ProjectsPage() {
             <section>
                 <Typography variant='h4' mb={6}><strong>All Projects</strong></Typography>
                 <Box mb={2}>
-                    <DispatchProjectForm />
+                    <AddProjectForm />
                 </Box>
                 <ProjectsList projects={projects} />
             </section>
