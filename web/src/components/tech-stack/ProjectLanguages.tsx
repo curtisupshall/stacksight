@@ -76,10 +76,9 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
 
     
     return (
-        <Box>        
-            <Stack direction='row' gap={'2px'} style={{ display: 'flex', flexFlow: 'row nowrap', gap: '2px', height: 12 }}>
+        <Box my={2}>        
+            <Stack my={1} direction='row' gap={'2px'} style={{ display: 'flex', flexFlow: 'row nowrap', gap: '2px', height: 12, borderRadius: '8px', overflow: 'hidden' }}>
                 {languageData.chartData.map((bar) => {
-                    console.log({ bar })
                     return (
                         <Box
                             style={{ backgroundColor: bar.color }}
@@ -88,7 +87,7 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
                     );
                 })}
             </Stack>
-            <Stack direction='row'>
+            <Stack direction='row' my={1}>
                 {languageData.languageDetails.map((language) => {
                     return (
                         <Stack direction='row' alignItems='center' gap={0.5}>

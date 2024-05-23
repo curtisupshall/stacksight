@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { SOFTWARE_CATEGORIES, SOFTWARE_LIBRARIES, SoftwareCategory, SoftwareLibrary } from "../../constants/libs";
 import { categorizeProjectTags, formatDocsUrl } from "../../utils/Utils";
 import { InsertLink } from "@mui/icons-material";
@@ -15,31 +15,31 @@ export default function ProjectTechStack(props: IProjectTechStackProps) {
     // console.log(JSON.stringify(categories))
 
     return (
-        <ul>
+        <Box>
             {categories.map((category) => {
                 return (
-                    <li>
-                        <Typography variant='h6'>{category.name}</Typography>
-                        <ul>
+                    <Box>
+                        <Typography variant='body1'>{category.name}</Typography>
+                        <Box my={1}>
                             {category.libraries.map((library) => {
                                 return (
-                                    <li>
+                                    <Box pl={2}>
                                     
-                                        <Typography variant='h6' sx={{ display: 'inline-flex', gap: 1 }}>
-                                            <span>{library.name} </span>
+                                        <Typography variant='body1' sx={{ display: 'inline-flex', gap: 1 }}>
+                                            <strong><span>{library.name} </span></strong>
                                             <Typography component='a' target='_blank' href={library.docsUrl} sx={{ color: 'action', display: 'inline-flex', gap: 0.5, alignItems: 'center' }}>
                                                     <InsertLink fontSize="small" />
                                                     {formatDocsUrl(library.docsUrl)}
                                             </Typography>
                                         </Typography>
                                         <Typography variant='body2'>{library.description}</Typography>
-                                    </li>
+                                    </Box>
                                 )
                             })}
-                        </ul>
-                    </li>
+                        </Box>
+                    </Box>
                 )
             })}
-        </ul>
+        </Box>
     )
 }

@@ -46,10 +46,16 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                         
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography variant='h5'>Languages</Typography>
-                        <ProjectLanguages languages={project.languages ?? []} />
-                        <Typography variant='h5'>Frameworks</Typography>
-                        <ProjectTechStack tags={project.tags ?? []} />
+                        <Stack gap={1}>
+                            <Box>
+                                <Typography variant='h5'>Languages</Typography>
+                                <ProjectLanguages languages={project.languages ?? []} />
+                            </Box>
+                            <Box>
+                                <Typography variant='h5'>Frameworks</Typography>
+                                <ProjectTechStack tags={project.tags ?? []} />
+                            </Box>
+                        </Stack>
                     </Grid>
                 </Grid>
             </section>
