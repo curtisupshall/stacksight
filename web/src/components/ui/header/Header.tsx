@@ -1,11 +1,11 @@
-'use client'
+'use server'
 
 import { Avatar, Box, Button, ButtonBase, Collapse, Container, ContainerProps, Divider, Icon, IconButton, InputAdornment, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, TextField } from "@mui/material"
 
 import HeartIcon from '@mui/icons-material/FavoriteBorder';
 import AppMenu from "./AppMenu";
-import AppLogo from "./AppLogo";
 import Search from "./Search";
+import HeaderNav from "./HeaderNav";
 
 const Header = (props: ContainerProps) => {
     const showFavorites = true;
@@ -18,7 +18,7 @@ const Header = (props: ContainerProps) => {
             <Box sx={{ mb: 0, ...headerProps }}>
                 <Container {...props}>
                     <Box py={2} display='flex' alignItems='center' justifyContent='space-between' gap={4}>
-                        <AppLogo />
+                        <HeaderNav />
                         <div />
                         {showSearch && (
                             <Search />
@@ -29,11 +29,6 @@ const Header = (props: ContainerProps) => {
                                     <Button variant='outlined' sx={{ borderRadius: 8 }}>Save and Exit</Button>
                                 </Box>
                             )} */}
-                            {showFavorites && (
-                                <IconButton onClick={() => {}}>
-                                    <HeartIcon />
-                                </IconButton>
-                            )}
                             <AppMenu />
                         </Box>
                     </Box>

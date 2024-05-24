@@ -1,3 +1,5 @@
+'use client'
+
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
