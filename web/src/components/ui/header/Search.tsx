@@ -1,36 +1,37 @@
 'use client'
 
-import { InputAdornment, TextField } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import { useEffect, useState } from "react";
 
-export type ISearchProps = {
-    //
-}
+export default function Search() {
+    const [open, setOpen] = useState<boolean>(false);
 
-const Search = (props: ISearchProps) => {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault(); // Prevents the default form submission behavior
-
-        // Extracts the search query from the form
-    }
+    useEffect(() => {
+        if (open) {
+            alert('opened!')
+        }
+    }, [open])
 
     return (
-        <form style={{ flex: 1 }} onSubmit={handleSubmit}>
-            <TextField
-                placeholder='Search projects or technologies'
-                name='app-search'
-                fullWidth
-                InputProps={{
-                    sx: { borderRadius: 56 },
-                    startAdornment: (
-                        <InputAdornment position='start'>
-                            <SearchIcon />
-                        </InputAdornment>
-                    )
+        <a style={{ cursor: 'pointer' }} onClick={() => setOpen(true)}>
+            <Stack
+                direction='row'
+                gap={0.5}
+                sx={{
+                    border: '1px solid',
+                    borderColor: 'rgba(0, 0, 0, 0.23)',
+                    borderRadius: 16,
+                    color: 'rgba(0, 0, 0, 0.65)',
+                    py: 1.5,
+                    pl: 2,
+                    pr: 8
                 }}
-            />
-        </form>
+            >
+                <SearchIcon color='inherit' />
+                <Typography sx={{ userSelect: 'none' }}>Search projects of technologies</Typography>
+            </Stack>
+        </a>
     )
 }
 
-export default Search;
