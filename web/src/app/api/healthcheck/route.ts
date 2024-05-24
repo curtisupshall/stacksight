@@ -1,7 +1,8 @@
+import { NextRequest } from "next/server";
 import { DbConnection, getKnex } from "../../../server/database/db";
 
 export async function GET(
-    request: Request,
+    request: NextRequest,
 ) {
 
     const connection = new DbConnection();

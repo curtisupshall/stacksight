@@ -21,4 +21,17 @@ export class SoftwareOwnerRepository extends BaseRepository {
 
         return response.rows;
     }
+
+    async searchOwnersByName(ownerName: string): Promise<ISoftwareOwner[]> {
+        const query = getKnex()
+            .select('owner_name')
+            .count('* as num_projects')
+            .from('software_project')
+            .where('owner_name', 'ilike', `%${ownerName}%`)
+            .groupBy('owner_name');
+    
+        const response = await this.connection.knex(query);
+    
+        return response.rows;
+    }
 }

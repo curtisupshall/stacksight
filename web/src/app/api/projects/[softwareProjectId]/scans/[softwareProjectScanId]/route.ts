@@ -1,9 +1,10 @@
 import { revalidatePath } from "next/cache";
 import { DbConnection } from "../../../../../../server/database/db";
 import { ProjectScanService } from "@/server/services/project-scan-service";
+import { NextRequest } from "next/server";
 
 export async function PATCH(
-    request: Request,
+    request: NextRequest,
     { params }: { params: { softwareProjectId: string, softwareProjectScanId: string } }
 ) {
 
