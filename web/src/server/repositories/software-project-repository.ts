@@ -102,13 +102,13 @@ export class SoftwareProjectRepository extends BaseRepository {
         return response.rows[0];
     }
 
-    async searchProjectByFullName(repoFullName: string): Promise<ISoftwareProject | undefined> {
+    async searchProjectsByFullName(repoFullName: string): Promise<ISoftwareProject[]> {
         const query = this._getListProjectsQuery()
             .where('sp.full_name', 'ilike', `%${repoFullName}%`)
 
         const response = await this.connection.knex(query);
 
-        return response.rows[0];
+        return response.rows
     }
 
     async addNewProject(project: ICreateSoftwareProjectRecord): Promise<ISoftwareProjectRecord> {

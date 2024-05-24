@@ -8,7 +8,7 @@ import {
 } from "@mui/material"
 
 import AppMenu from "./AppMenu";
-import Search from "./Search";
+import Search from "../search/AppSearch";
 import HeaderNav from "./HeaderNav";
 import SearchIcon from "@mui/icons-material/Search";
 
