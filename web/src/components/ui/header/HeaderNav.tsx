@@ -24,7 +24,7 @@ const HeaderNav = () => {
                 <AppLogo />
                 {breadcrumbs.map((breadcrumb) => {
                     return (
-                        <Link component={NextLink} underline="hover" color="inherit" href={breadcrumb.href}>
+                        <Link key={breadcrumb.label} component={NextLink} underline="hover" color="inherit" href={breadcrumb.href}>
                             {breadcrumb.label}
                         </Link>
 

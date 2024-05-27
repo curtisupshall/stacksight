@@ -15,7 +15,7 @@ export default function ProjectsList(props: IProjectsListProps) {
             <Stack component='ul' gap={2} sx={{ p: 0, m: 0 }}>
                 {props.projects.map((project) => {
                     return (
-                        <ProjectsListCard {...project} />
+                        <ProjectsListCard key={project.software_project_id} {...project} />
                     )
                 })}
             </Stack>

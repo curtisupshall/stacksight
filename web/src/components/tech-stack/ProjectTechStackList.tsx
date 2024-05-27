@@ -18,12 +18,12 @@ export default function ProjectTechStack(props: IProjectTechStackProps) {
         <Box>
             {categories.map((category) => {
                 return (
-                    <Box>
+                    <Box key={category.name}>
                         <Typography variant='body1'>{category.name}</Typography>
                         <Box my={1}>
                             {category.libraries.map((library) => {
                                 return (
-                                    <Box pl={2}>
+                                    <Box pl={2} key={library.name}>
                                     
                                         <Typography variant='body1' sx={{ display: 'inline-flex', gap: 1 }}>
                                             <strong><span>{library.name} </span></strong>
