@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, CircularProgress, Dialog, DialogContent, Grow, IconButton, InputAdornment, ListItemText, MenuItem, MenuList, Stack, TextField, Typography } from "@mui/material";
+import { Box, CircularProgress, Dialog, DialogContent, Fade, Grow, IconButton, InputAdornment, ListItemText, MenuItem, MenuList, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -17,6 +17,13 @@ export default function Search() {
     const [loading, setLoading] = useState<boolean>(false);
     const [results, setResults] = useState<ISearchResponse | null>(null);
     const [error, setError] = useState<any | null>(null);
+
+    const handleOpen = () => {
+        setOpen(true);
+        setQuery('');
+        setError(null);
+        setResults(null);
+    }
 
     const resultsSections = useMemo(() => {
         if (!results) {
@@ -93,66 +100,81 @@ export default function Search() {
 
     return (
         <>
-            <a style={{ cursor: 'pointer' }} onClick={() => setOpen(true)}>
+            <a style={{ cursor: 'pointer' }} onClick={handleOpen}>
                 <SearchLaunchButton placeholderText={placeholderText} />
             </a>
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}
-                TransitionComponent={Grow}
+                TransitionComponent={Fade}
                 fullWidth
                 maxWidth={false}
                 PaperProps={{
                     sx: {
                         position: 'absolute',
                         top: 0,
-                        mt: 0.5
+                        right: 0,
+                        left: 0,
+                        mt: 0.75,
+                        mx: 16,
+                        width: 'unset'
                     }
                 }}
             >
-                <DialogContent sx={{}}>
-                    <TextField
-                        name='stacksight__search'
-                        value={query}
-                        onChange={(event) => setQuery(event.target.value)}
-                        autoFocus
-                        size='small'
-                        placeholder={placeholderText}
-                        fullWidth
-                        error={hasError}
-                        helperText={hasError ? (
-                            <Typography variant='inherit' color='error'>An error occurred.</Typography>
-                        ) : undefined}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                            endAdornment: query.length ? (
-                                <InputAdornment position='end'>
-                                    <IconButton onClick={() => setQuery('')}>
-                                        <CancelIcon fontSize="small"/>
-                                    </IconButton>
-                                </InputAdornment>
-                            ) : undefined
-                        }}
-                    />
+                <DialogContent sx={{ py: 0 }}>
+                    <Paper elevation={0} square sx={{ py: 2, position: 'sticky', top: 0, zIndex: 2 }}>
+                        <TextField
+                            name='stacksight__search'
+                            value={query}
+                            onChange={(event) => setQuery(event.target.value)}
+                            autoFocus
+                            size='small'
+                            placeholder={placeholderText}
+                            fullWidth
+                            error={hasError}
+                            helperText={hasError ? (
+                                <Typography variant='inherit' color='error'>An error occurred.</Typography>
+                            ) : undefined}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: query.length ? (
+                                    <InputAdornment position='end'>
+                                        <IconButton onClick={() => setQuery('')}>
+                                            <CancelIcon fontSize="small"/>
+                                        </IconButton>
+                                    </InputAdornment>
+                                ) : undefined
+                            }}
+                        />
+                    </Paper>
                     {loading ? (
                         <CircularProgress />
                     ) : (
                         <>
                             {resultsSections.length > 0 ? (
-                                <>
+                                <Box sx={{ pb: 2, overflowY: 'auto', overflowX: 'hidden' }}>
                                     {resultsSections.map((section) =>  {
                                         return (
                                             <Box key={section.label}>
                                                 <Typography variant='overline'>{section.label}</Typography>
-                                                <MenuList>
+                                                <MenuList sx={{ mx: -2, py: 0 }}>
                                                     {section.items.map((item) => {
                                                         return (
-                                                            <MenuItem key={item.key} component={NextLink} href={item.link} onClick={() => setOpen(false)}>
-                                                                <ListItemText primary={item.label} secondary={item.description} />
+                                                            <MenuItem sx={{ px: 2 }} key={item.key} component={NextLink} href={item.link} onClick={() => setOpen(false)}>
+                                                                <ListItemText
+                                                                    primary={item.label}
+                                                                    secondary={item.description}
+                                                                    
+                                                                    secondaryTypographyProps={{
+                                                                        sx: {
+                                                                            overflow: "hidden", textOverflow: "ellipsis"
+                                                                        }
+                                                                    }}
+                                                                />
                                                             </MenuItem>
                                                         )
                                                     })}
@@ -160,11 +182,11 @@ export default function Search() {
                                             </Box>
                                         );
                                     })}
-                                </>
+                                </Box>
                             ) : (
                                 <>
                                     {results && (
-                                        <Box>
+                                        <Box pb={2}>
                                             <Typography>No results found</Typography>
                                         </Box>
                                     )}

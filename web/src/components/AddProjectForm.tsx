@@ -9,7 +9,7 @@ interface IAddProjectFormProps {
 export default function AddProjectForm(props: IAddProjectFormProps) {
     return (
         <form action={addNewProject}>
-            <Stack direction='row' alignItems='center' gap={1}>
+            <Stack justifyContent='flex-end' direction='row' alignItems='center' gap={1}>
                 <TextField
                     variant='filled'
                     size="small"

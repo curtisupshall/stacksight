@@ -1,6 +1,6 @@
 'use server'
 
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import type { ISoftwareProject } from "../../types/software-project";
 import AddProjectForm from "../../components/AddProjectForm";
 import ProjectsList from "../../components/software-projects/ProjectsList";
@@ -20,10 +20,10 @@ export default async function ProjectsPage() {
 
         return (
             <section>
-                <Typography variant='h4' mb={6}><strong>All Projects</strong></Typography>
-                <Box mb={2}>
+                <Stack alignItems='center' mb={6} direction='row' justifyContent='space-between'>
+                    <Typography variant='h4' mb={0}><strong>All Projects</strong></Typography>
                     <AddProjectForm />
-                </Box>
+                </Stack>
                 <ProjectsList projects={projects} />
             </section>
         )

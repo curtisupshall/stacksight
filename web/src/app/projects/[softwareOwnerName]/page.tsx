@@ -27,9 +27,6 @@ export default async function SoftwareOwnerPage({ params }: { params: { software
             <section>
                 <Typography variant='h4' mb={6}><strong>{softwareOwnerName}</strong></Typography>
                 <Typography variant='h6' mb={2}>Projects</Typography>
-                <Box mb={2}>
-                    <AddProjectForm />
-                </Box>
                 <ProjectsList projects={projects} />
             </section>
         )
