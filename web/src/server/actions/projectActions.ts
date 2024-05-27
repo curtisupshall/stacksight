@@ -67,3 +67,33 @@ export async function scanProject(formData: FormData) {
         connection.release();
     }
 }
+
+export async function deleteProject(formData: FormData) {
+    const softwareProjectIdFormValue = formData.get('softwareProjectId');
+
+    if (!softwareProjectIdFormValue) {
+        throw new Error('A software project ID must be provided.')
+    }
+
+    const softwareProjectId = Number(softwareProjectIdFormValue);
+
+    const connection = new DbConnection();
+
+    try {
+        // Open database connection
+        await connection.open();
+        
+        const projectService = new SoftwareProjectService(connection);
+        await projectService.deleteProjectById(softwareProjectId);
+
+        // Commit the transaction
+        await connection.commit();
+
+        revalidatePath('/projects');
+    } catch (error) {
+        connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
+}

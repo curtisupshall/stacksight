@@ -10,6 +10,7 @@ import ProjectScanStatus from "../../../../components/software-projects/ProjectS
 import { getProjectStatus } from "../../../../utils/Utils";
 import ProjectTechStack from "../../../../components/tech-stack/ProjectTechStackList";
 import ProjectLanguages from "../../../../components/tech-stack/ProjectLanguages";
+import { OpenInNew } from "@mui/icons-material";
 
 export default async function SoftwareProjectPage({ params }: { params: { softwareProjectName: string, softwareOwnerName: string }}) {
     
@@ -39,6 +40,12 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                         <ProjectBranch {...project} />
                         <ProjectScanStatus project={project} />
                         <ProjectStatusIndicator status={getProjectStatus(project)} />
+                        <Link href={project.html_url} target='_blank'>
+                            <Stack direction='row'>
+                                <Typography>View Source</Typography>
+                                <OpenInNew />
+                            </Stack>
+                        </Link>
                     </Stack>
                 </Box>
                 <Grid container columns={2}>

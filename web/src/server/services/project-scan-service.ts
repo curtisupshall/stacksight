@@ -83,4 +83,10 @@ export class ProjectScanService extends BaseService {
         // Step 2. End-date the current scan
         await this.projectScanRepository.updateProjectScanRecordEndDate(softwareProjectScanId)
     }
+
+    async deleteProjectScansByProjectId(softwareProjectId: number): Promise<void> {
+        await this.projectScanRepository.deleteProjectLanguagesByProjectId(softwareProjectId);
+        await this.projectScanRepository.deleteProjectTagsByProjectId(softwareProjectId);
+        await this.projectScanRepository.deleteProjectScansByProjectId(softwareProjectId);
+    }
 }

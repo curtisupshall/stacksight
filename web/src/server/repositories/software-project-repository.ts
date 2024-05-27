@@ -134,4 +134,13 @@ export class SoftwareProjectRepository extends BaseRepository {
 
         return response.rows[0];
     }
+
+    async deleteProjectRecordByProjectId(softwareProjectId: number): Promise<ISoftwareProjectRecord> {
+        const response = await this.connection.query(`
+            DELETE FROM software_project WHERE software_project_id = $1
+            RETURNING *;
+        `, [softwareProjectId]);
+
+        return response.rows[0]
+    }
 }

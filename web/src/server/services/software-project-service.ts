@@ -67,4 +67,12 @@ export class SoftwareProjectService extends BaseService {
 
         return projectRecord;
     }
+
+    async deleteProjectById(softwareProjectId: number): Promise<ISoftwareProjectRecord> {
+        const projectScanService = new ProjectScanService(this.connection);
+
+        await projectScanService.deleteProjectScansByProjectId(softwareProjectId);
+        return this.softwareProjectRepository.deleteProjectRecordByProjectId(softwareProjectId);
+
+    }
 }

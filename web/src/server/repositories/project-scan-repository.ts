@@ -53,4 +53,32 @@ export class ProjectScanRepository extends BaseRepository {
                 ${queryValues.map((_, i) => `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`).join(',')}
         `, queryValues.flat());
     }
+
+    async deleteProjectTagsByProjectId(softwareProjectId: number): Promise<void> {
+        await this.connection.query(`
+            DELETE FROM software_project_tag
+            WHERE software_project_scan_id IN (
+                SELECT software_project_scan_id
+                FROM software_project_scan
+                WHERE software_project_id = $1
+            )
+        `, [softwareProjectId]);
+    }
+
+    async deleteProjectLanguagesByProjectId(softwareProjectId: number): Promise<void> {
+        await this.connection.query(`
+            DELETE FROM software_project_language
+            WHERE software_project_scan_id IN (
+                SELECT software_project_scan_id
+                FROM software_project_scan
+                WHERE software_project_id = $1
+            )
+        `, [softwareProjectId]);
+    }
+
+    async deleteProjectScansByProjectId(softwareProjectId: number): Promise<void> {
+        await this.connection.query(`
+            DELETE FROM software_project_scan WHERE software_project_id = $1;
+        `, [softwareProjectId]);
+    }
 }
