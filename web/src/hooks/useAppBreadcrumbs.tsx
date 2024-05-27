@@ -1,24 +1,21 @@
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { APP_TAB_MATCHER } from "./useAppTabs";
 
 export interface IBreadcrumb {
-    name: string;
-    path: string;
+    label: string;
+    href: string;
 }
 
 const breadcrumbMatchers = [
     {
-        name: 'Projects',
+        label: 'Projects',
         pattern: /\/projects$/
     },
-    {
-        name: 'Scans',
-        pattern: /\/projects\/[a-zA-Z_0-9\-]*\/[a-zA-Z_0-9\-]*\/scans$/
-    }
-]
+] as const;
 
 const getBreadcrumbName = (path: string): string | undefined => {
-    return breadcrumbMatchers.find((matcher) =>  matcher.pattern.test(path))?.name
+    return breadcrumbMatchers.find((matcher) =>  matcher.pattern.test(path))?.label
 }
 
 export default function useAppBreadcrumbs() {
@@ -29,13 +26,14 @@ export default function useAppBreadcrumbs() {
 
         pathname?.split('/').reduce(((previousPath, pathItem: string) => {
             const path = [previousPath, pathItem].join('/')
-            console.log('reading:', path)
-            if (pathItem) {
-                const name = getBreadcrumbName(path) ?? pathItem;
+            const matchesTab = Object.values(APP_TAB_MATCHER).some((entry) => entry.pattern.test(path) && entry.overridesBreadcrumbs);
+
+            if (pathItem && !matchesTab) {
+                const label = getBreadcrumbName(path) ?? pathItem;
     
                 crumbs.push({
-                    name,
-                    path
+                    label,
+                    href: path
                 })
             }
     
