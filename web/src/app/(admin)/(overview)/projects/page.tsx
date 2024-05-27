@@ -1,10 +1,10 @@
 'use server'
 
 import { Box, Stack, Typography } from "@mui/material";
-import type { ISoftwareProject } from "../../../types/software-project";
-import AddProjectForm from "../../../components/AddProjectForm";
-import ProjectsList from "../../../components/software-projects/ProjectsList";
-import { SoftwareProjectService } from "../../../server/services/software-project-service";
+import type { ISoftwareProject } from "../../../../types/software-project";
+import AddProjectForm from "../../../../components/AddProjectForm";
+import ProjectsList from "../../../../components/software-projects/ProjectsList";
+import { SoftwareProjectService } from "../../../../server/services/software-project-service";
 import { DbConnection } from "@/server/database/db";
 
 export default async function ProjectsPage() {
