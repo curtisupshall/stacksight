@@ -25,10 +25,7 @@ export default async (props: PropsWithChildren) => {
 			<body>
 				<ThemeProvider theme={appTheme}>
 					<SessionProvider session={session}>
-						<Stack component='main' id='root' minHeight='100vh'>
-							<Header maxWidth='xl' disableGutters sx={{ px: 8 }} />
-							{props.children}
-						</Stack>
+						{props.children}
 					</SessionProvider>
 				</ThemeProvider>
 			</body>
