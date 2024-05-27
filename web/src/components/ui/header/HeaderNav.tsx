@@ -5,46 +5,10 @@ import NextLink from "next/link";
 import AppLogo from "./AppLogo";
 import { useSearchParams, usePathname } from "next/navigation";
 import { useMemo } from "react";
-
-interface IBreadcrumb {
-    name: string;
-    path: string;
-}
-
-const breadcrumbMatchers = [
-    {
-        name: 'Projects',
-        pattern: /\/projects$/
-    }
-]
-
-const getBreadcrumbName = (path: string): string | undefined => {
-    return breadcrumbMatchers.find((matcher) =>  matcher.pattern.test(path))?.name
-}
+import useAppBreadcrumbs from "@/hooks/useAppBreadcrumbs";
 
 const HeaderNav = () => {
-    const pathname = usePathname();
-
-    const breadcrumbs: IBreadcrumb[] = useMemo(() => {
-        const crumbs: IBreadcrumb[] = [];
-
-        pathname?.split('/').reduce(((previousPath, pathItem: string) => {
-            const path = [previousPath, pathItem].join('/')
-            console.log('reading:', path)
-            if (pathItem) {
-                const name = getBreadcrumbName(path) ?? pathItem;
-    
-                crumbs.push({
-                    name,
-                    path
-                })
-            }
-    
-            return path;
-        }))
-
-        return crumbs;
-    }, [pathname])
+    const breadcrumbs = useAppBreadcrumbs();
     
     return (
         <Stack
