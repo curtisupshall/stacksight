@@ -90,10 +90,17 @@ const appTheme = createTheme({
                 root: {
                     textTransform: 'none',
                     minWidth: '0 !important',
-                    fontWeight: 700
+                    
                 }
             }
         },
+        MuiBreadcrumbs: {
+            styleOverrides: {
+                li: {
+                    fontWeight: 600
+                }
+            }
+        }
     }
 });
 
