@@ -1,5 +1,5 @@
 import { ForkRight } from "@mui/icons-material";
-import { ISoftwareProject } from "../../types/software-project";
+import { ISoftwareProject } from "../../../types/software-project";
 import { Chip } from "@mui/material";
 
 

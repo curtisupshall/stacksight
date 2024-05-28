@@ -2,15 +2,16 @@ import dayjs from 'dayjs'
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime)
 
-import { ISoftwareProject } from "../../types/software-project";
-import Typography, { TypographyProps } from "@mui/material/Typography";
+import { IProjectScan } from "@/types/project-scan";
+import { Typography } from '@mui/material';
 
-interface IProjectScanStatusProps {
-    project: ISoftwareProject
-    TypographyProps?: Partial<TypographyProps>
+interface IProjectTimestampProps {
+    scan: IProjectScan
 }
 
-export default function ProjectScanStatus(props: IProjectScanStatusProps) {
+export default function ProjectTimestamp(props: IProjectTimestampProps) {
+    const { scan } = props;
+
     let lastScanDispatchDay = null;
     let lastScanCompletionDay = null;
     let lastScanAbortedDay = null;
@@ -18,20 +19,20 @@ export default function ProjectScanStatus(props: IProjectScanStatusProps) {
     let lastScanText = 'Never'
     let lastScanTooltip: string | undefined = undefined;
 
-    if (props.project.last_scan_dispatched_at) {
-        lastScanDispatchDay = dayjs(props.project.last_scan_dispatched_at);
+    if (scan.dispatched_at) {
+        lastScanDispatchDay = dayjs(scan.dispatched_at);
         lastScanTooltip = lastScanDispatchDay.format('MMM D, YYYY h:mmA')
         lastScanText = `Started ${lastScanDispatchDay.fromNow()}`
     }
 
-    if (props.project.last_scan_completed_at) {
-        lastScanCompletionDay = dayjs(props.project.last_scan_completed_at)
+    if (scan.completed_at) {
+        lastScanCompletionDay = dayjs(scan.completed_at)
         lastScanTooltip = lastScanCompletionDay.format('MMM D, YYYY h:mmA')
         lastScanText = `Completed ${lastScanCompletionDay.fromNow()}`;
     }
 
-    if (props.project.last_scan_aborted_at) {
-        lastScanAbortedDay = dayjs(props.project.last_scan_aborted_at)
+    if (scan.aborted_at) {
+        lastScanAbortedDay = dayjs(scan.aborted_at)
         lastScanTooltip = lastScanAbortedDay.format('MMM D, YYYY h:mmA')
         lastScanText = `Failed ${lastScanAbortedDay.fromNow()}`
     }

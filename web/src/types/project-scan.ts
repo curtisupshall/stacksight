@@ -6,9 +6,12 @@ export interface IProjectScanRecord {
     author_name: string;
     commit_date: string;
     commit_html_url: string;
+    dispatched_at: string;
+    completed_at: string | null;
+    aborted_at: string | null;
 }
 
-export interface IProjectScan extends IProjectLanguageRecord {
+export interface IProjectScan extends IProjectScanRecord {
     tags: string[] | null;
     languages: IProjectLanguage[] | null;
 }

@@ -5,14 +5,11 @@ import type { ISoftwareProject, SoftwareProjectStatus } from "../../types/softwa
 import Link from "next/link";
 import ProjectsListCardActions from "./ProjectsListCardActions";
 import { ForkRight, Print } from '@mui/icons-material';
-import ProjectStatusIndicator from './ProjectStatusIndicator';
-import ProjectScanStatus from './ProjectScanStatus';
-import ProjectBranch from './ProjectBranch';
+import ProjectStatus from './status/ProjectStatus';
+import ProjectBranch from './status/ProjectBranch';
 import { getProjectStatus } from '../../utils/Utils';
 
 export default async function ProjectsListCard(props: ISoftwareProject) {
-    const status: SoftwareProjectStatus = getProjectStatus(props);
-
     return (
         <Card component='li' key={props.software_project_id} sx={{ p: 2 }}>
             <Stack direction='row' gap={1}>
@@ -26,13 +23,11 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
                                 <Typography variant='h6'>{props.project_name}</Typography>
                             </Link>
                         </Breadcrumbs>
-                        <ProjectStatusIndicator status={status} />
-                        <ProjectBranch {...props} />
+                        {/* <ProjectStatus project={props} /> */}
                     </Stack>
                     <Typography variant='body2'>
                         {props.description}
                     </Typography>
-                    <ProjectScanStatus project={props} />
                 </Box>
                 {/* <Stack direction='row' gap={1} flex={3} pt={0.5}>
                     {props.tags?.filter(Boolean).map((tag) => (
