@@ -1,12 +1,13 @@
-import { Container, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import { PropsWithChildren } from "react";
+import BaseContainer from "./BaseContainer";
 
 export default function BaseLayout(props: PropsWithChildren) {
     return (
         <Paper square variant="outlined" sx={{ flex: 1, pt: 3, borderLeft: 0, borderRight: 0 }}>
-            <Container maxWidth='xl' disableGutters sx={{ px: 8 }}>
+            <BaseContainer>
                 {props.children}
-            </Container>
+            </BaseContainer>
         </Paper>
     )
 }
