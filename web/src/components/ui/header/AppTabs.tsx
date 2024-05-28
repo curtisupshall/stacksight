@@ -3,7 +3,7 @@
 import useAppTabs, { ITab } from "@/hooks/useAppTabs"
 import { Container, Tab, Tabs } from "@mui/material"
 import Link from "next/link";
-import { usePathname, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 interface IAppTabsProps {
     tabs: ITab[]
@@ -13,7 +13,6 @@ export default function AppTabs(props: IAppTabsProps) {
     const { tabs } = props;
 
     const params = useParams();
-    const pathname = usePathname();
 
     const value = useAppTabs(tabs);
 
@@ -32,8 +31,6 @@ export default function AppTabs(props: IAppTabsProps) {
                             }
                         })
                         .join('/');
-                    
-                    console.log('tab link:', href)
 
                     return (
                         <Tab

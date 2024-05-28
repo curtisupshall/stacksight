@@ -7,7 +7,18 @@ export interface ITab {
     matcherKey: keyof typeof APP_TAB_MATCHER
 }
 
-export const APP_TAB_MATCHER = {
+type AppTabMatcherKey = 
+    | 'DASHBOARD'
+    | 'PROJECTS'
+    | 'PROJECT_SCANS'
+    | 'PROJECT_DETAILS'
+
+type AppTabMatcherEntry = {
+    pattern: RegExp,
+    overridesBreadcrumbs?: boolean
+}
+
+export const APP_TAB_MATCHER: Record<AppTabMatcherKey, AppTabMatcherEntry> = {
     'DASHBOARD': {
         pattern: /\/dashboard$/,
     },
@@ -21,7 +32,7 @@ export const APP_TAB_MATCHER = {
     'PROJECT_DETAILS': {
         pattern: /\/projects\/[a-zA-Z_0-9\-]*\/[a-zA-Z_0-9\-]*$/,
     }
-} as const
+} as const;
 
 export default function useAppTabs(tabs: ITab[]) {
     const pathname = usePathname();
