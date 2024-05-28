@@ -41,8 +41,8 @@ export default function ProjectStatusIndicator(props: ISoftwareProject) {
         case 'SCANNING':
             label='Scanning'
             sxProps = {
-                backgroundColor: 'yellow',
-                borderColor: 'orange',
+                backgroundColor: 'rgba(219, 171, 10, 0.1)',
+                borderColor: '#dbab0a',
             }
             icon = (
                 <Box ml={0}>
