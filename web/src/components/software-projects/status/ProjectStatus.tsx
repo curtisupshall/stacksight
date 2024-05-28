@@ -7,7 +7,6 @@ import { getProjectStatus } from '@/utils/Utils';
 import { Stack } from "@mui/material";
 import ProjectBranch from "./ProjectBranch";
 import ProjectStatusIndicator from "./ProjectStatusIndicator";
-import ProjectTimestamp from "./ProjectTimestamp";
 
 type IProjectStatusSlot =
     | 'SCAN_TIMESTAMP'
@@ -26,32 +25,32 @@ const DEFAULT_SLOTS: Partial<Record<IProjectStatusSlot, boolean>> = {
     'BRANCH_NAME': true,
 }
 
-export default function ProjectStatus(props: IProjectStatusProps) {
-    const slots = props.slots ?? DEFAULT_SLOTS;
+// export default function ProjectStatus(props: IProjectStatusProps) {
+//     const slots = props.slots ?? DEFAULT_SLOTS;
 
     
 
-    return (
-        <Stack gap={1}>
-            {slots.BRANCH_NAME && (
-                <ProjectBranch {...props.project} />
-            )}
+//     return (
+//         <Stack gap={1}>
+//             {slots.BRANCH_NAME && (
+//                 <ProjectBranch {...props.project} />
+//             )}
 
-            {slots.COMMIT_HASH && (
-                <Typography>Commit hash</Typography>
-            )}
+//             {slots.COMMIT_HASH && (
+//                 <Typography>Commit hash</Typography>
+//             )}
 
-            {slots.COMMIT_MESSAGE && (
-                <Typography>Commit message</Typography>
-            )}
+//             {slots.COMMIT_MESSAGE && (
+//                 <Typography>Commit message</Typography>
+//             )}
 
-            {/* {slots.SCAN_INDICATOR && (
-                <ProjectStatusIndicator scan={props.project.last_scan} />
-            )} */}
+//             {/* {slots.SCAN_INDICATOR && (
+//                 <ProjectStatusIndicator scan={props.project.last_scan} />
+//             )} */}
 
-            {slots.SCAN_TIMESTAMP && (
-                <ProjectTimestamp scan={props.project.last_scan} />
-            )}
-        </Stack>
-    );
-}
+//             {slots.SCAN_TIMESTAMP && (
+//                 <ProjectTimestamp scan={props.project.last_scan} />
+//             )}
+//         </Stack>
+//     );
+// }

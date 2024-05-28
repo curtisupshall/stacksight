@@ -4,10 +4,6 @@ import { Box, Breadcrumbs, Card, Chip, Divider, IconButton, Stack, Typography } 
 import type { ISoftwareProject, SoftwareProjectStatus } from "../../types/software-project";
 import Link from "next/link";
 import ProjectsListCardActions from "./ProjectsListCardActions";
-import { ForkRight, Print } from '@mui/icons-material';
-import ProjectStatus from './status/ProjectStatus';
-import ProjectBranch from './status/ProjectBranch';
-import { getProjectStatus } from '../../utils/Utils';
 import ProjectStatusIndicator from "./status/ProjectStatusIndicator";
 
 export default async function ProjectsListCard(props: ISoftwareProject) {
