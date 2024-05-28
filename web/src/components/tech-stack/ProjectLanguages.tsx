@@ -74,8 +74,8 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
 
     
     return (
-        <Box my={2}>        
-            <Stack my={1} direction='row' gap={'2px'} style={{ display: 'flex', flexFlow: 'row nowrap', gap: '2px', height: 12, borderRadius: '8px', overflow: 'hidden' }}>
+        <Box>        
+            <Stack mb={1} direction='row' gap={'2px'} style={{ display: 'flex', flexFlow: 'row nowrap', gap: '2px', height: 12, borderRadius: '8px', overflow: 'hidden' }}>
                 {languageData.chartData.map((bar) => {
                     return (
                         <Box

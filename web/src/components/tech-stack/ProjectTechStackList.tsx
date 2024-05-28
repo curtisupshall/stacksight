@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Grid, Link, Stack, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
 import { SOFTWARE_CATEGORIES, SOFTWARE_LIBRARIES, SoftwareCategory, SoftwareLibrary } from "../../constants/libs";
 import { categorizeProjectTags, formatDocsUrl } from "../../utils/Utils";
 import { InsertLink } from "@mui/icons-material";
@@ -15,31 +15,37 @@ export default function ProjectTechStack(props: IProjectTechStackProps) {
     // console.log(JSON.stringify(categories))
 
     return (
-        <Box>
-            {categories.map((category) => {
-                return (
-                    <Box key={category.name}>
-                        <Typography variant='body1'>{category.name}</Typography>
-                        <Box my={1}>
-                            {category.libraries.map((library) => {
-                                return (
-                                    <Box pl={2} key={library.name}>
-                                    
-                                        <Typography variant='body1' sx={{ display: 'inline-flex', gap: 1 }}>
-                                            <strong><span>{library.name} </span></strong>
-                                            <Typography component='a' target='_blank' href={library.docsUrl} sx={{ color: 'action', display: 'inline-flex', gap: 0.5, alignItems: 'center' }}>
-                                                    <InsertLink fontSize="small" />
-                                                    {formatDocsUrl(library.docsUrl)}
-                                            </Typography>
-                                        </Typography>
-                                        <Typography variant='body2'>{library.description}</Typography>
-                                    </Box>
-                                )
-                            })}
-                        </Box>
-                    </Box>
-                )
-            })}
-        </Box>
+        <Table>
+            <TableBody>
+                {categories.map((category) => {
+                    return (
+
+                        <TableRow key={category.name}>
+                            <TableCell sx={{ pl: 0, verticalAlign: 'top' }}>
+                                <Typography variant='body1'>{category.name}</Typography>
+                            </TableCell>
+                            <TableCell sx={{ pr: 0 }}>
+                                <Stack gap={1}>
+                                    {category.libraries.map((library) => {
+                                        return (
+                                            <Box key={library.name}>
+                                                <Typography variant='body1' sx={{ display: 'inline-flex', gap: 1 }}>
+                                                    <strong><span>{library.name} </span></strong>
+                                                    <Link component='a' target='_blank' href={library.docsUrl} sx={{ color: 'action', display: 'inline-flex', gap: 0.5, alignItems: 'center' }}>
+                                                            <InsertLink fontSize="small" />
+                                                            {formatDocsUrl(library.docsUrl)}
+                                                    </Link>
+                                                </Typography>
+                                                <Typography variant='body2'>{library.description}</Typography>
+                                            </Box>
+                                        )
+                                    })}
+                                </Stack>
+                            </TableCell>
+                        </TableRow>
+                    )
+                })}
+            </TableBody>
+        </Table>
     )
 }
