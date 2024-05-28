@@ -12,22 +12,22 @@ export class SoftwareProjectRepository extends BaseRepository {
 
     _getListProjectsQuery(): Knex.QueryBuilder {
         const knex = getKnex();
-
+    
         // Define the CTE for the latest scans of each project
         const latestScans = knex('software_project_scan')
             .select('software_project_id', knex.raw('MAX(dispatched_at) as max_dispatched_at'))
             .groupBy('software_project_id')
             .as('latest_scans');
-
+    
         // CTE for details of the latest scans
         const latestScanDetails = knex('software_project_scan as sps')
-            .select('sps.software_project_id', 'sps.software_project_scan_id', 'sps.dispatched_at', 'sps.completed_at', 'sps.aborted_at')
+            .select('sps.*')
             .join(latestScans, function() {
                 this.on('sps.software_project_id', '=', 'latest_scans.software_project_id')
                     .andOn('sps.dispatched_at', '=', 'latest_scans.max_dispatched_at');
             })
             .as('latest_scan_details');
-
+    
         // CTE for tags associated with the latest scans
         const tags = knex('software_project_tag as spt')
             .select('spt.software_project_scan_id')
@@ -35,7 +35,7 @@ export class SoftwareProjectRepository extends BaseRepository {
             .join(latestScanDetails, 'spt.software_project_scan_id', '=', 'latest_scan_details.software_project_scan_id')
             .groupBy('spt.software_project_scan_id')
             .as('tags');
-
+    
         // CTE for languages associated with the latest scans
         const languages = knex('software_project_language as spl')
             .select('spl.software_project_scan_id')
@@ -43,22 +43,31 @@ export class SoftwareProjectRepository extends BaseRepository {
             .join(latestScanDetails, 'spl.software_project_scan_id', '=', 'latest_scan_details.software_project_scan_id')
             .groupBy('spl.software_project_scan_id')
             .as('languages');
-
+    
         // Final query assembling all the pieces
         const projects = knex('software_project as sp')
             .select('sp.*')
-            .select('latest_scan_details.dispatched_at as last_scan_dispatched_at')
-            .select('latest_scan_details.completed_at as last_scan_completed_at')
-            .select('latest_scan_details.aborted_at as last_scan_aborted_at')
-            .select('tags.tags')
-            .select('languages.languages')
+            .select({
+                last_scan: knex.raw('json_build_object(' +
+                    '\'software_project_scan_id\', latest_scan_details.software_project_scan_id, ' +
+                    '\'software_project_id\', latest_scan_details.software_project_id, ' +
+                    '\'commit_sha\', latest_scan_details.commit_sha, ' +
+                    '\'commit_message\', latest_scan_details.commit_message, ' +
+                    '\'author_name\', latest_scan_details.author_name, ' +
+                    '\'commit_date\', latest_scan_details.commit_date, ' +
+                    '\'commit_html_url\', latest_scan_details.commit_html_url, ' +
+                    '\'tags\', tags.tags, ' +
+                    '\'languages\', languages.languages' +
+                    ')')
+            })
             .leftJoin(latestScanDetails, 'sp.software_project_id', 'latest_scan_details.software_project_id')
             .leftJoin(tags, 'latest_scan_details.software_project_scan_id', 'tags.software_project_scan_id')
             .leftJoin(languages, 'latest_scan_details.software_project_scan_id', 'languages.software_project_scan_id')
             .orderBy('sp.created_at', 'desc');
-
+    
         return projects;
     }
+    
 
     async listProjects(): Promise<ISoftwareProject[]> {
         const response = await this.connection.knex(this._getListProjectsQuery());
