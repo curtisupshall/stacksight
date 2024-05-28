@@ -1,6 +1,6 @@
 'use server'
 
-import { Box, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
 import { DbConnection } from "../../../../../../server/database/db";
 import { SoftwareProjectService } from "../../../../../../server/services/software-project-service";
 import { notFound } from "next/navigation";
@@ -35,7 +35,7 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
 
         return (
             <section>
-                <Box mb={5}>
+                <Box mb={2}>
                     <Typography variant='h3' mb={1}>{repoFullName}</Typography>
                     <Typography mb={1}>{project.description}</Typography>
                     <Stack direction='row' gap={1}>
@@ -44,7 +44,11 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                         <ProjectCommitHash {...project} />
                     </Stack>
                 </Box>
-                <Grid container columns={2}>
+                <Alert severity="warning">
+                    <AlertTitle>Results are not current</AlertTitle>
+                    <Typography>The results of this project will be updated when the next successful scan is completed.</Typography>
+                </Alert>
+                <Grid container columns={2} mt={2}>
                     <Grid item xs={1}>
                         
                     </Grid>
