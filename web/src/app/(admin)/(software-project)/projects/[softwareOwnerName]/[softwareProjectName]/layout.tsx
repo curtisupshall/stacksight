@@ -9,12 +9,12 @@ import { ITab } from '@/hooks/useAppTabs'
 
 const tabs: ITab[] = [
 	{
-		href: ``,
+		href: `/projects/[softwareOwnerName]/[softwareProjectName]`,
 		label: 'Details',
 		matcherKey: 'PROJECT_DETAILS'
 	},
 	{
-		href: `scans`,
+		href: `/projects/[softwareOwnerName]/[softwareProjectName]/scans`,
 		label: 'Scans',
 		matcherKey: 'PROJECT_SCANS'
 	}

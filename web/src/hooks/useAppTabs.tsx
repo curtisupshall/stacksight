@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 export interface ITab {
     label: string;
-    href: string;
+    href: string,
     matcherKey: keyof typeof APP_TAB_MATCHER
 }
 
@@ -13,7 +13,6 @@ export const APP_TAB_MATCHER = {
     },
     'PROJECTS': {
         pattern: /\/projects$/,
-        
     },
     'PROJECT_SCANS': {
         overridesBreadcrumbs: true,

@@ -12,6 +12,10 @@ const breadcrumbMatchers = [
         label: 'Projects',
         pattern: /\/projects$/
     },
+    {
+        label: 'Dashboard',
+        pattern: /\/dashboard$/
+    },
 ] as const;
 
 const getBreadcrumbName = (path: string): string | undefined => {
