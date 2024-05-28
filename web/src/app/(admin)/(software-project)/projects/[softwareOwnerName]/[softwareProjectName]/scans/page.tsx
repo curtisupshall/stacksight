@@ -31,7 +31,7 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
 
         return (
             <section>
-                <Typography variant='h4' mb={6}><strong>{softwareOwnerName}</strong></Typography>
+                <Typography variant='h4' mb={6}><strong>{repoFullName}</strong></Typography>
                 <Typography variant='h6' mb={2}>Scans</Typography>
                 <ProjectScansList scans={scans} />
             </section>
