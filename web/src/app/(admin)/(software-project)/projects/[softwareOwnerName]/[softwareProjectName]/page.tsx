@@ -37,7 +37,7 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                 <section>
                     <ResultsAlert />
                     <Box mb={3}>
-                        <Typography variant='h3' mb={1}>{repoFullName}</Typography>
+                        <Typography variant='h3' mb={2}>{repoFullName}</Typography>
                         <Stack direction='row' gap={1}>
                             <ProjectStatusIndicator {...project} />
                             <ProjectBranch {...project} />
