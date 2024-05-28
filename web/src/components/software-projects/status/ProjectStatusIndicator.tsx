@@ -3,64 +3,109 @@
 import CircularProgress, {
     circularProgressClasses,
 } from '@mui/material/CircularProgress';
-import { Box, Icon } from '@mui/material';
-import { Cancel, Check, Help } from '@mui/icons-material';
-import { SoftwareProjectStatus } from '@/types/software-project';
+import { Box, Chip, SxProps } from '@mui/material';
 import { IProjectScan } from '@/types/project-scan';
 import { getProjectStatus } from '@/utils/Utils';
+import Link from 'next/link';
+import { ISoftwareProject } from '@/types/software-project';
 
-interface IStatusIndicatorProps {
-    scan: IProjectScan;
+const StatusDot = (props: { color: string }) => {
+    return (
+        <Box
+            sx={{
+                width: '12px',
+                height: '12px',
+                ml: 1,
+                borderRadius: '50%',
+                backgroundColor: props.color
+            }}
+        />
+    )
 }
 
-export default function ProjectStatusIndicator(props: IStatusIndicatorProps) {
-    const status = getProjectStatus(props.scan);
+export default function ProjectStatusIndicator(props: ISoftwareProject) {
+    const status = getProjectStatus(props.last_scan);
+
+    let icon = <StatusDot color='action' />
+    let label = 'Pending'
+    let sxProps: SxProps = {}
 
     switch (status) {
         case 'FAILED':
-            return (
-                <Cancel sx={{ width: '24px', height: '24px', m: '-4px' }}/>
+            label = 'Failed'
+            icon = (
+                <StatusDot color='rgb(238, 0, 0)' />
             )
+            break;
 
-        case 'PENDING':
-            return (
-                <Box sx={{ position: 'relative', width: '16px', height: '16px' }}>
+        case 'SCANNING':
+            label='Scanning'
+            sxProps = {
+                backgroundColor: 'yellow',
+                borderColor: 'orange',
+            }
+            icon = (
+                <Box ml={0}>
+                <Box sx={{ position: 'relative', mx: 0.5, width: '12px', height: '12px' }}>
                     <CircularProgress
                         variant="determinate"
                         sx={{
-                            color: 'rgba(219, 171, 10, 0.5)'
+                            display: 'block',
+                            color: 'rgba(219, 171, 10, 0.5)',
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
                         }}
-                        size={16}
-                        thickness={8}
+                        size={12}
+                        thickness={10}
                         value={100}
                     />
                     <CircularProgress
                         variant="indeterminate"
                         disableShrink
                         sx={{
+                            display: 'block',
                             color: '#dbab0a',
                             animationDuration: '1000ms',
                             position: 'absolute',
                             left: 0,
+                            top: 0,
                             [`& .${circularProgressClasses.circle}`]: {
                                 strokeLinecap: 'round',
                                 strokeDasharray: '30px, 200px'
                             },
                         }}
-                        size={16}
-                        thickness={8}
+                        size={12}
+                        thickness={10}
                     />
                 </Box>
+                </Box>
             )
-        
+            break
+
         case 'SUCCEEDED':
-            return (
-                <Check color='success' sx={{ width: '24px', height: '24px', m: '-4px' }} />
+            label = 'Ready'
+            icon = (
+                <StatusDot color='#50e3c2' />
             )
+            break;
 
         default:
-            return (
-                <Help color='action' sx={{ width: '24px', height: '24px', m: '-4px' }} />
-            )
+            break;
     }
+
+    return (
+        <Chip
+            variant='outlined'
+            size='small'
+            icon={icon}
+            label={label}
+            component={Link}
+            href={`/projects/${props.full_name}/scans`}
+            sx={{
+                ...sxProps,
+                cursor: 'pointer'
+            }}
+        />
+    )
 }

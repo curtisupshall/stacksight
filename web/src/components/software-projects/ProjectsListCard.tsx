@@ -8,6 +8,7 @@ import { ForkRight, Print } from '@mui/icons-material';
 import ProjectStatus from './status/ProjectStatus';
 import ProjectBranch from './status/ProjectBranch';
 import { getProjectStatus } from '../../utils/Utils';
+import ProjectStatusIndicator from "./status/ProjectStatusIndicator";
 
 export default async function ProjectsListCard(props: ISoftwareProject) {
     return (
@@ -24,6 +25,7 @@ export default async function ProjectsListCard(props: ISoftwareProject) {
                             </Link>
                         </Breadcrumbs>
                         {/* <ProjectStatus project={props} /> */}
+                        <ProjectStatusIndicator {...props} />
                     </Stack>
                     <Typography variant='body2'>
                         {props.description}

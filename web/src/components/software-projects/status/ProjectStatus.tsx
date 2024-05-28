@@ -45,9 +45,9 @@ export default function ProjectStatus(props: IProjectStatusProps) {
                 <Typography>Commit message</Typography>
             )}
 
-            {slots.SCAN_INDICATOR && (
+            {/* {slots.SCAN_INDICATOR && (
                 <ProjectStatusIndicator scan={props.project.last_scan} />
-            )}
+            )} */}
 
             {slots.SCAN_TIMESTAMP && (
                 <ProjectTimestamp scan={props.project.last_scan} />

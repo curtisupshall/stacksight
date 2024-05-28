@@ -25,7 +25,7 @@ export type ICreateSoftwareProjectRecord = Pick<ISoftwareProjectRecord,
 >
 
 export type SoftwareProjectStatus =
-    | 'PENDING'
+    | 'SCANNING'
     | 'SUCCEEDED'
     | 'FAILED'
-    | 'UNKNOWN'
+    | 'PENDING'

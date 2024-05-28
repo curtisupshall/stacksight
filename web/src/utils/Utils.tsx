@@ -4,10 +4,10 @@ import { ISoftwareProject, SoftwareProjectStatus } from "../types/software-proje
 
 
 export const getProjectStatus = (scan: IProjectScan): SoftwareProjectStatus => {
-    let status: SoftwareProjectStatus = 'UNKNOWN';
+    let status: SoftwareProjectStatus = 'PENDING';
 
     if (scan.dispatched_at) {
-        status = 'PENDING'
+        status = 'SCANNING'
     }
 
     if (scan.completed_at) {
