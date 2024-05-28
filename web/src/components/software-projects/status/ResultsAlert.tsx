@@ -8,7 +8,7 @@ export default function ResultsAlert() {
 
     return (
         <Collapse in={!hidden}>
-            <Box pb={3}>
+            <Box pb={2}>
                 <Alert severity="warning" onClose={() => setHidden(true)}>
                     <AlertTitle>Results are not current</AlertTitle>
                     <Typography>The results of this project will be updated when the next successful scan is completed.</Typography>

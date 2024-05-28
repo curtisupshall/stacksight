@@ -1,6 +1,6 @@
 'use server'
 
-import { Alert, AlertTitle, Box, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Divider, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
 import { DbConnection } from "../../../../../../server/database/db";
 import { SoftwareProjectService } from "../../../../../../server/services/software-project-service";
 import { notFound } from "next/navigation";
@@ -37,8 +37,7 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                 <section>
                     <ResultsAlert />
                     <Box mb={3}>
-                        <Typography variant='h3' mb={1}>{repoFullName}</Typography>
-                        <Typography mb={1}>{project.description}</Typography>
+                        <Typography variant='h3' mb={2}>{repoFullName}</Typography>
                         <Stack direction='row' gap={1}>
                             <ProjectStatusIndicator {...project} />
                             <ProjectBranch {...project} />
@@ -46,20 +45,23 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                         </Stack>
                     </Box>
                     
-                    <Grid container columns={2} mt={2}>
-                        <Grid item xs={1}>
-                            
+                    <Grid container columns={3} spacing={4}>
+                        <Grid item xs={2}>
+                            <Box>
+                                <Typography variant='h6'>The Stack</Typography>
+                                <ProjectTechStack tags={project.last_scan.tags ?? []} />
+                            </Box>
                         </Grid>
                         <Grid item xs={1}>
                             <Stack gap={1}>
                                 <Box>
-                                    <Typography variant='h5'>Languages</Typography>
+                                    <Typography variant='h6' mb={2}>About</Typography>
+                                    <Typography>{project.description}</Typography>
+                                    <Divider sx={{ my: 2 }} />
+                                    <Typography variant='h6' mb={2}>Languages</Typography>
                                     <ProjectLanguages languages={project.last_scan.languages ?? []} />
                                 </Box>
-                                <Box>
-                                    <Typography variant='h5'>Frameworks</Typography>
-                                    <ProjectTechStack tags={project.last_scan.tags ?? []} />
-                                </Box>
+                                
                             </Stack>
                         </Grid>
                     </Grid>
