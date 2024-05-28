@@ -53,8 +53,6 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
             ? otherCategoryLineCount / totalLanguageLineCount
             : undefined
 
-        console.log('otherPercentage:', otherPercentage)
-
         if (otherPercentage) {
             chartData.push({
                 flex: otherCategoryLineCount / minLineCount,
@@ -81,6 +79,7 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
                 {languageData.chartData.map((bar) => {
                     return (
                         <Box
+                            key={`${bar.color}-${bar.flex}`}
                             style={{ backgroundColor: bar.color }}
                             sx={{ flex: bar.flex, height: 12 }}
                         />
@@ -90,7 +89,7 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
             <Stack direction='row' my={1}>
                 {languageData.languageDetails.map((language) => {
                     return (
-                        <Stack direction='row' alignItems='center' gap={0.5}>
+                        <Stack key={language.name} direction='row' alignItems='center' gap={0.5}>
                             <Box sx={{ borderRadius: '50%', width: 24, height: 24, backgroundColor: language.color }} />
                             <Typography sx={{ fontWeight: 500 }}>
                                 {language.name}&nbsp;
