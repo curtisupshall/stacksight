@@ -1,19 +1,20 @@
+import { IProjectScan } from "@/types/project-scan";
 import { SOFTWARE_CATEGORIES, SOFTWARE_LIBRARIES, SOFTWARE_LIBRARIES_BY_CATEGORY, SoftwareCategory, SoftwareCategorySlug, SoftwareLibrary, SoftwareLibrarySlug } from "../constants/libs";
 import { ISoftwareProject, SoftwareProjectStatus } from "../types/software-project";
 
 
-export const getProjectStatus = (project: ISoftwareProject): SoftwareProjectStatus => {
-    let status: SoftwareProjectStatus = 'UNKNOWN';
+export const getProjectStatus = (scan: IProjectScan): SoftwareProjectStatus => {
+    let status: SoftwareProjectStatus = 'PENDING';
 
-    if (project.last_scan_dispatched_at) {
-        status = 'PENDING'
+    if (scan.dispatched_at) {
+        status = 'SCANNING'
     }
 
-    if (project.last_scan_completed_at) {
+    if (scan.completed_at) {
         status = 'SUCCEEDED'
     }
 
-    if (project.last_scan_aborted_at) {
+    if (scan.aborted_at) {
         status = 'FAILED'
     }
 
