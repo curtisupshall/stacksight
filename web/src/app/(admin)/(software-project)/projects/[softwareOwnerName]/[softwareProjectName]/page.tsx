@@ -13,6 +13,7 @@ import { OpenInNew } from "@mui/icons-material";
 import ProjectStatus from "../../../../../../components/software-projects/status/ProjectStatus";
 import ProjectCommitHash from "@/components/software-projects/status/ProjectCommitHash";
 import ProjectStatusIndicator from "@/components/software-projects/status/ProjectStatusIndicator";
+import ResultsAlert from "@/components/software-projects/status/ResultsAlert";
 
 export default async function SoftwareProjectPage({ params }: { params: { softwareProjectName: string, softwareOwnerName: string }}) {
     
@@ -34,38 +35,38 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
         await connection.commit();
 
         return (
-            <section>
-                <Box mb={2}>
-                    <Typography variant='h3' mb={1}>{repoFullName}</Typography>
-                    <Typography mb={1}>{project.description}</Typography>
-                    <Stack direction='row' gap={1}>
-                        <ProjectStatusIndicator {...project} />
-                        <ProjectBranch {...project} />
-                        <ProjectCommitHash {...project} />
-                    </Stack>
-                </Box>
-                <Alert severity="warning">
-                    <AlertTitle>Results are not current</AlertTitle>
-                    <Typography>The results of this project will be updated when the next successful scan is completed.</Typography>
-                </Alert>
-                <Grid container columns={2} mt={2}>
-                    <Grid item xs={1}>
-                        
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Stack gap={1}>
-                            <Box>
-                                <Typography variant='h5'>Languages</Typography>
-                                <ProjectLanguages languages={project.last_scan.languages ?? []} />
-                            </Box>
-                            <Box>
-                                <Typography variant='h5'>Frameworks</Typography>
-                                <ProjectTechStack tags={project.last_scan.tags ?? []} />
-                            </Box>
+            <>
+                <section>
+                    <ResultsAlert />
+                    <Box mb={3}>
+                        <Typography variant='h3' mb={1}>{repoFullName}</Typography>
+                        <Typography mb={1}>{project.description}</Typography>
+                        <Stack direction='row' gap={1}>
+                            <ProjectStatusIndicator {...project} />
+                            <ProjectBranch {...project} />
+                            <ProjectCommitHash {...project} />
                         </Stack>
+                    </Box>
+                    
+                    <Grid container columns={2} mt={2}>
+                        <Grid item xs={1}>
+                            
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Stack gap={1}>
+                                <Box>
+                                    <Typography variant='h5'>Languages</Typography>
+                                    <ProjectLanguages languages={project.last_scan.languages ?? []} />
+                                </Box>
+                                <Box>
+                                    <Typography variant='h5'>Frameworks</Typography>
+                                    <ProjectTechStack tags={project.last_scan.tags ?? []} />
+                                </Box>
+                            </Stack>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </section>
+                </section>
+            </>
         )
     } catch (error) {
         connection.rollback();
