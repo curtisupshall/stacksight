@@ -12,6 +12,7 @@ import ProjectLanguages from "../../../../../../components/tech-stack/ProjectLan
 import { OpenInNew } from "@mui/icons-material";
 import ProjectStatus from "../../../../../../components/software-projects/status/ProjectStatus";
 import ProjectCommitHash from "@/components/software-projects/status/ProjectCommitHash";
+import ProjectStatusIndicator from "@/components/software-projects/status/ProjectStatusIndicator";
 
 export default async function SoftwareProjectPage({ params }: { params: { softwareProjectName: string, softwareOwnerName: string }}) {
     
@@ -37,16 +38,11 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                 <Box mb={5}>
                     <Typography variant='h3' mb={1}>{repoFullName}</Typography>
                     <Typography mb={1}>{project.description}</Typography>
-                    <Stack direction='row'>
+                    <Stack direction='row' gap={1}>
+                        <ProjectStatusIndicator {...project} />
                         <ProjectBranch {...project} />
                         <ProjectCommitHash {...project} />
                     </Stack>
-                    <Link href={project.html_url} target='_blank'>
-                        <Stack direction='row'>
-                            <Typography>View Source</Typography>
-                            <OpenInNew />
-                        </Stack>
-                    </Link>
                 </Box>
                 <Grid container columns={2}>
                     <Grid item xs={1}>

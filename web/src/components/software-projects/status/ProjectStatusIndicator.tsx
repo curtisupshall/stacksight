@@ -1,5 +1,9 @@
 'use client'
 
+import dayjs from 'dayjs'
+import relativeTime from "dayjs/plugin/relativeTime"
+dayjs.extend(relativeTime)
+
 import CircularProgress, {
     circularProgressClasses,
 } from '@mui/material/CircularProgress';
@@ -84,7 +88,7 @@ export default function ProjectStatusIndicator(props: ISoftwareProject) {
             break
 
         case 'SUCCEEDED':
-            label = 'Ready'
+            label = `Ready (${dayjs(props.last_scan.completed_at).fromNow()})`
             icon = (
                 <StatusDot color='#50e3c2' />
             )
@@ -97,7 +101,7 @@ export default function ProjectStatusIndicator(props: ISoftwareProject) {
     return (
         <Chip
             variant='outlined'
-            size='small'
+            // size='small'
             icon={icon}
             label={label}
             component={Link}
