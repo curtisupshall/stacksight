@@ -20,7 +20,7 @@ export default function AddProjectForm(props: IAddProjectFormProps) {
                         minWidth: '400px'
                     }}
                 />
-                <Button variant='outlined' type='submit'>Add</Button>
+                <Button variant='contained' color='primary' type='submit'>Add</Button>
             </Stack>
         </form>
     )

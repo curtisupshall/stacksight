@@ -14,13 +14,15 @@ const appTheme = createTheme({
     // },
     palette: {
         primary: {
-            light: '#5469a4',
-            main: '#1A237E',
-            // main: '#004d40',
-            // main: '#D6453D',
-            dark: '#001949',
+            // light: '#BAE9FE',
+            // main: '#8FCEED',
+            main: '#1D6087',
             contrastText: '#ffffff'
         },
+        secondary: {
+            main: '#8FCEED',
+            contrastText: '#000'
+        }
         // success: {
         //     main: '#2E8540'
         // },
@@ -82,8 +84,16 @@ const appTheme = createTheme({
                     }
                 }
             }
-        }
-
+        },
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    textTransform: 'none',
+                    minWidth: '0 !important',
+                    fontWeight: 700
+                }
+            }
+        },
     }
 });
 
