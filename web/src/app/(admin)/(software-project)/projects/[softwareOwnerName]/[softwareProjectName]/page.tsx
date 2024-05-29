@@ -46,7 +46,9 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                         <Stack direction='row' gap={1}>
                             <ProjectStatusIndicator {...project} />
                             <ProjectBranch {...project} />
-                            <ProjectCommitHash {...project} />
+                            {project.last_scan && (
+                                <ProjectCommitHash {...project.last_scan} />
+                            )}
                         </Stack>
                     </Box>
                     
