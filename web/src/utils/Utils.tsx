@@ -46,7 +46,7 @@ export const getProjectStatus = (scan?: IProjectScan | null): SoftwareProjectSta
     return status;
 }
 
-export const categorizeProjectTags = (tags: SoftwareLibrarySlug[]): (SoftwareCategory & { libraries: SoftwareLibrary[] })[]  => {
+export const categorizeProjectTags = (tags: SoftwareLibrarySlug[]): (SoftwareCategory & { libraries: (SoftwareLibrary & { slug: string })[] })[]  => {
     return Object
         .entries(SOFTWARE_CATEGORIES)
         .map(([categorySlug, category]: [string, SoftwareCategory]) => {
