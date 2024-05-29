@@ -7,14 +7,19 @@ import { ITab } from '@/hooks/useAppTabs'
 
 const tabs: ITab[] = [
 	{
+		href: `/dashboard`,
+		label: 'Dashboard',
+		matcherKey: "DASHBOARD"
+	},
+	{
 		href: `/projects`,
 		label: 'Projects',
 		matcherKey: "PROJECTS"
 	},
 	{
-		href: `/dashboard`,
-		label: 'Dashboard',
-		matcherKey: "DASHBOARD"
+		href: `/tags`,
+		label: 'Frameworks',
+		matcherKey: "TAGS"
 	}
 ];
 

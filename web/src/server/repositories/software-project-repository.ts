@@ -157,4 +157,19 @@ export class SoftwareProjectRepository extends BaseRepository {
 
         return response.rows[0]
     }
+
+    async listProjectsByTag(tag: string): Promise<ISoftwareProject[]> {
+        const query = this._getListProjectsQuery()
+            .whereExists(function () {
+                // Nested query to check existence of the tag within the current project's scans
+                this.select('*')
+                    .from('software_project_tag as spt')
+                    .whereRaw('spt.software_project_scan_id = latest_scan_details.software_project_scan_id')
+                    .andWhere('spt.tag', '=', tag);
+            });
+    
+        const response = await this.connection.knex(query);
+
+        return response.rows;
+    }
 }

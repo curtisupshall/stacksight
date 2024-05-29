@@ -73,6 +73,9 @@ export class SoftwareProjectService extends BaseService {
 
         await projectScanService.deleteProjectScansByProjectId(softwareProjectId);
         return this.softwareProjectRepository.deleteProjectRecordByProjectId(softwareProjectId);
+    }
 
+    async listProjectsByTag(tag: string): Promise<ISoftwareProject[]> {
+        return this.softwareProjectRepository.listProjectsByTag(tag);
     }
 }

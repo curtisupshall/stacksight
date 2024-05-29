@@ -54,7 +54,7 @@ export const categorizeProjectTags = (tags: SoftwareLibrarySlug[]): (SoftwareCat
                 ...category,
                 libraries: tags
                     .filter((tag) => SOFTWARE_LIBRARIES_BY_CATEGORY[categorySlug].includes(tag))
-                    .map((tag) => SOFTWARE_LIBRARIES[tag])
+                    .map((tag) => ({ ...SOFTWARE_LIBRARIES[tag], slug: tag }))
             };
         })
         .filter((category) => {

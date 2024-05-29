@@ -21,8 +21,8 @@ export default function ProjectTechStack(props: IProjectTechStackProps) {
                     return (
 
                         <TableRow key={category.name}>
-                            <TableCell sx={{ pl: 0, verticalAlign: 'top' }}>
-                                <Typography variant='body1'>{category.name}</Typography>
+                            <TableCell sx={{ pl: 0, verticalAlign: 'top', position: 'sticky', top: 0 }}>
+                                <Typography variant='body1' sx={{ backgroundColor: 'white' }}>{category.name}</Typography>
                             </TableCell>
                             <TableCell sx={{ pr: 0 }}>
                                 <Stack gap={1}>
@@ -30,7 +30,7 @@ export default function ProjectTechStack(props: IProjectTechStackProps) {
                                         return (
                                             <Box key={library.name}>
                                                 <Typography variant='body1' sx={{ display: 'inline-flex', gap: 1 }}>
-                                                    <strong><span>{library.name} </span></strong>
+                                                    <strong><Link href={`/tags/${library.slug}`}>{library.name}</Link></strong>
                                                     <Link component='a' target='_blank' href={library.docsUrl} sx={{ color: 'action', display: 'inline-flex', gap: 0.5, alignItems: 'center' }}>
                                                             <InsertLink fontSize="small" />
                                                             {formatDocsUrl(library.docsUrl)}
