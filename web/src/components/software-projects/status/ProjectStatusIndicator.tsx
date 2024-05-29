@@ -88,7 +88,7 @@ export default function ProjectStatusIndicator(props: ISoftwareProject) {
             break
 
         case 'SUCCEEDED':
-            label = `Ready (${dayjs(props.last_scan.completed_at).fromNow()})`
+            label = `Ready (${dayjs(props.last_scan?.completed_at).fromNow()})`
             icon = (
                 <StatusDot color='#50e3c2' />
             )
