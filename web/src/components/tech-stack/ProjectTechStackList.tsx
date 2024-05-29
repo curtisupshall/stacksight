@@ -21,8 +21,8 @@ export default function ProjectTechStack(props: IProjectTechStackProps) {
                     return (
 
                         <TableRow key={category.name}>
-                            <TableCell sx={{ pl: 0, verticalAlign: 'top' }}>
-                                <Typography variant='body1'>{category.name}</Typography>
+                            <TableCell sx={{ pl: 0, verticalAlign: 'top', position: 'sticky', top: 0 }}>
+                                <Typography variant='body1' sx={{ backgroundColor: 'white' }}>{category.name}</Typography>
                             </TableCell>
                             <TableCell sx={{ pr: 0 }}>
                                 <Stack gap={1}>
