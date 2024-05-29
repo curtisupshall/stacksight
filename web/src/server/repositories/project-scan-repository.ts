@@ -37,9 +37,9 @@ export class ProjectScanRepository extends BaseRepository {
     async updateProjectScanRecordEndDate(softwareProjectScanId: number) {
         await this.connection.query(`
             UPDATE software_project_scan
-            SET completed_at = NOW()
-            WHERE software_project_scan_id = $1
-        `, [softwareProjectScanId]);
+            SET completed_at = $1
+            WHERE software_project_scan_id = $2
+        `, [new Date().toISOString(), softwareProjectScanId]);
     }
 
     async addTagsToProjectScan(softwareProjectScanId: number, tags: string[]) {
