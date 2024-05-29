@@ -44,16 +44,33 @@ export class ProjectScanService extends BaseService {
     }
 
     async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{
-        // Step 1. Persist the scan in the database
-        const scanRecord = await this.projectScanRepository.createProjectScanRecord(projectRecord.software_project_id)
+        // Step 1. Collect commit details from the repo
+        const githubCommitResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/commits?per_page=1`);
+        const gitHubCommitJson = (await githubCommitResponse.json())[0] as any
+        
+        const commit_sha = gitHubCommitJson.sha;
+        const commit_message = gitHubCommitJson.commit.message;
+        const author_name = gitHubCommitJson.commit.author.name;
+        const commit_date = gitHubCommitJson.commit.committer.date;
+        const commit_html_url = gitHubCommitJson.html_url;
 
-        // Step 2. Record the current language statistics for the repo
+        // Step 2. Persist the scan in the database
+        const scanRecord = await this.projectScanRepository.createProjectScanRecord({
+            software_project_id: projectRecord.software_project_id,
+            commit_sha,
+            commit_message,
+            author_name,
+            commit_date,
+            commit_html_url
+        });
+
+        // Step 3. Record the current language statistics for the repo
         const githubResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/languages`);
         const gitHubJson = await githubResponse.json() as Record<string, number>;
         await this.projectScanRepository.addLanguagesToProjectScan(scanRecord.software_project_scan_id, gitHubJson);
 
 
-        // Step 3. Dispatch the scan to the repo scan queue
+        // Step 4. Dispatch the scan to the repo scan queue
         const sqsClient = new SQSClient(sqsConfig);
         if (!process.env.AWS_REPO_SCAN_QUEUE_URL) {
             throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
