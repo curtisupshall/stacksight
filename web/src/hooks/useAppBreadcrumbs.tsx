@@ -16,6 +16,10 @@ const breadcrumbMatchers = [
         label: 'Dashboard',
         pattern: /\/dashboard$/
     },
+    {
+        label: 'Frameworks',
+        pattern: /\/tags$/
+    },
 ] as const;
 
 const getBreadcrumbName = (path: string): string | undefined => {
