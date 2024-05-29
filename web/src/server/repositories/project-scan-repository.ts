@@ -1,6 +1,8 @@
 import { ICreateProjectScanRecord, IProjectScanRecord } from "@/types/project-scan";
 import { DbConnection } from "../database/db";
 import { BaseRepository } from "./base-repository";
+import { ISoftwareProject } from "@/types/software-project";
+import { SoftwareProjectRepository } from "./software-project-repository";
 
 export class ProjectScanRepository extends BaseRepository {
     

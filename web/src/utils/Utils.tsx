@@ -21,7 +21,7 @@ export const getProjectStatus = (scan?: IProjectScan | null): SoftwareProjectSta
     return status;
 }
 
-export const categorizeProjectTags = (tags: SoftwareLibrarySlug[]): (SoftwareCategory & { libraries: SoftwareLibrary[] })[]  => {
+export const categorizeProjectTags = (tags: SoftwareLibrarySlug[]): (SoftwareCategory & { libraries: (SoftwareLibrary & { slug: string })[] })[]  => {
     // const visibleCategories: SoftwareCategorySlug[] = Array.from(
     //     tags.reduce((acc: Set<SoftwareCategorySlug>, tag: SoftwareLibrarySlug) => {
     //         const category: SoftwareCategorySlug | null = Object.entries()
@@ -37,7 +37,7 @@ export const categorizeProjectTags = (tags: SoftwareLibrarySlug[]): (SoftwareCat
                 ...category,
                 libraries: tags
                     .filter((tag) => SOFTWARE_LIBRARIES_BY_CATEGORY[categorySlug].includes(tag))
-                    .map((tag) => SOFTWARE_LIBRARIES[tag])
+                    .map((tag) => ({ ...SOFTWARE_LIBRARIES[tag], slug: tag }))
             };
         })
         .filter((category) => {
