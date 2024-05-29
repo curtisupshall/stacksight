@@ -43,6 +43,10 @@ export class ProjectScanService extends BaseService {
         return this.projectScanRepository.listScansByProjectId(softwareProjectId);
     }
 
+    async getLatestSuccessfulScanByProjectId(softwareProjectId: number): Promise<IProjectScanRecord | undefined> {
+        return this.projectScanRepository.getLatestSuccessfulScanByProjectId(softwareProjectId);
+    }
+
     async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{
         // Step 1. Collect commit details from the repo
         const githubCommitResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/commits?per_page=1`);

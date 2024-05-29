@@ -12,7 +12,7 @@ export interface ISoftwareProjectRecord {
 
 // Desired response type:
 export interface ISoftwareProject extends ISoftwareProjectRecord {
-    last_scan: IProjectScan;
+    last_scan: IProjectScan | null;
 }
 
 export type ICreateSoftwareProjectRecord = Pick<ISoftwareProjectRecord,

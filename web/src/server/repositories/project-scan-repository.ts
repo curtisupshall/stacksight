@@ -44,6 +44,22 @@ export class ProjectScanRepository extends BaseRepository {
         return response.rows;
     }
 
+    async getLatestSuccessfulScanByProjectId(softwareProjectId: number): Promise<IProjectScanRecord | undefined> {
+        const response = await this.connection.query(
+            `
+                SELECT *
+                FROM software_project_scan
+                WHERE completed_at IS NOT NULL
+                AND software_project_id = $1
+                ORDER BY dispatched_at DESC
+                LIMIT 1;
+            `,
+            [softwareProjectId]
+        );
+
+        return response.rows[0]
+    }
+
     async updateProjectScanRecordEndDate(softwareProjectScanId: number) {
         await this.connection.query(`
             UPDATE software_project_scan
