@@ -25,18 +25,22 @@ export class ProjectScanService extends BaseService {
     }
 
 
-    async scanProjectById(projectId: number) {
+    async scanProjectById(softwareProjectId: number) {
         const softwareProjectService = new SoftwareProjectService(this.connection);
 
         // Step 1. Check if the project exists before scanning
-        const softwareProjectRecord = await softwareProjectService.getProjectRecordById(projectId);
+        const softwareProjectRecord = await softwareProjectService.getProjectRecordById(softwareProjectId);
 
         if (!softwareProjectRecord) {
-            throw new Error(`Failed to find project with ID: ${projectId}`)
+            throw new Error(`Failed to find project with ID: ${softwareProjectId}`)
         }
 
         // Step 2. Dispatch the scan
         return await this.disaptchProjectScan(softwareProjectRecord);
+    }
+
+    async listScansByProjectId(softwareProjectId: number) {
+        return this.projectScanRepository.listScansByProjectId(softwareProjectId);
     }
 
     async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{

@@ -86,11 +86,11 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
                     );
                 })}
             </Stack>
-            <Stack direction='row' my={1}>
+            <Stack direction='row' my={1} rowGap={0} columnGap={1} flexWrap={'wrap'}>
                 {languageData.languageDetails.map((language) => {
                     return (
                         <Stack key={language.name} direction='row' alignItems='center' gap={0.5}>
-                            <Box sx={{ borderRadius: '50%', width: 24, height: 24, backgroundColor: language.color }} />
+                            <Box sx={{ borderRadius: '50%', width: 16, height: 16, backgroundColor: language.color }} />
                             <Typography sx={{ fontWeight: 500 }}>
                                 {language.name}&nbsp;
                                 <Typography component='span' variant='body2' color='action'>

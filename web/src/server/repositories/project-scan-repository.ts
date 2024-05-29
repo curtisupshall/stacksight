@@ -23,6 +23,17 @@ export class ProjectScanRepository extends BaseRepository {
         return response.rows[0];
     }
 
+    async listScansByProjectId(softwareProjectId: number): Promise<IProjectScanRecord[]> {
+        const response = await this.connection.query(
+            `
+                SELECT * FROM software_project_scan
+                WHERE software_project_id = $1;
+            `, [softwareProjectId]
+        );
+
+        return response.rows;
+    }
+
     async updateProjectScanRecordEndDate(softwareProjectScanId: number) {
         await this.connection.query(`
             UPDATE software_project_scan
