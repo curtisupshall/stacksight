@@ -1,4 +1,4 @@
-import { IProjectScanRecord } from "@/types/project-scan";
+import { ICreateProjectScanRecord, IProjectScanRecord } from "@/types/project-scan";
 import { DbConnection } from "../database/db";
 import { BaseRepository } from "./base-repository";
 
@@ -8,15 +8,25 @@ export class ProjectScanRepository extends BaseRepository {
         super(connection);
     }
 
-    async createProjectScanRecord(softwareProjectId: number): Promise<IProjectScanRecord> {
+    async createProjectScanRecord(newScanRecord: ICreateProjectScanRecord): Promise<IProjectScanRecord> {
         const response = await this.connection.query(`
             INSERT INTO software_project_scan (
-                software_project_id
+                software_project_id,
+                commit_sha,
+                commit_message,
+                author_name,
+                commit_date,
+                commit_html_url
             )
-            VALUES ($1)
+            VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *`,
             [
-                softwareProjectId
+                newScanRecord.software_project_id,
+                newScanRecord.commit_sha,
+                newScanRecord.commit_message,
+                newScanRecord.author_name,
+                newScanRecord.commit_date,
+                newScanRecord.commit_html_url
             ]
         );
 
@@ -32,6 +42,22 @@ export class ProjectScanRepository extends BaseRepository {
         );
 
         return response.rows;
+    }
+
+    async getLatestSuccessfulScanByProjectId(softwareProjectId: number): Promise<IProjectScanRecord | undefined> {
+        const response = await this.connection.query(
+            `
+                SELECT *
+                FROM software_project_scan
+                WHERE completed_at IS NOT NULL
+                AND software_project_id = $1
+                ORDER BY dispatched_at DESC
+                LIMIT 1;
+            `,
+            [softwareProjectId]
+        );
+
+        return response.rows[0]
     }
 
     async updateProjectScanRecordEndDate(softwareProjectScanId: number) {

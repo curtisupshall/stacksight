@@ -1,10 +1,11 @@
 import { ForkRight } from "@mui/icons-material";
 import { ISoftwareProject } from "../../../types/software-project";
 import { Chip } from "@mui/material";
+import { IProjectScanRecord } from "@/types/project-scan";
 
 
-export default function ProjectCommitHash(props: ISoftwareProject) {
-    const hash = props.last_scan.commit_sha.slice(0, 7);
+export default function ProjectCommitHash(props: IProjectScanRecord) {
+    const hash = props.commit_sha.slice(0, 7);
 
     return (
         <Chip
@@ -20,7 +21,7 @@ export default function ProjectCommitHash(props: ISoftwareProject) {
             }}
             // size='small'
             component='a'
-            href={props.last_scan.commit_html_url}
+            href={props.commit_html_url}
             target='_blank'
         />
     )

@@ -11,6 +11,15 @@ export interface IProjectScanRecord {
     aborted_at: string | null;
 }
 
+export type ICreateProjectScanRecord = Pick<IProjectScanRecord,
+    | 'software_project_id'
+    | 'commit_sha'
+    | 'commit_message'
+    | 'author_name'
+    | 'commit_date'
+    | 'commit_html_url'
+>
+
 export interface IProjectScan extends IProjectScanRecord {
     tags: string[] | null;
     languages: IProjectLanguage[] | null;

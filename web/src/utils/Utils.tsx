@@ -3,18 +3,18 @@ import { SOFTWARE_CATEGORIES, SOFTWARE_LIBRARIES, SOFTWARE_LIBRARIES_BY_CATEGORY
 import { ISoftwareProject, SoftwareProjectStatus } from "../types/software-project";
 
 
-export const getProjectStatus = (scan: IProjectScan): SoftwareProjectStatus => {
+export const getProjectStatus = (scan?: IProjectScan | null): SoftwareProjectStatus => {
     let status: SoftwareProjectStatus = 'PENDING';
 
-    if (scan.dispatched_at) {
+    if (scan?.dispatched_at) {
         status = 'SCANNING'
     }
 
-    if (scan.completed_at) {
+    if (scan?.completed_at) {
         status = 'SUCCEEDED'
     }
 
-    if (scan.aborted_at) {
+    if (scan?.aborted_at) {
         status = 'FAILED'
     }
 
