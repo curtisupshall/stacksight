@@ -1,7 +1,32 @@
+import dayjs from 'dayjs'
+import relativeTime from "dayjs/plugin/relativeTime"
+import utc from "dayjs/plugin/utc"
+import updateLocale from "dayjs/plugin/updateLocale"
+
+dayjs.extend(relativeTime)
+dayjs.extend(utc)
+dayjs.extend(updateLocale)
+dayjs.updateLocale('en', {
+    relativeTime: {
+        future: "in %s",
+        past: "%s",
+        s: 'Now',
+        m: "1m ago",
+        mm: "%dm ago",
+        h: "1h ago",
+        hh: "%dh ago",
+        d: "1d ago",
+        dd: "%dd ago",
+        M: "1mo ago",
+        MM: "%dmo ago",
+        y: "1y ago",
+        yy: "%dy ago"
+    }
+});
+
 import { IProjectScan } from "@/types/project-scan";
 import { SOFTWARE_CATEGORIES, SOFTWARE_LIBRARIES, SOFTWARE_LIBRARIES_BY_CATEGORY, SoftwareCategory, SoftwareCategorySlug, SoftwareLibrary, SoftwareLibrarySlug } from "../constants/libs";
-import { ISoftwareProject, SoftwareProjectStatus } from "../types/software-project";
-
+import { SoftwareProjectStatus } from "../types/software-project";
 
 export const getProjectStatus = (scan?: IProjectScan | null): SoftwareProjectStatus => {
     let status: SoftwareProjectStatus = 'PENDING';
@@ -21,15 +46,7 @@ export const getProjectStatus = (scan?: IProjectScan | null): SoftwareProjectSta
     return status;
 }
 
-export const categorizeProjectTags = (tags: SoftwareLibrarySlug[]): (SoftwareCategory & { libraries: (SoftwareLibrary & { slug: string })[] })[]  => {
-    // const visibleCategories: SoftwareCategorySlug[] = Array.from(
-    //     tags.reduce((acc: Set<SoftwareCategorySlug>, tag: SoftwareLibrarySlug) => {
-    //         const category: SoftwareCategorySlug | null = Object.entries()
-
-    //         return acc;
-    //     }, new Set<SoftwareCategorySlug>())
-    // );
-
+export const categorizeProjectTags = (tags: SoftwareLibrarySlug[]): (SoftwareCategory & { libraries: SoftwareLibrary[] })[]  => {
     return Object
         .entries(SOFTWARE_CATEGORIES)
         .map(([categorySlug, category]: [string, SoftwareCategory]) => {
@@ -58,4 +75,8 @@ export const formatDocsUrl = (url: string | undefined): string => {
         console.error('Invalid URL:', error);
         return '';
     }
+}
+
+export const getRelativeTime = (timestamp: string | null): string => {
+    return dayjs.utc(timestamp).fromNow()
 }

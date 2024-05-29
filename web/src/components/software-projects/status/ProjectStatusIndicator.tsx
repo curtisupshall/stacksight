@@ -1,15 +1,13 @@
 'use client'
 
-import dayjs from 'dayjs'
-import relativeTime from "dayjs/plugin/relativeTime"
-dayjs.extend(relativeTime)
+
 
 import CircularProgress, {
     circularProgressClasses,
 } from '@mui/material/CircularProgress';
 import { Box, Chip, SxProps } from '@mui/material';
 import { IProjectScan } from '@/types/project-scan';
-import { getProjectStatus } from '@/utils/Utils';
+import { getProjectStatus, getRelativeTime } from '@/utils/Utils';
 import Link from 'next/link';
 import { ISoftwareProject } from '@/types/software-project';
 
@@ -88,7 +86,7 @@ export default function ProjectStatusIndicator(props: ISoftwareProject) {
             break
 
         case 'SUCCEEDED':
-            label = `Ready (${dayjs(props.last_scan?.completed_at).fromNow()})`
+            label = `Ready (${getRelativeTime(props.last_scan?.completed_at ?? null)})`
             icon = (
                 <StatusDot color='#50e3c2' />
             )
