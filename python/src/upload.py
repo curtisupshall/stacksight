@@ -2,7 +2,7 @@ import requests
 import json
 import os
 
-def send_results(request_url, tags):
+def send_results(request_url, tags, contributors, languages, last_commit):
     print('Your results are being uploaded')
 
     # Prepare the request
@@ -11,7 +11,10 @@ def send_results(request_url, tags):
         'Authorization': authorization
     }
     data = json.dumps({
-        'tags': tags
+        'tags': tags,
+        'contributors': contributors,
+        'languages': languages,
+        'last_commit': last_commit
     })
 
     # Send the request

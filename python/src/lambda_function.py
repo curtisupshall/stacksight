@@ -1,6 +1,7 @@
 from classify import classify
 from download import download_and_unzip_repo
 from upload import send_results
+from vc import get_contributors_json, get_languages_json, get_last_commit_json
 import json
 import os
 
@@ -26,7 +27,11 @@ def lambda_handler(event, context):
 
         # Process the repos
         tags = classify(path_to_repo)
-        send_results(success_endpoint, tags)
+        contributors = get_contributors_json(repo_fullname)
+        languages = get_languages_json(repo_fullname)
+        last_commit = get_last_commit_json(repo_fullname)
+
+        send_results(success_endpoint, tags, contributors, languages, last_commit)
 
     return {
         'statusCode': 200,
