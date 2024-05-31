@@ -52,11 +52,7 @@ export class SoftwareProjectRepository extends BaseRepository {
                     json_build_object(
                         'software_project_scan_id', latest_scan_details.software_project_scan_id,
                         'software_project_id', latest_scan_details.software_project_id,
-                        'commit_sha', latest_scan_details.commit_sha,
-                        'commit_message', latest_scan_details.commit_message,
-                        'author_name', latest_scan_details.author_name,
-                        'commit_date', latest_scan_details.commit_date,
-                        'commit_html_url', latest_scan_details.commit_html_url,
+                        
                         'dispatched_at', latest_scan_details.dispatched_at,
                         'completed_at', latest_scan_details.completed_at,
                         'aborted_at', latest_scan_details.aborted_at,

@@ -1,4 +1,4 @@
-import { ICreateProjectScanRecord, IProjectScanRecord } from "@/types/project-scan";
+import { ICreateProjectScanRecord, IProjectCommitRecord, IProjectScanRecord } from "@/types/project-scan";
 import { DbConnection } from "../database/db";
 import { BaseRepository } from "./base-repository";
 import { ISoftwareProject } from "@/types/software-project";
@@ -13,22 +13,12 @@ export class ProjectScanRepository extends BaseRepository {
     async createProjectScanRecord(newScanRecord: ICreateProjectScanRecord): Promise<IProjectScanRecord> {
         const response = await this.connection.query(`
             INSERT INTO software_project_scan (
-                software_project_id,
-                commit_sha,
-                commit_message,
-                author_name,
-                commit_date,
-                commit_html_url
+                software_project_id
             )
-            VALUES ($1, $2, $3, $4, $5, $6)
+            VALUES ($1)
             RETURNING *`,
             [
                 newScanRecord.software_project_id,
-                newScanRecord.commit_sha,
-                newScanRecord.commit_message,
-                newScanRecord.author_name,
-                newScanRecord.commit_date,
-                newScanRecord.commit_html_url
             ]
         );
 
@@ -91,6 +81,31 @@ export class ProjectScanRepository extends BaseRepository {
             VALUES
                 ${queryValues.map((_, i) => `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`).join(',')}
         `, queryValues.flat());
+    }
+
+    async addCommitToProjectScan(softwareProjectScanId: number, commitRecord: IProjectCommitRecord) {
+        await this.connection.query(
+            `
+                INSERT INTO software_project_scan_commit (
+                    software_project_scan_id,
+                    author_name,
+                    commit_date,
+                    commit_html_url,
+                    commit_message,
+                    commit_sha
+                ) VALUES (
+                    $1, $2, $3, $4, $5, $6
+                )
+            `,
+            [
+                softwareProjectScanId,
+                commitRecord.author_name,
+                commitRecord.commit_date,
+                commitRecord.commit_html_url,
+                commitRecord.commit_message,
+                commitRecord.commit_sha
+            ]
+        )
     }
 
     async deleteProjectTagsByProjectId(softwareProjectId: number): Promise<void> {

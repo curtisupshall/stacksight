@@ -5,9 +5,10 @@ import { BaseService } from "./base-service";
 import { SQSClient, SendMessageCommand, SendMessageRequest } from "@aws-sdk/client-sqs";
 import { SoftwareProjectService } from "./software-project-service";
 import { ISoftwareProjectRecord } from "@/types/software-project";
-import { IProjectScanRecord } from "@/types/project-scan";
+import { IProjectCommitRecord, IProjectScanRecord } from "@/types/project-scan";
 import { ContributorService } from "./contributor-service";
 import { IProjectScanContributor } from "@/types/contributor";
+import { IProjectScanLambdaResponse, IProjectScanSqsMessage } from "@/types/python";
 
 const sqsConfig = {
     region: process.env.AWS_SQS_REGION ?? '',
@@ -50,59 +51,31 @@ export class ProjectScanService extends BaseService {
     }
 
     async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{
-        const contributorService = new ContributorService(this.connection);
-
-        // Step 1. Collect commit details from the repo
-        const githubCommitResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/commits?per_page=1`);
-        const gitHubCommitJson = (await githubCommitResponse.json())[0] as any
-        
-        const commit_sha = gitHubCommitJson.sha;
-        const commit_message = gitHubCommitJson.commit.message;
-        const author_name = gitHubCommitJson.commit.author.name;
-        const commit_date = gitHubCommitJson.commit.committer.date;
-        const commit_html_url = gitHubCommitJson.html_url;
-
-        // Step 2. Persist the scan in the database
+        // Step 1. Persist the scan in the database
         const scanRecord = await this.projectScanRepository.createProjectScanRecord({
             software_project_id: projectRecord.software_project_id,
-            commit_sha,
-            commit_message,
-            author_name,
-            commit_date,
-            commit_html_url
         });
 
-        // Step 3. Persist contributor details in the database
-        const githubContributorResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/contributors`);
-        const gitHubContributorJson = await githubContributorResponse.json() as any[];
-
-        const contributors: IProjectScanContributor[] = gitHubContributorJson.map((record) => ({
-            login: record.login,
-            html_url: record.html_url,
-            contributions: record.contributions,
-            avatar_url: record.avatar_url
-        }));
-
-        await contributorService.addContributorsToProjectScan(scanRecord.software_project_scan_id, contributors);
-
-        // Step 4. Record the current language statistics for the repo
-        const githubResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/languages`);
-        const gitHubJson = await githubResponse.json() as Record<string, number>;
-        await this.projectScanRepository.addLanguagesToProjectScan(scanRecord.software_project_scan_id, gitHubJson);
-
-
-        // Step 5. Dispatch the scan to the repo scan queue
+        // Step 2. Dispatch the scan to the repo scan queue
         const sqsClient = new SQSClient(sqsConfig);
         if (!process.env.AWS_REPO_SCAN_QUEUE_URL) {
             throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
         }
 
-        const messageBody = {
-            softwareProjectId: projectRecord.software_project_id,
-            softwareProjectScanId: scanRecord.software_project_scan_id,
-            repoFullName: `${projectRecord.owner_name}/${projectRecord.project_name}`,
-            branchName: projectRecord.branch_name
-        }        
+        const softwareProjectId = projectRecord.software_project_id;
+        const softwareProjectScanId = scanRecord.software_project_scan_id;
+
+        const messageBody: IProjectScanSqsMessage = {
+            project: {
+                repoFullName: `${projectRecord.owner_name}/${projectRecord.project_name}`,
+                branchName: projectRecord.branch_name
+            },
+            api: {
+                successEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}`,
+                errorEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}/error'`,
+            }
+        }
+
         const messageRequest: SendMessageRequest = {
             QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL,
             MessageBody: JSON.stringify(messageBody),
@@ -118,11 +91,35 @@ export class ProjectScanService extends BaseService {
         return scanRecord;
     }
 
-    async recordProjectScanTags(softwareProjectScanId: number, tags: string[]) {
-        // Step 1. Persist the software tags in the database
-        await this.projectScanRepository.addTagsToProjectScan(softwareProjectScanId, tags);
+    async patchProjectScan(softwareProjectScanId: number, body: IProjectScanLambdaResponse) {
+        const contributorService = new ContributorService(this.connection);
 
-        // Step 2. End-date the current scan
+        // Step 1. Collect commit details
+        const commitRecord: IProjectCommitRecord = {
+            'commit_sha': body.last_commit.sha,
+            'commit_message': body.last_commit.commit.message,
+            'author_name': body.last_commit.commit.author.name,
+            'commit_date': body.last_commit.commit.committer.date,
+            'commit_html_url': body.last_commit.html_url,
+        }
+        await this.projectScanRepository.addCommitToProjectScan(softwareProjectScanId, commitRecord);
+
+        // Step 2. Persist contributor details in the database
+        const contributors: IProjectScanContributor[] = body.contributors.map((record) => ({
+            login: record.login,
+            html_url: record.html_url,
+            contributions: record.contributions,
+            avatar_url: record.avatar_url
+        }));
+        await contributorService.addContributorsToProjectScan(softwareProjectScanId, contributors);
+
+        // Step 3. Record the current language statistics for the repo
+        await this.projectScanRepository.addLanguagesToProjectScan(softwareProjectScanId, body.languages);
+
+        // Step 4. Persist the software tags in the database
+        await this.projectScanRepository.addTagsToProjectScan(softwareProjectScanId, body.tags);
+
+        // Step 5. End-date the current scan
         await this.projectScanRepository.updateProjectScanRecordEndDate(softwareProjectScanId)
     }
 

@@ -1,14 +1,16 @@
-from git import Repo
-from typing import List
+import requests
 
-def clone_repos(repo_full_names: List[str]):
-    for repo_full_name in repo_full_names:
-        repo_url = f'git@github.com:{repo_full_name}.git'
-        clone_dir = f'.stacksight/{repo_full_name}'
+def get_last_commit_json(repo_fullname: str):
+    response = requests.get(f'https://api.github.com/repos/{repo_fullname}/commits?per_page=1')
+    response.raise_for_status()
+    return response.json()[0]
 
-        try:
-            Repo.clone_from(repo_url, clone_dir)
-            print(f"Repository cloned successfully into {clone_dir}")
-        except Exception as e:
-            print(f"Failed to clone repository: {e}")
-            raise e
+def get_contributors_json(repo_fullname: str):
+    response = requests.get(f'https://api.github.com/repos/{repo_fullname}/contributors')
+    response.raise_for_status()
+    return response.json()
+
+def get_languages_json(repo_fullname: str):
+    response = requests.get(f'https://api.github.com/repos/{repo_fullname}/languages')
+    response.raise_for_status()
+    return response.json()
