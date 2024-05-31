@@ -19,4 +19,8 @@ export class ContributorService extends BaseService {
     async addContributorsToProjectScan(projectScanId: number, contributors: IProjectScanContributor[]) {
         return this.contributorRepository.addContributorsToProjectScan(projectScanId, contributors);
     }
+
+    async getContributorsByProjectScanId(projectScanId: number) {
+        return this.contributorRepository.getContributorsByProjectScanId(projectScanId);
+    }
 }

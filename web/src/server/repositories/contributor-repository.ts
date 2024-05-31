@@ -33,5 +33,18 @@ export class ContributorRepository extends BaseRepository {
         // Perform the database query
         await this.connection.query(sql, params);
     }
+
+    async getContributorsByProjectScanId(projectScanId: number): Promise<IProjectScanContributor[]> {
+        const response = await this.connection.query(
+            `
+                SELECT *
+                FROM software_project_scan_contributor
+                WHERE software_project_scan_id = $1
+            `,
+            [projectScanId]
+        );
+
+        return response.rows;
+    }
     
 }
