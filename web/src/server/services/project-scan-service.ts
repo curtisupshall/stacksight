@@ -8,7 +8,7 @@ import { ISoftwareProjectRecord } from "@/types/software-project";
 import { IProjectScanRecord } from "@/types/project-scan";
 import { ContributorService } from "./contributor-service";
 import { IProjectScanContributor } from "@/types/contributor";
-import { IProjectScanSqsMessage } from "@/types/queue";
+import { IProjectScanSqsMessage } from "@/types/python";
 
 const sqsConfig = {
     region: process.env.AWS_SQS_REGION ?? '',

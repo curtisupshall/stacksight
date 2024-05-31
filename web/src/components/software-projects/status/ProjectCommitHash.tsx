@@ -1,10 +1,10 @@
 import { ForkRight } from "@mui/icons-material";
 import { ISoftwareProject } from "../../../types/software-project";
 import { Chip, Typography } from "@mui/material";
-import { IProjectScanRecord } from "@/types/project-scan";
+import { IProjectCommitRecord, IProjectScanRecord } from "@/types/project-scan";
 import { getRelativeTime } from "@/utils/Utils";
 
-export default function ProjectCommitHash(props: IProjectScanRecord) {
+export default function ProjectCommitHash(props: IProjectCommitRecord) {
     const hash = props.commit_sha.slice(0, 7);
 
     return (
