@@ -13,6 +13,7 @@ import ProjectCommitHash from "@/components/software-projects/status/ProjectComm
 import ProjectStatusIndicator from "@/components/software-projects/status/ProjectStatusIndicator";
 import ResultsAlert from "@/components/software-projects/status/ResultsAlert";
 import { ProjectScanService } from "@/server/services/project-scan-service";
+import ProjectContributors from "@/slots/ProjectContributors";
 
 export default async function SoftwareProjectPage({ params }: { params: { softwareProjectName: string, softwareOwnerName: string }}) {
     
@@ -67,6 +68,9 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                                     <Divider sx={{ my: 2 }} />
                                     <Typography variant='h6' mb={2}>Languages</Typography>
                                     <ProjectLanguages languages={project.last_scan?.languages ?? []} />
+                                    <Divider sx={{ my: 2 }} />
+                                    <Typography variant='h6' mb={2}>Contributors</Typography>
+                                    <ProjectContributors {...project} />
                                 </Box>
                                 
                             </Stack>

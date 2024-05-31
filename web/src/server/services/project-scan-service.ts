@@ -6,6 +6,8 @@ import { SQSClient, SendMessageCommand, SendMessageRequest } from "@aws-sdk/clie
 import { SoftwareProjectService } from "./software-project-service";
 import { ISoftwareProjectRecord } from "@/types/software-project";
 import { IProjectScanRecord } from "@/types/project-scan";
+import { ContributorService } from "./contributor-service";
+import { IProjectScanContributor } from "@/types/contributor";
 
 const sqsConfig = {
     region: process.env.AWS_SQS_REGION ?? '',
@@ -48,6 +50,8 @@ export class ProjectScanService extends BaseService {
     }
 
     async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{
+        const contributorService = new ContributorService(this.connection);
+
         // Step 1. Collect commit details from the repo
         const githubCommitResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/commits?per_page=1`);
         const gitHubCommitJson = (await githubCommitResponse.json())[0] as any
@@ -68,13 +72,26 @@ export class ProjectScanService extends BaseService {
             commit_html_url
         });
 
-        // Step 3. Record the current language statistics for the repo
+        // Step 3. Persist contributor details in the database
+        const githubContributorResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/contributors`);
+        const gitHubContributorJson = await githubContributorResponse.json() as any[];
+
+        const contributors: IProjectScanContributor[] = gitHubContributorJson.map((record) => ({
+            login: record.login,
+            html_url: record.html_url,
+            contributions: record.contributions,
+            avatar_url: record.avatar_url
+        }));
+
+        await contributorService.addContributorsToProjectScan(scanRecord.software_project_scan_id, contributors);
+
+        // Step 4. Record the current language statistics for the repo
         const githubResponse = await fetch(`https://api.github.com/repos/${projectRecord.full_name}/languages`);
         const gitHubJson = await githubResponse.json() as Record<string, number>;
         await this.projectScanRepository.addLanguagesToProjectScan(scanRecord.software_project_scan_id, gitHubJson);
 
 
-        // Step 4. Dispatch the scan to the repo scan queue
+        // Step 5. Dispatch the scan to the repo scan queue
         const sqsClient = new SQSClient(sqsConfig);
         if (!process.env.AWS_REPO_SCAN_QUEUE_URL) {
             throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
@@ -110,6 +127,8 @@ export class ProjectScanService extends BaseService {
     }
 
     async deleteProjectScansByProjectId(softwareProjectId: number): Promise<void> {
+        const contributorService = new ContributorService(this.connection);
+        await contributorService.deleteContributorsByProjectId(softwareProjectId)
         await this.projectScanRepository.deleteProjectLanguagesByProjectId(softwareProjectId);
         await this.projectScanRepository.deleteProjectTagsByProjectId(softwareProjectId);
         await this.projectScanRepository.deleteProjectScansByProjectId(softwareProjectId);
