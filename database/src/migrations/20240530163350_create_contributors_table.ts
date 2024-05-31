@@ -10,6 +10,7 @@ export async function up(knex: Knex): Promise<void> {
             "software_project_scan_id"          INTEGER NOT NULL,
             "login"                             VARCHAR(64),
             "html_url"                          VARCHAR(255),
+            "avatar_url"                        VARCHAR(255),
             "contributions"                     INTEGER,
             "created_at"                        TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "updated_at"                        TIMESTAMP(3),

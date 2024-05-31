@@ -4,7 +4,8 @@ import { DbConnection } from "@/server/database/db";
 import { ContributorService } from "@/server/services/contributor-service";
 import { IProjectScanContributor } from "@/types/contributor";
 import { ISoftwareProject } from "@/types/software-project";
-import { Avatar, AvatarGroup } from "@mui/material"
+import { Avatar, AvatarGroup, Stack, avatarClasses } from "@mui/material"
+import axios from "axios";
 import Link from "next/link";
 
 // interface IProjectContributorsProps {
@@ -25,18 +26,19 @@ export default async function ProjectContributors(props: ISoftwareProject) {
         }
 
         return (
-            <AvatarGroup max={20}>
-                {contributors.map((contributor) => {
+            <Stack direction='row' flexWrap='wrap' flexDirection='row' gap={1}>
+                {contributors.map(async (contributor) => {
                     return (
                         <Avatar
+                            key={contributor.login}
                             component={Link}
                             href={contributor.html_url}
-                            
-                            // src={}
+                            // src={(await axios.get(`https://api.github.com/users/${contributor.login}`)).data.avatar_url}
+                            src={contributor.avatar_url}
                         />
                     )
                 })}
-            </AvatarGroup>
+            </Stack>
         )
     } catch (error) {
         connection.rollback();

@@ -79,7 +79,8 @@ export class ProjectScanService extends BaseService {
         const contributors: IProjectScanContributor[] = gitHubContributorJson.map((record) => ({
             login: record.login,
             html_url: record.html_url,
-            contributions: record.contributions
+            contributions: record.contributions,
+            avatar_url: record.avatar_url
         }));
 
         await contributorService.addContributorsToProjectScan(scanRecord.software_project_scan_id, contributors);
@@ -126,6 +127,8 @@ export class ProjectScanService extends BaseService {
     }
 
     async deleteProjectScansByProjectId(softwareProjectId: number): Promise<void> {
+        const contributorService = new ContributorService(this.connection);
+        await contributorService.deleteContributorsByProjectId(softwareProjectId)
         await this.projectScanRepository.deleteProjectLanguagesByProjectId(softwareProjectId);
         await this.projectScanRepository.deleteProjectTagsByProjectId(softwareProjectId);
         await this.projectScanRepository.deleteProjectScansByProjectId(softwareProjectId);

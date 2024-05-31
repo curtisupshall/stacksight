@@ -23,4 +23,8 @@ export class ContributorService extends BaseService {
     async getContributorsByProjectScanId(projectScanId: number) {
         return this.contributorRepository.getContributorsByProjectScanId(projectScanId);
     }
+
+    async deleteContributorsByProjectId(projectId: number): Promise<void> {
+        return this.contributorRepository.deleteContributorsByProjectId(projectId);
+    }
 }
