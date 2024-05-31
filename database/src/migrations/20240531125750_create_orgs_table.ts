@@ -2,7 +2,7 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
     /**
-     * Creates the software_project_languages table
+     * Creates the software_organization table
      */
     await knex.raw(`
         CREATE TABLE "software_organization" (
@@ -18,6 +18,9 @@ export async function up(knex: Knex): Promise<void> {
     `);
 }
 
+/**
+ * Removes the software_organization table
+ */
 export async function down(knex: Knex): Promise<void> {
     await knex.raw(`
         DROP TABLE "software_organization";
