@@ -13,6 +13,7 @@ type AppTabMatcherKey =
     | 'PROJECT_SCANS'
     | 'PROJECT_DETAILS'
     | 'TAGS'
+    | 'ORGANIZATIONS'
 
 type AppTabMatcherEntry = {
     pattern: RegExp,
@@ -25,6 +26,9 @@ export const APP_TAB_MATCHER: Record<AppTabMatcherKey, AppTabMatcherEntry> = {
     },
     'PROJECTS': {
         pattern: /\/projects$/,
+    },
+    'ORGANIZATIONS': {
+        pattern: /\/orgs$/,
     },
     'TAGS': {
         pattern: /\/tags$/,

@@ -17,6 +17,11 @@ const tabs: ITab[] = [
 		matcherKey: "PROJECTS"
 	},
 	{
+		href: `/orgs`,
+		label: 'Organizations',
+		matcherKey: "ORGANIZATIONS"
+	},
+	{
 		href: `/tags`,
 		label: 'Frameworks',
 		matcherKey: "TAGS"
