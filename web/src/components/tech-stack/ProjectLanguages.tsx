@@ -15,7 +15,7 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
         const languageDetails: { name: string, color: string, percentage: number }[] = [];
         const chartData: { flex: number, color: string }[] = [];
         
-        let minLineCount = props.languages[0].num_lines;
+        let minLineCount = props.languages[0]?.num_lines ?? 0;
         let totalLanguageLineCount = 0;
         let otherCategoryLineCount = 0;
 
