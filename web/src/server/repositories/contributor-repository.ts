@@ -18,9 +18,9 @@ export class ContributorRepository extends BaseRepository {
                 login,
                 html_url,
                 contributions,
-                avatar_url,
+                avatar_url
             ) VALUES 
-            ${contributors.map((_, index) => `($1, $${index * 4 + 2}, $${index * 4 + 3}, $${index * 4 + 4})`).join(", ")}
+            ${contributors.map((_, index) => `($1, $${index * 4 + 2}, $${index * 4 + 3}, $${index * 4 + 4}, $${index * 4 + 5})`).join(", ")}
         `;
         
         // Flatten contributor details into a single array for parameterized query
@@ -28,8 +28,8 @@ export class ContributorRepository extends BaseRepository {
             ...acc,
             contributor.login,
             contributor.html_url,
+            String(contributor.contributions),
             contributor.avatar_url,
-            String(contributor.contributions)
         ]), [String(projectScanId)]);
     
         // Perform the database query
