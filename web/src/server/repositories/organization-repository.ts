@@ -43,4 +43,17 @@ export class OrganizationRepository extends BaseRepository {
 
         return response.rows;
     }
+
+    async getOrganizationById(softwareOrganizationId: number): Promise<ISoftwareOrganizationRecord | undefined> {
+        const response = await this.connection.query(
+            `
+                SELECT *
+                FROM software_organization
+                WHERE software_organization_id = $1
+            `,
+            [softwareOrganizationId]
+        );
+
+        return response.rows[0];
+    }
 }

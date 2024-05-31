@@ -4,6 +4,7 @@ import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 import { useState } from "react";
 import { ISoftwareOrganizationRecord } from "@/types/organization";
+import { scanOrganization } from "@/server/actions/organizationActions";
 
 export default function OrganizationsListCardActions(props: ISoftwareOrganizationRecord) {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -19,11 +20,11 @@ export default function OrganizationsListCardActions(props: ISoftwareOrganizatio
                 anchorEl={anchorEl}
                 onClose={() => handleClose()}
             >
-                {/* <form action={scanOrganization}>
-                    <input type='hidden' name='softwareOrganizationId' value={props.software_project_id} />
+                <form action={scanOrganization}>
+                    <input type='hidden' name='softwareOrganizationId' value={props.software_organization_id} />
                     <MenuItem component='button' type='submit'>Scan Now</MenuItem>
                 </form>
-                <form action={deleteOrganization}>
+                {/* <form action={deleteOrganization}>
                     <input type='hidden' name='softwareOrganizationId' value={props.software_project_id} />
                     <MenuItem component='button' type='submit'>Delete Organization</MenuItem>
                 </form> */}
