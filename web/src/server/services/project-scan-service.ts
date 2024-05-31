@@ -1,14 +1,13 @@
-import { revalidatePath } from "next/cache";
 import { DbConnection } from "../database/db";
 import { ProjectScanRepository } from "../repositories/project-scan-repository";
 import { BaseService } from "./base-service";
-import { SQSClient, SendMessageCommand, SendMessageRequest } from "@aws-sdk/client-sqs";
+import { SQSClient, SendMessageCommand, SendMessageBatchCommand, SendMessageBatchRequest, SendMessageRequest } from "@aws-sdk/client-sqs";
 import { SoftwareProjectService } from "./software-project-service";
 import { ISoftwareProjectRecord } from "@/types/software-project";
 import { IProjectCommitRecord, IProjectScanRecord } from "@/types/project-scan";
 import { ContributorService } from "./contributor-service";
 import { IProjectScanContributor } from "@/types/contributor";
-import { IProjectScanLambdaResponse, IProjectScanSqsMessage } from "@/types/python";
+import { IProjectScanLambdaResponse, IProjectScanSqsMessageBody } from "@/types/python";
 
 const sqsConfig = {
     region: process.env.AWS_SQS_REGION ?? '',
@@ -50,31 +49,41 @@ export class ProjectScanService extends BaseService {
         return this.projectScanRepository.getLatestSuccessfulScanByProjectId(softwareProjectId);
     }
 
-    async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{
-        // Step 1. Persist the scan in the database
-        const scanRecord = await this.projectScanRepository.createProjectScanRecord({
-            software_project_id: projectRecord.software_project_id,
-        });
+    async disaptchProjectScans(projectRecords: ISoftwareProjectRecord[]): Promise<IProjectScanRecord[]>{
 
-        // Step 2. Dispatch the scan to the repo scan queue
+        // Step 1. Persist the scans in the database
+        const createScanRecords = projectRecords.map((project) => ({ software_project_id: project.software_project_id }))
+        const scanRecords = await this.projectScanRepository.createProjectScanRecords(createScanRecords);
+
+        // Step 2. Dispatch the scans to the repo scan queue
+        const messages: IProjectScanSqsMessageBody[] = projectRecords.map((projectRecord) => {
+            const scanRecord = scanRecords.find((record) => record.software_project_id === projectRecord.software_project_id)
+            const softwareProjectId = projectRecord.software_project_id;
+            const softwareProjectScanId = scanRecord.software_project_scan_id;
+    
+            return {
+                project: {
+                    repoFullName: `${projectRecord.owner_name}/${projectRecord.project_name}`,
+                    branchName: projectRecord.branch_name
+                },
+                api: {
+                    successEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}`,
+                    errorEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}/error'`,
+                }
+            }
+        })
+
+        await this.sendBatchSqsRequests(messages)
+    }
+
+    // TODO
+    async sendBatchSqsRequests(messages: IProjectScanSqsMessageBody[]) {
         const sqsClient = new SQSClient(sqsConfig);
         if (!process.env.AWS_REPO_SCAN_QUEUE_URL) {
             throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
         }
 
-        const softwareProjectId = projectRecord.software_project_id;
-        const softwareProjectScanId = scanRecord.software_project_scan_id;
-
-        const messageBody: IProjectScanSqsMessage = {
-            project: {
-                repoFullName: `${projectRecord.owner_name}/${projectRecord.project_name}`,
-                branchName: projectRecord.branch_name
-            },
-            api: {
-                successEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}`,
-                errorEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}/error'`,
-            }
-        }
+        // Batch messages into groups of ten
 
         const messageRequest: SendMessageRequest = {
             QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL,
@@ -88,7 +97,6 @@ export class ProjectScanService extends BaseService {
             throw new Error('Failed to dispatch message to SQS:', error);
         }
 
-        return scanRecord;
     }
 
     async patchProjectScan(softwareProjectScanId: number, body: IProjectScanLambdaResponse) {

@@ -1,6 +1,6 @@
 
 
-export interface IProjectScanSqsMessage {
+export interface IProjectScanSqsMessageBody {
     project: {
         repoFullName: string;
         branchName: string;

@@ -1,11 +1,7 @@
-import { SQSClient, SendMessageCommand, SendMessageCommandOutput, SendMessageRequest } from "@aws-sdk/client-sqs";
 import type { DbConnection } from "../database/db";
 import type { ISoftwareProject, ISoftwareProjectRecord } from "../../types/software-project";
 import { BaseService } from "./base-service";
-import { revalidatePath } from "next/cache";
 import { SoftwareProjectRepository } from "../repositories/software-project-repository";
-import { IProjectScanRecord } from "../../types/project-scan";
-import { ProjectScanRepository } from "../repositories/project-scan-repository";
 import { ProjectScanService } from "./project-scan-service";
 
 export class SoftwareProjectService extends BaseService {
