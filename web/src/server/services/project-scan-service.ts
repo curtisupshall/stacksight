@@ -76,8 +76,6 @@ export class ProjectScanService extends BaseService {
             }
         }
 
-        console.log(messageBody); // TODO remove
-
         const messageRequest: SendMessageRequest = {
             QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL,
             MessageBody: JSON.stringify(messageBody),
@@ -94,9 +92,6 @@ export class ProjectScanService extends BaseService {
     }
 
     async patchProjectScan(softwareProjectScanId: number, body: IProjectScanLambdaResponse) {
-        console.log('patchProjectScan():')
-        console.log(softwareProjectScanId)
-        console.log(JSON.stringify(body.last_commit));
         const contributorService = new ContributorService(this.connection);
 
         // Step 1. Collect commit details
