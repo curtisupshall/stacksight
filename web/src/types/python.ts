@@ -10,3 +10,10 @@ export interface IProjectScanSqsMessage {
         errorEndpoint: string;
     }
 }
+
+export interface IProjectScanLambdaResponse {
+    tags: string[];
+    contributors: any[];
+    last_commit: any;
+    languages: Record<string, number>
+}

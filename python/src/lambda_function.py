@@ -13,7 +13,7 @@ def lambda_handler(event, context):
 
         # Get data from request body
         project_body = body.get('project', {})
-        endpoints_body = body.get('endpoints', {})
+        endpoints_body = body.get('api', {})
 
         repo_fullname = project_body.get('repoFullName')
         branch = project_body.get('branchName')
