@@ -12,7 +12,20 @@ export class OrganizationService extends BaseService {
         this.organizationRepository = new OrganizationRepository(connection);
     }
 
-    async addOrganization(organization: ICreateSoftwareOrganizationRecord): Promise<ISoftwareOrganizationRecord> {
+    async addOrganizationByName(organizationName: string): Promise<ISoftwareOrganizationRecord> {
+        // Step 1. Get information about the org from GitHub
+        const orgResponse = await fetch(`https://api.github.com/users/${organizationName}`);
+        const orgJson = await orgResponse.json() as any;
+
+        // Step 2. Create the org record
+        const organization: ICreateSoftwareOrganizationRecord = {
+            name: organizationName,
+            avatar_url: orgJson.avatar_url,
+            full_name: orgJson.name,
+            bio: orgJson.bio,
+            html_url: orgJson.repos_url,
+        }
+
         return this.organizationRepository.addOrganization(organization);
     }
 

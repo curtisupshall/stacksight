@@ -13,16 +13,20 @@ export class OrganizationRepository extends BaseRepository {
             `
                 INSERT INTO software_organization (
                     name,
+                    full_name,
+                    bio,
                     html_url,
                     avatar_url
                 ) VALUES 
                 (
-                    $1, $2, $3
+                    $1, $2, $3, $4, $5
                 )
                 RETURNING *
             `,
             [
                 organization.name,
+                organization.full_name,
+                organization.bio,
                 organization.html_url,
                 organization.avatar_url
             ]
