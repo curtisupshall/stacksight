@@ -13,22 +13,12 @@ export class ProjectScanRepository extends BaseRepository {
     async createProjectScanRecord(newScanRecord: ICreateProjectScanRecord): Promise<IProjectScanRecord> {
         const response = await this.connection.query(`
             INSERT INTO software_project_scan (
-                software_project_id,
-                commit_sha,
-                commit_message,
-                author_name,
-                commit_date,
-                commit_html_url
+                software_project_id
             )
-            VALUES ($1, $2, $3, $4, $5, $6)
+            VALUES ($1)
             RETURNING *`,
             [
                 newScanRecord.software_project_id,
-                newScanRecord.commit_sha,
-                newScanRecord.commit_message,
-                newScanRecord.author_name,
-                newScanRecord.commit_date,
-                newScanRecord.commit_html_url
             ]
         );
 
