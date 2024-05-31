@@ -44,16 +44,9 @@ export class SoftwareProjectService extends BaseService {
         const githubResponse = await fetch(`https://api.github.com/repos/${repoFullName}`);
         const gitHubJson = await githubResponse.json() as any;
         const branchOrDefaultName = branchName ?? gitHubJson.default_branch
-        
-        // Step 2. Check if the project is already added. If it has been, throw an error
-        const project = await this.softwareProjectRepository.getProjectByFullName(repoFullName);
 
-        if (project) {
-            throw new Error('Project has already been added. If you want to scan a different branch, you must delete this project first.')
-        }
-
-        // Step 3. Persist the new project in the database
-        const projectRecord = await this.softwareProjectRepository.addNewProject({
+        // Step 2. Persist the new project in the database
+        const projectRecord = await this.softwareProjectRepository.addOrRetrieveProject({
             full_name: gitHubJson.full_name,
             owner_name: gitHubJson.owner.login,
             branch_name: branchOrDefaultName,
@@ -62,7 +55,7 @@ export class SoftwareProjectService extends BaseService {
             html_url: gitHubJson.html_url
         });
 
-        // Step 4. Dispatch a new scan of the repo.
+        // Step 3. Dispatch a new scan of the repo.
         await projectScanService.disaptchProjectScan(projectRecord);
 
         return projectRecord;

@@ -121,26 +121,40 @@ export class SoftwareProjectRepository extends BaseRepository {
         return response.rows
     }
 
-    async addNewProject(project: ICreateSoftwareProjectRecord): Promise<ISoftwareProjectRecord> {
-        const response = await this.connection.query(
-            `INSERT INTO software_project (
-                full_name,
-                owner_name,
-                branch_name,
-                project_name,
-                description,
-                html_url
-            ) VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING *`,
-            [
-                project.full_name,
-                project.owner_name,
-                project.branch_name,
-                project.project_name,
-                project.description,
-                project.html_url
-            ]
-        );
+    /**
+     * Adds a new project. If a project having the same full name already exists,
+     * it is returned.
+     *
+     * @param {ICreateSoftwareProjectRecord} project
+     * @return {*}  {Promise<ISoftwareProjectRecord>}
+     * @memberof SoftwareProjectRepository
+     */
+    async addOrRetrieveProject(project: ICreateSoftwareProjectRecord): Promise<ISoftwareProjectRecord> {
+        const response = await this.connection.query(`
+            WITH inserted AS (
+                INSERT INTO software_project (
+                    full_name,
+                    owner_name,
+                    branch_name,
+                    project_name,
+                    description,
+                    html_url
+                ) VALUES ($1, $2, $3, $4, $5, $6)
+                ON CONFLICT (full_name) DO NOTHING
+                RETURNING *
+            )
+            SELECT * FROM inserted
+            UNION ALL
+            SELECT * FROM software_project WHERE full_name = $1 AND NOT EXISTS (SELECT 1 FROM inserted)
+            LIMIT 1
+        `, [
+            project.full_name,
+            project.owner_name,
+            project.branch_name,
+            project.project_name,
+            project.description,
+            project.html_url
+        ]);
 
         return response.rows[0];
     }

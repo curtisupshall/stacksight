@@ -2,6 +2,7 @@ import { DbConnection } from "../database/db";
 import { OrganizationRepository } from "../repositories/organization-repository";
 import { BaseService } from "./base-service";
 import { ICreateSoftwareOrganizationRecord, ISoftwareOrganizationRecord } from "@/types/organization";
+import { ProjectScanService } from "./project-scan-service";
 
 const ORG_NUM_REPOS_PER_PAGE = 100;
 
@@ -36,6 +37,8 @@ export class OrganizationService extends BaseService {
     }
 
     async scanOrganizationById(softwareOrganizationId: number) {
+        const projectScanService = new ProjectScanService(this.connection);
+
         // Step 1. Get the org record from the database
         const organization = await this.organizationRepository.getOrganizationById(softwareOrganizationId);
 
@@ -62,6 +65,8 @@ export class OrganizationService extends BaseService {
 
         const repositories: any[] = pageResults.reduce((acc, page) => [...acc, ...page], []);
 
-        console.log("Found num repos:", repositories.length)
+        return Promise.all(repositories.map((repo) => {
+            return projectScanService
+        }))
     }
 }
