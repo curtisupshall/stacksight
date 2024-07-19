@@ -1,0 +1,37 @@
+library: nextjs
+description: "A framework for building React apps"
+website: "https://nextjs.org/"
+
+# Artifacts whose existence suggest the use of this library
+artifacts:
+  - name: '.next'
+    p: 0.5
+
+
+# Files which contain source code
+sources:
+  - filetypes:
+      - '.tsx'
+      - '.jsx'
+    patterns:
+      - "from (\"|')next/*(\"|')"
+    p: 0.5
+
+packages:
+  - manifest: package.json
+    name: "\"next\": \"**.**.**\""
+    version: "\"next\": \"**.**.**\""
+
+# If the artifact checks match, this library gets tagged with a flavor
+flavors:
+  - name: App Router
+    website: https://nextjs.org/docs/app
+    artifacts:
+    - name: '(/app)|(/src/app)/**/*.(tsx|jsx)'
+      p: 1.0
+
+  - name: Page Router
+    website: https://nextjs.org/docs/pages
+    artifacts:
+    - name: '(/app)|(/src/app)/**/*.(tsx|jsx)'
+      p: 1.0
