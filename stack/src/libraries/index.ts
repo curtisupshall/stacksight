@@ -1,7 +1,10 @@
+import Library from "../Library";
 import nextjs from "./frontend/nextjs";
 
-export default {
+const allLibraries: Record<string, Library[]> = {
     'frontend': [
-        nextjs
+        new nextjs()
     ]
 }
+
+export default allLibraries

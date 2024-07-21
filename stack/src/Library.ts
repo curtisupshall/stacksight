@@ -29,12 +29,12 @@ type Variant = {
     sources?: Source[];
 }
 
-type Package = {
-    // e.g. package.json
-    file: RegExp;
-    // e.g. "next": "14.0.1"
-    dependency: RegExp;
-}
+// type Package = {
+//     // e.g. package.json
+//     file: RegExp;
+//     // e.g. "next": "14.0.1"
+//     dependency: RegExp;
+// }
 
 type Version = {
     // e.g. pacage.json
@@ -55,7 +55,7 @@ export type Matcher = [
 ]
 
 interface CompiledLibrary {
-    tags: Record<Tag, LibraryMetadata | VariantMetadata>, 
+    tagData: Record<Tag, LibraryMetadata | VariantMetadata>, 
     matchers: Matcher[]
 }
 
@@ -76,9 +76,9 @@ export default abstract class Library {
         return [];
     }
 
-    packages(): Package[] {
-        return [];
-    }
+    // packages(): Package[] {
+    //     return [];
+    // }
 
     version(): Version | undefined {
         return undefined;
@@ -95,15 +95,16 @@ export default abstract class Library {
         const metadata = this.metadata();
         const artifacts = this.artifacts();
         const sources = this.sources();
-        const packages = this.packages();
+        // const packages = this.packages();
         const variants = this.variants();
 
-        const tags: Record<Tag, LibraryMetadata | VariantMetadata> = {
+        const tagData: Record<Tag, LibraryMetadata | VariantMetadata> = {
             [metadata.name]: metadata
         };
         
         variants.forEach((variant) => {
-            tags[variant.metadata.name] = variant.metadata;
+            const variantTag = [metadata.name, variant.metadata.name].join('.');
+            tagData[variantTag] = variant.metadata;
         });
 
         const sourceMatchers: Matcher[] = sources.map((source) => [
@@ -154,7 +155,7 @@ export default abstract class Library {
         ]
 
         return {
-            tags,
+            tagData,
             matchers,
         }
     }
