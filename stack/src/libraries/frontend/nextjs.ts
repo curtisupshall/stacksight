@@ -1,15 +1,14 @@
 import Library from "../../Library";
 
-export default class extends Library {
-    metadata = () => ({
-        kind: 'library' as const,
+const NextJs: Library = {
+    metadata: {
         name: 'next',
         label: 'Next.js',
         description: "A framework for building React apps",
         website: "https://nextjs.org/",
-    });
+    },
 
-    artifacts = () => [
+    artifacts: [
         {
             file: /.*\/\.next$/,
             score: 0.75,
@@ -18,27 +17,30 @@ export default class extends Library {
             file: /.\/app\/(page|layout).(tsx|jsx)$/,
             score: 0.50,
         }
-    ];
+    ],
 
-    sources = () => [
+    sources: [
         {
             file: /.*\.(tsx|jsx)$/,
             score: 0.75,
             linetext: /import .* from (\"|\')next(\/[a-z]+)?(\"|\')(;|$)/
-        },
+        }
+    ],
+
+    packages: [
         {
             file: /.*\/package.json/,
             score: 1.0,
             linetext: /"next":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
         }
-    ];
+    ],
 
-    variants = () => [
+    children: [
         {
             metadata: {
-                kind: 'variant' as const,
                 name: 'app-router',
                 label: 'App Router',
+                description: 'Next.js App Router',
                 website: 'https://nextjs.org/docs/app',
             },
             artifacts: [
@@ -50,8 +52,8 @@ export default class extends Library {
         },
         {
             metadata: {
-                kind: 'variant' as const,
                 name: 'pages-router',
+                description: 'Next.js Pages Router',
                 label: 'Pages Router',
                 website: 'https://nextjs.org/docs/app',
             },
@@ -59,10 +61,11 @@ export default class extends Library {
                 {
                     file: /.*\/pages\/.*\.(tsx|jsx)$/,
                     score: 1,
-                    disqualify: /.*\/(page|layout).(tsx|jsx)$/,
                 }
             ]
         }
-    ];
+    ]
 
 }
+
+export default NextJs;

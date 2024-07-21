@@ -1,9 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import Library, { Tag, Matcher, VariantMetadata, LibraryMetadata } from './Library';
-
 import allLibraries from './libraries/index'
+import Library, { compile, LibraryOutput, Matcher, Tag } from './Library';
 
 // interface LibraryStats {
 //   metadata: Metadata;
@@ -18,17 +17,15 @@ const IGNORE_DIRS: string[] = [
 
 class Crawler {
 	private _projectPath: string;
-	private _matchers: Matcher[];
+	private _outputs: LibraryOutput[];
 	private _scores: Record<Tag, number>;
-	private _tagData: Record<Tag, LibraryMetadata | VariantMetadata>;
 	private _filePaths: string[];
 
 	constructor(projectPath: string) {
-		this._matchers = [];
 		this._projectPath = projectPath;
-		this._scores = {};
-		this._tagData = {};
 		this._filePaths = [];
+		this._outputs = [];
+		this._scores = {};
 	}
 
 	public run(): void {
@@ -40,16 +37,11 @@ class Crawler {
 	}
 
 	public observe(library: Library) {
-		const { matchers, tagData } = library.compile();
-		console.log('observering ', Object.keys(tagData));
-
-		matchers.forEach((matcher) => {
-			this._matchers.push(matcher)
-		});
-
-		Object.entries(tagData).forEach(([tag, metadata]) => {
-			this._tagData[tag] = metadata;
-			this._scores[tag] = 0;
+		const outputs = compile(library);
+		
+		outputs.forEach((output) => {
+			this._scores[output.tag] = 0;
+			this._outputs.push(output)
 		});
 	}
 
@@ -79,7 +71,11 @@ class Crawler {
 	private crawl(dir: string): void {
 		this.collectFilePaths(this._projectPath);
 
-		this._matchers.forEach((matcher: Matcher) => {
+		const matchers = this._outputs.reduce((acc: Matcher[], output) => {
+			return [...acc, ...output.matchers];
+		}, [])
+
+		matchers.forEach((matcher: Matcher) => {
 			const [
 				fileRegex,
 				contentRegex,
@@ -120,7 +116,6 @@ class Crawler {
 		});
 
 	}
-
 
 	private testFileContent(filePath: string, contentRegex: RegExp): [number, string | null] {
 		try {

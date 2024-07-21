@@ -1,43 +1,23 @@
-export interface LibraryMetadata {
-    kind: 'library';
+export interface Metadata {
     name: string;
     label: string;
     description: string;
     website: string;
 }
 
-export interface VariantMetadata {
-    kind: 'variant';
-    name: string;
-    label: string;
-    website: string;
-}
-
-interface Artifact {
+interface ArtifactConfig {
     file: RegExp;
     score: number;
 }
 
-interface Source extends Artifact {
+interface SourceConfig extends ArtifactConfig {
     // A line of text which qualifies the library
     linetext: RegExp;
 }
 
-type Variant = {
-    metadata: VariantMetadata;
-    artifacts?: Artifact[];
-    sources?: Source[];
-}
+type PackageConfig = SourceConfig;
 
-// type Package = {
-//     // e.g. package.json
-//     file: RegExp;
-//     // e.g. "next": "14.0.1"
-//     dependency: RegExp;
-// }
-
-type Version = {
-    // e.g. pacage.json
+type VersionConfig = {
     file: RegExp;
 }
 
@@ -54,109 +34,76 @@ export type Matcher = [
     number
 ]
 
-interface CompiledLibrary {
-    tagData: Record<Tag, LibraryMetadata | VariantMetadata>, 
+export type LibraryOutput = {
+    tag: Tag
+    parentTag: string | null
+    metadata: Metadata
     matchers: Matcher[]
 }
 
-export default abstract class Library {
-    _artifacts: Artifact[];
+export default interface Library {
+    metadata: Metadata;
 
-    constructor() {
-        this._artifacts = [];
-    }
+    artifacts?: ArtifactConfig[];
 
-    abstract metadata(): LibraryMetadata;
+    sources?: SourceConfig[];
 
-    artifacts(): Artifact[] {
-        return [];
-    }
+    packages?: PackageConfig[];
 
-    sources(): Source[] {
-        return [];
-    }
+    version?: VersionConfig;
 
-    // packages(): Package[] {
-    //     return [];
-    // }
+    children?: Library[];
+}
 
-    version(): Version | undefined {
-        return undefined;
-    }
+export const compile = (library: Library, parentTag: string| null = null): LibraryOutput[] => {
+    const metadata = library.metadata;
+    const artifacts = library.artifacts ?? [];
+    const sources = library.sources ?? [];
+    const packages = library.packages ?? [];
+    const children = library.children ?? [];
 
-    /**
-     * Provides information about which variant of the library is being used.
-     */
-    variants(): Variant[] {
-        return [];
-    }
+    const tag = [parentTag, metadata.name].filter(Boolean).join('.');
 
-    compile(): CompiledLibrary {
-        const metadata = this.metadata();
-        const artifacts = this.artifacts();
-        const sources = this.sources();
-        // const packages = this.packages();
-        const variants = this.variants();
+    const sourceMatchers: Matcher[] = sources.map((source) => [
+        source.file,
+        source.linetext,
+        tag,
+        source.score
+    ]);
 
-        const tagData: Record<Tag, LibraryMetadata | VariantMetadata> = {
-            [metadata.name]: metadata
-        };
-        
-        variants.forEach((variant) => {
-            const variantTag = [metadata.name, variant.metadata.name].join('.');
-            tagData[variantTag] = variant.metadata;
-        });
+    const packageMatchers: Matcher[] = packages.map((pkg) => [
+        pkg.file,
+        pkg.linetext,
+        tag,
+        pkg.score
+    ]);
 
-        const sourceMatchers: Matcher[] = sources.map((source) => [
-            source.file,
-            source.linetext,
-            metadata.name,
-            source.score
-        ]);
+    const artifactMathcers: Matcher[] = artifacts.map((artifact) => [
+        artifact.file,
+        undefined,
+        tag,
+        artifact.score
+    ]);
 
-        const artifactMathcers: Matcher[] = artifacts.map((artifact) => [
-            artifact.file,
-            undefined,
-            metadata.name,
-            artifact.score
-        ]);
+    const matchers: Matcher[] = [
+        ...artifactMathcers,
+        ...sourceMatchers,
+        ...packageMatchers,
+    ]
 
-        const variantMatchers: Matcher[] = variants.reduce((matchers: Matcher[], variant: Variant) => {
-            const tag = [metadata.name, variant.metadata.name].join('.');
+    const childOutputs = children.reduce((outputs: LibraryOutput[], child: Library) => {
+        compile(child, tag).forEach((output) => outputs.push(output));
 
-            const variantArtifactMatchers: Matcher[] = (variant.artifacts ?? []).map((artifact) => [
-                artifact.file,
-                undefined,
-                tag,
-                artifact.score
-            ]);
+        return outputs
+    }, []);
 
-            const variantSourceMatchers: Matcher[] = (variant.sources ?? []).map((source) => [
-                source.file,
-                source.linetext,
-                tag,
-                source.score
-            ]);
-
-            return [
-                ...matchers,
-                ...variantArtifactMatchers,
-                ...variantSourceMatchers
-            ];
-        }, [])
-
-        const matchers: Matcher[] = [
-            ...artifactMathcers,
-            ...sourceMatchers,
-            // ...packages.map((package) => {
-            //     package.file
-            // }),
-            ...variantMatchers
-        ]
-
-        return {
-            tagData,
+    return [
+        {
+            tag,
+            metadata,
+            parentTag,
             matchers,
-        }
-    }
+        },
+        ...childOutputs
+    ];
 }
