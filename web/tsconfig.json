@@ -18,7 +18,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "database/*": ["../database/*"]
     },
     // Enable latest features
     "lib": [
@@ -50,7 +51,7 @@
         "name": "next"
       }
     ],
-    "isolatedModules": true
+    "isolatedModules": true,
   },
   "include": [
     "next-env.d.ts",
@@ -60,5 +61,5 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
 }

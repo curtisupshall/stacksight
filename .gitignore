@@ -2,3 +2,4 @@
 .env
 .env.local
 localstack_data
+bun.lockb
