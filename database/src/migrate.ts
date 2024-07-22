@@ -5,7 +5,7 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 /**
  * Script which performs all database migrations
  */
-async function main() {
+async function run() {
     await migrate(drizzle(pool), {
         migrationsFolder: './migrations'
     });
@@ -13,4 +13,4 @@ async function main() {
     await pool.end();
 }
 
-main();
+run();
