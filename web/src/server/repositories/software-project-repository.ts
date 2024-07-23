@@ -4,13 +4,18 @@ import { BaseRepository } from "./base-repository";
 import { IProjectScanRecord } from "../../types/project-scan";
 import { Knex } from "knex";
 
+import { and, eq, sql } from "drizzle-orm";
+import { pgTable, serial, integer, varchar, timestamp } from "drizzle-orm/pg-core";
+import dbClient from 'database/src/client';
+
+
 export class SoftwareProjectRepository extends BaseRepository {
     
     constructor(connection: DbConnection) {
         super(connection);
     }
 
-    _getListProjectsQuery(): Knex.QueryBuilder {
+    _getListProjectsQuery_old(): Knex.QueryBuilder {
         const knex = getKnex();
     
         // Define the CTE for the latest scans of each project
@@ -68,12 +73,68 @@ export class SoftwareProjectRepository extends BaseRepository {
     
         return projects;
     }
+
+    _getListProjectsQuery() {
+        const latestScans = dbClient.select({
+            software_project_id: 'software_project_scan.software_project_id',
+            max_dispatched_at: sql`MAX(dispatched_at)`,
+        })
+            .from('software_project_scan')
+            .groupBy('software_project_id')
+            .as('latest_scans');
+    
+        const latestScanDetails = dbClient.select()
+            .from('software_project_scan as sps')
+            .innerJoin(latestScans, and(
+                eq('sps.software_project_id', 'latest_scans.software_project_id'),
+                eq('sps.dispatched_at', 'latest_scans.max_dispatched_at')
+            ))
+            .as('latest_scan_details');
+    
+        const tags = dbClient.select({
+            software_project_scan_id: 'spt.software_project_scan_id',
+            tags: sql`array_agg(distinct spt.tag) filter (where spt.tag is not null)`,
+        })
+            .from('software_project_scan_tag as spt')
+            .innerJoin(latestScanDetails, eq('spt.software_project_scan_id', 'latest_scan_details.software_project_scan_id'))
+            .groupBy('spt.software_project_scan_id')
+            .as('tags');
+    
+        const languages = dbClient.select({
+            software_project_scan_id: 'spl.software_project_scan_id',
+            languages: sql`json_agg(json_build_object('language_name', spl.language_name, 'num_lines', spl.num_lines))`,
+        })
+            .from('software_project_language as spl')
+            .innerJoin(latestScanDetails, eq('spl.software_project_scan_id', 'latest_scan_details.software_project_scan_id'))
+            .groupBy('spl.software_project_scan_id')
+            .as('languages');
+    
+        const projects = dbClient.select({
+            ...dbClient.raw('sp.*'),
+            last_scan: sql`json_build_object(
+                'software_project_scan_id', latest_scan_details.software_project_scan_id,
+                'software_project_id', latest_scan_details.software_project_id,
+                'dispatched_at', latest_scan_details.dispatched_at,
+                'completed_at', latest_scan_details.completed_at,
+                'aborted_at', latest_scan_details.aborted_at,
+                'tags', tags.tags,
+                'languages', languages.languages
+            )`,
+        })
+            .from('software_project as sp')
+            .leftJoin(latestScanDetails, eq('sp.software_project_id', 'latest_scan_details.software_project_id'))
+            .leftJoin(tags, eq('latest_scan_details.software_project_scan_id', 'tags.software_project_scan_id'))
+            .leftJoin(languages, eq('latest_scan_details.software_project_scan_id', 'languages.software_project_scan_id'))
+            .orderBy('sp.created_at', 'desc');
+    
+        return projects;
+    }
     
 
     async listProjects(): Promise<ISoftwareProject[]> {
-        const response = await this.connection.knex(this._getListProjectsQuery());
+        const response = await dbClient.execute(this._getListProjectsQuery());
 
-        return response.rows;
+        return response;
     }
 
     async listProjectsByOwnerName(ownerName: string): Promise<ISoftwareProject[]> {
