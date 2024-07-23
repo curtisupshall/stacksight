@@ -63,7 +63,7 @@ export class ProjectScanRepository extends BaseRepository {
     async addTagsToProjectScan(softwareProjectScanId: number, tags: string[]) {
         const queryValues = tags.map(tag => [softwareProjectScanId, tag]);
         await this.connection.query(`
-            INSERT INTO software_project_tag
+            INSERT INTO software_project_scan_tag
                 (software_project_scan_id, tag)
             VALUES
                 ${queryValues.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(',')}
@@ -110,7 +110,7 @@ export class ProjectScanRepository extends BaseRepository {
 
     async deleteProjectTagsByProjectId(softwareProjectId: number): Promise<void> {
         await this.connection.query(`
-            DELETE FROM software_project_tag
+            DELETE FROM software_project_scan_tag
             WHERE software_project_scan_id IN (
                 SELECT software_project_scan_id
                 FROM software_project_scan

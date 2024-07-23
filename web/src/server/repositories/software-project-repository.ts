@@ -29,7 +29,7 @@ export class SoftwareProjectRepository extends BaseRepository {
             .as('latest_scan_details');
     
         // CTE for tags associated with the latest scans
-        const tags = knex('software_project_tag as spt')
+        const tags = knex('software_project_scan_tag as spt')
             .select('spt.software_project_scan_id')
             .select(knex.raw('array_agg(distinct spt.tag) filter (where spt.tag is not null) as tags'))
             .join(latestScanDetails, 'spt.software_project_scan_id', '=', 'latest_scan_details.software_project_scan_id')
@@ -159,7 +159,7 @@ export class SoftwareProjectRepository extends BaseRepository {
             .whereExists(function () {
                 // Nested query to check existence of the tag within the current project's scans
                 this.select('*')
-                    .from('software_project_tag as spt')
+                    .from('software_project_scan_tag as spt')
                     .whereRaw('spt.software_project_scan_id = latest_scan_details.software_project_scan_id')
                     .andWhere('spt.tag', '=', tag);
             });

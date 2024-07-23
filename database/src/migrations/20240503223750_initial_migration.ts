@@ -40,8 +40,8 @@ export async function up(knex: Knex): Promise<void> {
      * Creates the table used to record software project tags discovered during scans
      */
     await knex.raw(`
-        CREATE TABLE "software_project_tag" (
-            "software_project_tag_id"   SERIAL PRIMARY KEY,
+        CREATE TABLE "software_project_scan_tag" (
+            "software_project_scan_tag_id"   SERIAL PRIMARY KEY,
             "software_project_scan_id"  INTEGER NOT NULL,
             "tag"                       VARCHAR(255),
             "created_at"                TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -54,7 +54,7 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
     await knex.raw(`
-        DROP TABLE "software_project_tag";
+        DROP TABLE "software_project_scan_tag";
         DROP TABLE "software_project_scan";
         DROP TABLE "software_project";
     `);
