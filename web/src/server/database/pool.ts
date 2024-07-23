@@ -6,6 +6,7 @@ const DB_CONNECTION_CONFIG = ({
     port: process.env.POSTGRES_PORT ? Number(process.env.POSTGRES_PORT) : undefined,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
+    ssl: true
 
     // max: 20,
     // idleTimeoutMillis: 30000,
