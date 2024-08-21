@@ -32,8 +32,11 @@
     "zod": "^3.23.5"
   },
   "scripts": {
-    "dev": "PORT=3692 dotenv -e ../.env -- next dev",
-    "build": "dotenv -e ../.env -- next build",
-    "start": "PORT=3692 next start"
+    "dev": "next -p 3692",
+    "build": "next build",
+    "start": "next start -p 3692",
+    "generate": "npx drizzle-kit generate",
+    "migrate": "npx tsx src/database/migrate.ts",
+    "seed": "npx tsx src/database/seed.ts"
   }
 }
