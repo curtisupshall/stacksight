@@ -1,9 +1,13 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
-import { DbConnection } from "../database/db";
-import { SoftwareProjectService } from '../services/software-project-service';
-import { ProjectScanService } from "../services/project-scan-service";
+
+import db from "@/database/client";
+import { SoftwareProjectService } from "../services/software-project-service";
+
+export const listProjects = () => {
+    return db.query.Project.findMany();
+}
 
 export async function addNewProject(formData: FormData) {
     const repoFullNameWithBranchFormValue = formData.get('repoFullName');
@@ -12,30 +16,16 @@ export async function addNewProject(formData: FormData) {
         throw new Error('No repo name was given.')
     }
 
-    const connection = new DbConnection();
+    const [repoFullName, branchName] = String(repoFullNameWithBranchFormValue).split('@');
 
-    try {
-        await connection.open();
-        
-        const softwareProjectService = new SoftwareProjectService(connection);
-        
-        const [repoFullName, branchName] = String(repoFullNameWithBranchFormValue).split('@');
-
-        if (!repoFullName) {
-            throw new Error('A repo name is required.')
-        }
-
-        await softwareProjectService.addNewProject(repoFullName, branchName);
-
-        await connection.commit();
-
-        revalidatePath('/projects');
-    } catch (error) {
-        connection.rollback();
-        throw error;
-    } finally {
-        connection.release();
+    if (!repoFullName) {
+        throw new Error('A repo name is required.')
     }
+
+    await SoftwareProjectService.addNewProject(repoFullName, branchName);
+
+
+    revalidatePath('/projects');
 }
 
 export async function scanProject(formData: FormData) {

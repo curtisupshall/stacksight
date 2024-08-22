@@ -102,7 +102,7 @@ export class SoftwareProjectRepository extends BaseRepository {
         return response.rows[0];
     }
 
-    async getProjectByFullName(repoFullName: string): Promise<ISoftwareProject | undefined> {
+    static async getProjectByFullName(repoFullName: string): Promise<ISoftwareProject | undefined> {
         
         const query = this._getListProjectsQuery()
             .whereILike('sp.full_name', repoFullName)
