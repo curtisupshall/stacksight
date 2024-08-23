@@ -1,5 +1,5 @@
 {
-  "id": "2713f3b1-cb0b-45b0-bc1e-11f1ce5417ee",
+  "id": "bea4a436-a37d-4d57-a4b6-0e19ef0d6db8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -309,7 +309,7 @@
           "name": "tag",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",

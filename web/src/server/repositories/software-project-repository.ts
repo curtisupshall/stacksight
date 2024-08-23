@@ -72,8 +72,8 @@ export class SoftwareProjectRepository {
                     limit: 1,
                     with: {
                         tags: true,
-                        // commits: true,
-                        // contributors: true,
+                        commits: true,
+                        contributors: true,
                     }
                 }
             }

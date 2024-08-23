@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "software_project_scan" (
 CREATE TABLE IF NOT EXISTS "software_project_scan_tag" (
 	"software_project_scan_tag_id" serial PRIMARY KEY NOT NULL,
 	"software_project_scan_id" integer NOT NULL,
-	"tag" varchar(255),
+	"tag" varchar(255) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp
 );

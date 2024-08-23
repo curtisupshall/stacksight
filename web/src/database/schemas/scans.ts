@@ -16,7 +16,8 @@ export const ProjectTag = pgTable('software_project_scan_tag', {
     softwareProjectScanId: integer('software_project_scan_id')
         .notNull()
         .references(() => ProjectScan.softwareProjectScanId),
-    tag: varchar('tag', { length: 255 }),
+
+    tag: varchar('tag', { length: 255 }).notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at'),
 });

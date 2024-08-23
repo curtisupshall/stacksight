@@ -13,7 +13,7 @@ export const ProjectScanRelations = relations(ProjectScan, ({ one, many }) => {
     return {
         tags: many(ProjectTag),
         commits: many(ProjectCommit),
-        // contributors: many(ProjectScanContributor),
+        contributors: many(ProjectScanContributor),
         project: one(Project, {
             fields: [ProjectScan.softwareProjectId],
             references: [Project.softwareProjectId]
@@ -39,11 +39,11 @@ export const ProjectCommitRelations = relations(ProjectCommit, ({ one }) => {
     }
 });
 
-// export const ProjectScanContributorRelations = relations(ProjectScanContributor, ({ one }) => {
-//     return {
-//         scan: one(ProjectScan, {
-//             fields: [ProjectScanContributor.softwareProjectScanId],
-//             references: [ProjectScan.softwareProjectScanId]
-//         }),
-//     }
-// });
+export const ProjectScanContributorRelations = relations(ProjectScanContributor, ({ one }) => {
+    return {
+        scan: one(ProjectScan, {
+            fields: [ProjectScanContributor.softwareProjectScanId],
+            references: [ProjectScan.softwareProjectScanId]
+        }),
+    }
+});
