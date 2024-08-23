@@ -1,7 +1,7 @@
 import type { CreateSoftwareProjectRecord, SoftwareProjectWithLatestScan } from "../../types/software-project";
 import db from "@/database/client";
 import { Project, ProjectScan } from "@/database/schemas";
-import { asc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 
 export class SoftwareProjectRepository {
     // _getListProjectsQuery(): Knex.QueryBuilder {
@@ -68,7 +68,7 @@ export class SoftwareProjectRepository {
         const projects = await db.query.Project.findMany({
             with: {
                 scans: {
-                    orderBy: [asc(ProjectScan.dispatchedAt)],
+                    orderBy: [desc(ProjectScan.dispatchedAt)],
                     limit: 1,
                     with: {
                         tags: true,
@@ -103,16 +103,13 @@ export class SoftwareProjectRepository {
     //     return response.rows[0];
     // }
 
-    // async getProjectRecordById(softwareProjectId: number): Promise<ISoftwareProjectRecord | undefined> {
-    //     const sqlQuery = `SELECT * FROM software_project WHERE software_project_id = $1`;
-
-    //     const response = await this.connection.query(sqlQuery, [softwareProjectId]);
-
-    //     return response.rows[0];
-    // }
+    static async getProjectRecordById(softwareProjectId: number) {
+        return db.query.Project.findFirst({
+            where: eq(Project.softwareProjectId, softwareProjectId)
+        });
+    }
 
     static async getProjectByFullName(repoFullName: string) {
-        
         return db.query.Project.findFirst({
             where: eq(Project.fullName, repoFullName),
         });

@@ -1,6 +1,8 @@
 import db from "@/database/client";
-import { ProjectScan } from "@/database/schemas";
-import { CreateProjectScanRecord, } from "@/types/project-scan";
+import { ProjectCommit, ProjectLanguage, ProjectScan, ProjectTag } from "@/database/schemas";
+import { CreateProjectScanLanguageRecord } from "@/types/languages";
+import { CreateProjectScanCommitRecord, CreateProjectScanRecord, CreateProjectScanTagRecord, } from "@/types/project-scan";
+import { eq } from "drizzle-orm";
 
 
 export class ProjectScanRepository {
@@ -36,61 +38,48 @@ export class ProjectScanRepository {
     //     return response.rows[0]
     // }
 
-    // async updateProjectScanRecordEndDate(softwareProjectScanId: number) {
-    //     await this.connection.query(`
-    //         UPDATE software_project_scan
-    //         SET completed_at = NOW()
-    //         WHERE software_project_scan_id = $1
-    //     `, [softwareProjectScanId]);
-    // }
+    static async markProjectScanAsCompleted(softwareProjectScanId: number) {
+        const rows = await db.update(ProjectScan)
+            .set({
+                completedAt: new Date()
+            })
+            .where(eq(ProjectScan.softwareProjectScanId, softwareProjectScanId))
+            .returning();
 
-    // async addTagsToProjectScan(softwareProjectScanId: number, tags: string[]) {
-    //     const queryValues = tags.map(tag => [softwareProjectScanId, tag]);
-    //     await this.connection.query(`
-    //         INSERT INTO software_project_scan_tag
-    //             (software_project_scan_id, tag)
-    //         VALUES
-    //             ${queryValues.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(',')}
-    //     `, queryValues.flat());
-    // }
+        return rows[0];
+            
+    }
 
-    // async addLanguagesToProjectScan(softwareProjectScanId: number, languages: Record<string, number>) {
-    //     const queryValues = Object.entries(languages).map(([langaugeName, numLines]) => {
-    //         return [softwareProjectScanId, langaugeName, numLines]
-    //     });
+    static async addTagsToProjectScan(softwareProjectScanId: number, tags: string[]) {
+        const queryValues = tags.map((tag: string): CreateProjectScanTagRecord => {
+            return {
+                softwareProjectScanId,
+                tag
+            }
+        });
 
-    //     await this.connection.query(`
-    //         INSERT INTO software_project_language
-    //             (software_project_scan_id, language_name, num_lines)
-    //         VALUES
-    //             ${queryValues.map((_, i) => `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`).join(',')}
-    //     `, queryValues.flat());
-    // }
+        const rows = await db.insert(ProjectTag).values(queryValues).returning();
+        return rows;
+    }
 
-    // async addCommitToProjectScan(softwareProjectScanId: number, commitRecord: IProjectCommitRecord) {
-    //     await this.connection.query(
-    //         `
-    //             INSERT INTO software_project_scan_commit (
-    //                 software_project_scan_id,
-    //                 author_name,
-    //                 commit_date,
-    //                 commit_html_url,
-    //                 commit_message,
-    //                 commit_sha
-    //             ) VALUES (
-    //                 $1, $2, $3, $4, $5, $6
-    //             )
-    //         `,
-    //         [
-    //             softwareProjectScanId,
-    //             commitRecord.author_name,
-    //             commitRecord.commit_date,
-    //             commitRecord.commit_html_url,
-    //             commitRecord.commit_message,
-    //             commitRecord.commit_sha
-    //         ]
-    //     )
-    // }
+    static async addLanguagesToProjectScan(softwareProjectScanId: number, languages: Record<string, number>) {
+        const insertRecords: CreateProjectScanLanguageRecord[]
+            = Object.entries(languages).map(([languageName, numLines]): CreateProjectScanLanguageRecord => {
+            return {
+                softwareProjectScanId,
+                languageName,
+                numLines
+            }
+        });
+
+        const rows = await db.insert(ProjectLanguage).values(insertRecords).returning();
+        return rows;
+    }
+
+    static async createProjectScanCommit(commitRecord: CreateProjectScanCommitRecord) {
+        const rows = await db.insert(ProjectCommit).values(commitRecord).returning();
+        return rows[0];
+    }
 
     // async deleteProjectTagsByProjectId(softwareProjectId: number): Promise<void> {
     //     await this.connection.query(`

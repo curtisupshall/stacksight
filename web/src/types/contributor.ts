@@ -1,4 +1,5 @@
 import { ProjectScanContributor } from "@/database/schemas";
-import { InferSelectModel } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export type ProjectScanContributorRecord = InferSelectModel<typeof ProjectScanContributor>;
+export type CreateProjectScanContributorRecord = InferInsertModel<typeof ProjectScanContributor>;

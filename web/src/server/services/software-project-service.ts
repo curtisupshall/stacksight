@@ -19,9 +19,9 @@ export class SoftwareProjectService {
     //     return this.softwareProjectRepository.getProjectByFullName(fullName);
     // }
 
-    // async getProjectRecordById(softwareProjectId: number): Promise<ISoftwareProjectRecord | undefined> {
-    //     return this.softwareProjectRepository.getProjectRecordById(softwareProjectId);
-    // }
+    static async getProjectRecordById(softwareProjectId: number) {
+        return SoftwareProjectRepository.getProjectRecordById(softwareProjectId);
+    }
 
     static async addNewProject(repoFullName: string, branchName: string | '') {
 

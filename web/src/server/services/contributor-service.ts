@@ -1,30 +1,16 @@
-import { DbConnection } from "../database/db";
-import { BaseService } from "./base-service";
-import { SQSClient, SendMessageCommand, SendMessageRequest } from "@aws-sdk/client-sqs";
-import { SoftwareProjectService } from "./software-project-service";
-import { ISoftwareProjectRecord } from "@/types/software-project";
 import { ContributorRepository } from "../repositories/contributor-repository";
-import { IProjectScanContributor } from "@/types/contributor";
+import { CreateProjectScanContributorRecord } from "@/types/contributor";
 
-export class ContributorService extends BaseService {
-    contributorRepository: ContributorRepository;
-
-    constructor(connection: DbConnection) {
-        super(connection);
-
-        this.contributorRepository = new ContributorRepository(connection);
+export class ContributorService {
+    static async createProjectScanContributors(contributors: CreateProjectScanContributorRecord[]) {
+        return ContributorRepository.createProjectScanContributors(contributors);
     }
 
+    // async getContributorsByProjectScanId(projectScanId: number) {
+    //     return this.contributorRepository.getContributorsByProjectScanId(projectScanId);
+    // }
 
-    async addContributorsToProjectScan(projectScanId: number, contributors: IProjectScanContributor[]) {
-        return this.contributorRepository.addContributorsToProjectScan(projectScanId, contributors);
-    }
-
-    async getContributorsByProjectScanId(projectScanId: number) {
-        return this.contributorRepository.getContributorsByProjectScanId(projectScanId);
-    }
-
-    async deleteContributorsByProjectId(projectId: number): Promise<void> {
-        return this.contributorRepository.deleteContributorsByProjectId(projectId);
-    }
+    // async deleteContributorsByProjectId(projectId: number): Promise<void> {
+    //     return this.contributorRepository.deleteContributorsByProjectId(projectId);
+    // }
 }
