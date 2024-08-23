@@ -1,23 +1,23 @@
 'use server'
 
 import { Box, Breadcrumbs, Card, Chip, Divider, IconButton, Stack, Typography } from "@mui/material";
-import type { ISoftwareProject, SoftwareProjectStatus } from "../../types/software-project";
+import type { SoftwareProjectWithLatestScan } from "../../types/software-project";
 import Link from "next/link";
 import ProjectsListCardActions from "./ProjectsListCardActions";
 import ProjectStatusIndicator from "./status/ProjectStatusIndicator";
 
-export default async function ProjectsListCard(props: ISoftwareProject) {
+export default async function ProjectsListCard(props: SoftwareProjectWithLatestScan) {
     return (
-        <Card component='li' key={props.software_project_id} sx={{ p: 2 }}>
+        <Card component='li' sx={{ p: 2 }}>
             <Stack direction='row' gap={1}>
                 <Box flex={2}>
                     <Stack direction='row' gap={1.5} alignItems='center'>
                         <Breadcrumbs>
-                            <Link href={`/projects/${props.owner_name}`}>
-                                <Typography variant='h6'>{props.owner_name}</Typography>
+                            <Link href={`/projects/${props.ownerName}`}>
+                                <Typography variant='h6'>{props.ownerName}</Typography>
                             </Link>
-                            <Link href={`/projects/${props.owner_name}/${props.project_name}`}>
-                                <Typography variant='h6'>{props.project_name}</Typography>
+                            <Link href={`/projects/${props.ownerName}/${props.projectName}`}>
+                                <Typography variant='h6'>{props.projectName}</Typography>
                             </Link>
                         </Breadcrumbs>
                         {/* <ProjectStatus project={props} /> */}

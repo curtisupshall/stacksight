@@ -6,10 +6,9 @@ import CircularProgress, {
     circularProgressClasses,
 } from '@mui/material/CircularProgress';
 import { Box, Chip, SxProps } from '@mui/material';
-import { IProjectScan } from '@/types/project-scan';
 import { getProjectStatus, getRelativeTime } from '@/utils/Utils';
 import Link from 'next/link';
-import { ISoftwareProject } from '@/types/software-project';
+import { SoftwareProjectWithLatestScan } from '@/types/software-project';
 
 const StatusDot = (props: { color: string }) => {
     return (
@@ -25,8 +24,8 @@ const StatusDot = (props: { color: string }) => {
     )
 }
 
-export default function ProjectStatusIndicator(props: ISoftwareProject) {
-    const status = getProjectStatus(props.last_scan);
+export default function ProjectStatusIndicator(props: SoftwareProjectWithLatestScan) {
+    const status = getProjectStatus(props.scan);
 
     let icon = <StatusDot color='action' />
     let label = 'Pending'
@@ -86,7 +85,7 @@ export default function ProjectStatusIndicator(props: ISoftwareProject) {
             break
 
         case 'SUCCEEDED':
-            label = `Ready (${getRelativeTime(props.last_scan?.completed_at ?? null)})`
+            label = `Ready (${getRelativeTime(String(props.scan?.completedAt) ?? null)})`
             icon = (
                 <StatusDot color='#50e3c2' />
             )
@@ -103,7 +102,7 @@ export default function ProjectStatusIndicator(props: ISoftwareProject) {
             icon={icon}
             label={label}
             component={Link}
-            href={`/projects/${props.full_name}/scans`}
+            href={`/projects/${props.fullName}/scans`}
             sx={{
                 ...sxProps,
                 cursor: 'pointer'

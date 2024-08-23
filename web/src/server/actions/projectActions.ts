@@ -5,8 +5,8 @@ import { revalidatePath } from "next/cache";
 import db from "@/database/client";
 import { SoftwareProjectService } from "../services/software-project-service";
 
-export const listProjects = () => {
-    return SoftwareProjectService.listProjects();
+export const listProjectsWithLatestScan = () => {
+    return SoftwareProjectService.listProjectsWithLatestScan();
 }
 
 export async function addNewProject(formData: FormData) {

@@ -3,8 +3,8 @@ import { ProjectScanService } from "./project-scan-service";
 
 export class SoftwareProjectService {
 
-    static async listProjects() {
-        return SoftwareProjectRepository.listProjects();
+    static async listProjectsWithLatestScan() {
+        return SoftwareProjectRepository.listProjectsWithLatestScan();
     }
 
     // async listProjectsByOwnerName(ownerName: string) {

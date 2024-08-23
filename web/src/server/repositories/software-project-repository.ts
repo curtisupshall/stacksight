@@ -1,4 +1,4 @@
-import type { CreateSoftwareProjectRecord } from "../../types/software-project";
+import type { CreateSoftwareProjectRecord, SoftwareProjectWithLatestScan } from "../../types/software-project";
 import db from "@/database/client";
 import { Project, ProjectScan } from "@/database/schemas";
 import { asc, eq } from "drizzle-orm";
@@ -64,7 +64,7 @@ export class SoftwareProjectRepository {
     // }
 
 
-    static async listProjects(): Promise<any> {
+    static async listProjectsWithLatestScan(): Promise<SoftwareProjectWithLatestScan[]> {
         const projects = await db.query.Project.findMany({
             with: {
                 scans: {
@@ -79,11 +79,10 @@ export class SoftwareProjectRepository {
             }
         })
 
-        // return projects.map((project) => ({
-        //     ...project,
-        //     scan: project.scans[0],
-        // }));
-        return projects;
+        return projects.map((project) => ({
+            ...project,
+            scan: project.scans[0] ?? null,
+        }));
     }
 
     // async listProjectsByOwnerName(ownerName: string): Promise<ISoftwareProject[]> {

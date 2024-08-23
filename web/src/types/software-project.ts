@@ -1,13 +1,12 @@
 import { Project } from "@/database/schemas";
 import { InferInsertModel, type InferSelectModel } from 'drizzle-orm'
+import { ProjectScanRecordWithRelations } from "./project-scan";
 
 export type SoftwareProjectRecord = InferSelectModel<typeof Project>;
 
-
-// Desired response type:
-// export interface ISoftwareProject extends ISoftwareProjectRecord {
-//     last_scan: IProjectScan | null;
-// }
+export type SoftwareProjectWithLatestScan = SoftwareProjectRecord & {
+    scan: ProjectScanRecordWithRelations | null;
+};
 
 export type CreateSoftwareProjectRecord = InferInsertModel<typeof Project>;
 
