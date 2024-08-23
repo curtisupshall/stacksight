@@ -13,7 +13,7 @@ export type CreateProjectScanCommitRecord = InferInsertModel<typeof ProjectCommi
 
 export type ProjectScanRecordWithRelations = ProjectScanRecord & {
     tags: ProjectScanTagRecord[],
-    commits: ProjectScanCommitRecord[],
+    commit: ProjectScanCommitRecord | null,
     contributors: ProjectScanContributorRecord[],
     languages: ProjectScanLanguageRecord[],
 };

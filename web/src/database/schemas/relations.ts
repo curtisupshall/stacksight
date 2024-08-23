@@ -13,7 +13,7 @@ export const ProjectRelations = relations(Project, ({ many }) => {
 export const ProjectScanRelations = relations(ProjectScan, ({ one, many }) => {
     return {
         tags: many(ProjectTag),
-        commits: many(ProjectCommit),
+        commit: one(ProjectCommit),
         contributors: many(ProjectScanContributor),
         languages: many(ProjectLanguage),
         project: one(Project, {

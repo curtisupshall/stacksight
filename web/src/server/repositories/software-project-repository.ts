@@ -73,7 +73,7 @@ export class SoftwareProjectRepository {
                     limit: 1,
                     with: {
                         tags: true,
-                        commits: true,
+                        commit: true,
                         contributors: true,
                         languages: true,
                     }
@@ -126,7 +126,7 @@ export class SoftwareProjectRepository {
                     limit: 1,
                     with: {
                         tags: true,
-                        commits: true,
+                        commit: true,
                         contributors: true,
                         languages: true,
                     }

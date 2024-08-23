@@ -31,7 +31,7 @@ export class ProjectScanRepository {
             orderBy: desc(ProjectScan.completedAt),
             with: {
                 tags: true,
-                commits: true,
+                commit: true,
                 contributors: true,
                 languages: true,
             }
