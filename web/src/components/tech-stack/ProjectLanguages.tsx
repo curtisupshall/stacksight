@@ -1,13 +1,13 @@
 'use client'
 
-import { IProjectLanguage } from "../../types/project-scan";
 import { languages } from "../../constants/linguist";
 import { useMemo } from "react";
 import { Box, Stack } from "@mui/system";
 import { Typography } from "@mui/material";
+import { ProjectScanLanguageRecord } from "@/types/languages";
 
 interface IProjectLanguagesProps {
-    languages: IProjectLanguage[];
+    languages: ProjectScanLanguageRecord[];
 }
 
 export default function ProjectLanguages(props: IProjectLanguagesProps) {
@@ -15,37 +15,37 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
         const languageDetails: { name: string, color: string, percentage: number }[] = [];
         const chartData: { flex: number, color: string }[] = [];
         
-        let minLineCount = props.languages[0]?.num_lines ?? 0;
+        let minLineCount = props.languages[0]?.numLines ?? 0;
         let totalLanguageLineCount = 0;
         let otherCategoryLineCount = 0;
 
         props.languages.forEach((language) => {
-            totalLanguageLineCount += language.num_lines;
+            totalLanguageLineCount += language.numLines;
 
-            if (language.num_lines < minLineCount) {
-                minLineCount = language.num_lines;
+            if (language.numLines < minLineCount) {
+                minLineCount = language.numLines;
             }
         })
 
         props.languages
-            .sort((a, b) => b.num_lines - a.num_lines)
+            .sort((a, b) => b.numLines - a.numLines)
             .forEach((language) => {
-                const percentage = 100 * language.num_lines / totalLanguageLineCount
+                const percentage = 100 * language.numLines / totalLanguageLineCount
                 if (percentage > 1) {
                     chartData.push({
-                        flex: Math.ceil(language.num_lines / minLineCount),
-                        color: languages?.[language.language_name]?.color,
+                        flex: Math.ceil(language.numLines / minLineCount),
+                        color: languages?.[language.languageName]?.color,
                     })
                 }
 
                 if (percentage > 0.5) {
                     languageDetails.push({
-                        name: language.language_name,
-                        color: languages?.[language.language_name]?.color,
+                        name: language.languageName,
+                        color: languages?.[language.languageName]?.color,
                         percentage
                     });
                 } else {
-                    otherCategoryLineCount += language.num_lines
+                    otherCategoryLineCount += language.numLines
                 }
             });
 

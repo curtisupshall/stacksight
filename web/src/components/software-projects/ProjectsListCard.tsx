@@ -21,7 +21,7 @@ export default async function ProjectsListCard(props: SoftwareProjectWithLatestS
                             </Link>
                         </Breadcrumbs>
                         {/* <ProjectStatus project={props} /> */}
-                        <ProjectStatusIndicator {...props} />
+                        <ProjectStatusIndicator project={props} scan={props.scan} />
                     </Stack>
                     <Typography variant='body2'>
                         {props.description}
