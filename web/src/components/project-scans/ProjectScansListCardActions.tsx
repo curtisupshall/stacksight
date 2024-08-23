@@ -1,12 +1,10 @@
 'use client'
 
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
-import type { ISoftwareProject } from "../../types/software-project";
 import { MoreVert } from "@mui/icons-material";
 import { useState } from "react";
-import { IProjectScanRecord } from "@/types/project-scan";
 
-export default function ProjectScansListCardActions(props: IProjectScanRecord) {
+export default function ProjectScansListCardActions(props: any) {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
     const handleClose = () => {

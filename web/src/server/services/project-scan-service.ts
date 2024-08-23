@@ -29,9 +29,9 @@ export class ProjectScanService extends BaseService {
         return await this.disaptchProjectScan(softwareProjectRecord);
     }
 
-    // async listScansByProjectId(softwareProjectId: number) {
-    //     return this.projectScanRepository.listScansByProjectId(softwareProjectId);
-    // }
+    static async listScansWithRelationsByProjectId(softwareProjectId: number) {
+        return ProjectScanRepository.listScansWithRelationsByProjectId(softwareProjectId);
+    }
 
     static async getLatestSuccessfulScanWithRelationsByProjectId(softwareProjectId: number) {
         return ProjectScanRepository.getLatestSuccessfulScanWithRelationsByProjectId(softwareProjectId);

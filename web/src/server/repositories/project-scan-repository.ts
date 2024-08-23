@@ -11,16 +11,18 @@ export class ProjectScanRepository {
         return rows[0];
     }
 
-    // async listScansByProjectId(softwareProjectId: number): Promise<IProjectScanRecord[]> {
-    //     const response = await this.connection.query(
-    //         `
-    //             SELECT * FROM software_project_scan
-    //             WHERE software_project_id = $1;
-    //         `, [softwareProjectId]
-    //     );
-
-    //     return response.rows;
-    // }
+    static async listScansWithRelationsByProjectId(softwareProjectId: number): Promise<ProjectScanRecordWithRelations[]> {
+        return db.query.ProjectScan.findMany({
+            where: eq(ProjectScan.softwareProjectId, softwareProjectId),
+            orderBy: desc(ProjectScan.dispatchedAt),
+            with: {
+                tags: true,
+                commit: true,
+                contributors: true,
+                languages: true,
+            }
+        });
+    }
 
     static async getLatestSuccessfulScanWithRelationsByProjectId(softwareProjectId: number): Promise<ProjectScanRecordWithRelations | undefined> {
         const response = await db.query.ProjectScan.findFirst({

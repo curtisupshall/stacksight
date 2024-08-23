@@ -26,7 +26,6 @@ const StatusDot = (props: { color: string }) => {
 }
 
 interface IProjectStatusIndicatorProps {
-    project: SoftwareProjectRecord;
     scan: ProjectScanRecordWithRelations | null;
 }
 
@@ -104,11 +103,8 @@ export default function ProjectStatusIndicator(props: IProjectStatusIndicatorPro
     return (
         <Chip
             variant='outlined'
-            // size='small'
             icon={icon}
             label={label}
-            component={Link}
-            href={`/projects/${props.project.fullName}/scans`}
             sx={{
                 ...sxProps,
                 cursor: 'pointer'

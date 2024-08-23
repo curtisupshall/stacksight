@@ -1,25 +1,24 @@
 'use server'
 
-import { Box, Breadcrumbs, Card, Chip, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Card, Stack } from "@mui/material";
 
-import { IProjectScanRecord } from "@/types/project-scan";
+import { ProjectScanRecordWithRelations } from "@/types/project-scan";
 import ProjectStatusIndicator from "../software-projects/status/ProjectStatusIndicator";
-import ProjectScansListCardActions from "./ProjectsListCardActions";
+import ProjectScansListCardActions from "./ProjectScansListCardActions";
 
-export default async function ProjectScansListCard(props: IProjectScanRecord) {
+interface IProjectScanListCardProps {
+    scan: ProjectScanRecordWithRelations;
+}
+
+export default async function ProjectScansListCard(props: IProjectScanListCardProps) {
     return (
-        <Card component='li' key={props.software_project_id} sx={{ p: 2 }}>
+        <Card component='li' sx={{ p: 2 }}>
             <Stack direction='row' gap={1}>
                 <Box flex={2}>
                     <Stack direction='row' gap={1.5} alignItems='center'>
-                        
-                        {/* <ProjectScanStatus project={props} /> */}
-                        {/* <ProjectStatusIndicator {...props} /> */}
-                        {JSON.stringify(props)}
+                        <ProjectStatusIndicator scan={props.scan} />
                     </Stack>
-                  
                 </Box>
-
                 <Box>
                     <ProjectScansListCardActions {...props} />
                 </Box>

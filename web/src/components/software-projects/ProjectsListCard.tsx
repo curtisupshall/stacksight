@@ -1,6 +1,6 @@
 'use server'
 
-import { Box, Breadcrumbs, Card, Chip, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Card, Stack, Typography } from "@mui/material";
 import type { SoftwareProjectWithLatestScan } from "../../types/software-project";
 import Link from "next/link";
 import ProjectsListCardActions from "./ProjectsListCardActions";
@@ -20,8 +20,9 @@ export default async function ProjectsListCard(props: SoftwareProjectWithLatestS
                                 <Typography variant='h6'>{props.projectName}</Typography>
                             </Link>
                         </Breadcrumbs>
-                        {/* <ProjectStatus project={props} /> */}
-                        <ProjectStatusIndicator project={props} scan={props.scan} />
+                        <Link href={`/projects/${props.fullName}/scans`}>
+                            <ProjectStatusIndicator scan={props.scan} />
+                        </Link>
                     </Stack>
                     <Typography variant='body2'>
                         {props.description}
