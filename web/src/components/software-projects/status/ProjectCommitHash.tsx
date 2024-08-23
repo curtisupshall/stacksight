@@ -1,11 +1,18 @@
 import { ForkRight } from "@mui/icons-material";
-import { ISoftwareProject } from "../../../types/software-project";
 import { Chip, Typography } from "@mui/material";
-import { IProjectCommitRecord, IProjectScanRecord } from "@/types/project-scan";
 import { getRelativeTime } from "@/utils/Utils";
+import { ProjectScanCommitRecord } from "@/types/project-scan";
 
-export default function ProjectCommitHash(props: IProjectCommitRecord) {
-    const hash = props.commit_sha.slice(0, 7);
+interface IProjectCommitHashProps {
+    commit: ProjectScanCommitRecord | null;
+}
+
+export default function ProjectCommitHash(props: IProjectCommitHashProps) {
+    if (!props.commit) {
+        return <></>;
+    }
+
+    const hash = props.commit.commitSha.slice(0, 7);
 
     return (
         <Chip
@@ -19,16 +26,16 @@ export default function ProjectCommitHash(props: IProjectCommitRecord) {
                         {hash}
                     </Typography>
                     <Typography variant='inherit' component='span'>
-                        &nbsp;({getRelativeTime(props.commit_date)})
+                        &nbsp;({getRelativeTime(props.commit.commitDate.toISOString())})
                     </Typography>
-                </>    
+                </>
             }
             sx={{
                 cursor: 'pointer'
             }}
             // size='small'
             component='a'
-            href={props.commit_html_url}
+            href={props.commit.commitHtmlUrl}
             target='_blank'
         />
     )

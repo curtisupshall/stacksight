@@ -10,6 +10,7 @@ import ProjectStatusIndicator from "@/components/software-projects/status/Projec
 import ResultsAlert from "@/components/software-projects/status/ResultsAlert";
 import { ProjectScanService } from "@/server/services/project-scan-service";
 import ProjectContributors from "@/slots/ProjectContributors";
+import ProjectCommitHash from "@/components/software-projects/status/ProjectCommitHash";
 
 export default async function SoftwareProjectPage({ params }: { params: { softwareProjectName: string, softwareOwnerName: string }}) {
     
@@ -37,10 +38,8 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                     <Typography variant='h3' mb={2}>{repoFullName}</Typography>
                     <Stack direction='row' gap={1}>
                         <ProjectStatusIndicator project={project} scan={lastSuccessfulScan} />
-                        <ProjectBranch {...project} />
-                        {/* {project.last_scan && (
-                            <ProjectCommitHash {...project.last_scan} />
-                        )} */}
+                        <ProjectBranch project={project} />
+                        <ProjectCommitHash commit={project.scan?.commit ?? null} />
                     </Stack>
                 </Box>
                 
