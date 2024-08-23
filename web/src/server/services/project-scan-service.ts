@@ -33,9 +33,9 @@ export class ProjectScanService extends BaseService {
     //     return this.projectScanRepository.listScansByProjectId(softwareProjectId);
     // }
 
-    // async getLatestSuccessfulScanByProjectId(softwareProjectId: number): Promise<IProjectScanRecord | undefined> {
-    //     return this.projectScanRepository.getLatestSuccessfulScanByProjectId(softwareProjectId);
-    // }
+    static async getLatestSuccessfulScanByProjectId(softwareProjectId: number) {
+        return ProjectScanRepository.getLatestSuccessfulScanByProjectId(softwareProjectId);
+    }
 
     static async disaptchProjectScan(projectRecord: SoftwareProjectRecord) {
         const { softwareProjectId } = projectRecord;

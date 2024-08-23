@@ -2,7 +2,7 @@ import db from "@/database/client";
 import { ProjectCommit, ProjectLanguage, ProjectScan, ProjectTag } from "@/database/schemas";
 import { CreateProjectScanLanguageRecord } from "@/types/languages";
 import { CreateProjectScanCommitRecord, CreateProjectScanRecord, CreateProjectScanTagRecord, } from "@/types/project-scan";
-import { eq } from "drizzle-orm";
+import { and, desc, eq, isNotNull } from "drizzle-orm";
 
 
 export class ProjectScanRepository {
@@ -22,21 +22,17 @@ export class ProjectScanRepository {
     //     return response.rows;
     // }
 
-    // async getLatestSuccessfulScanByProjectId(softwareProjectId: number): Promise<IProjectScanRecord | undefined> {
-    //     const response = await this.connection.query(
-    //         `
-    //             SELECT *
-    //             FROM software_project_scan
-    //             WHERE completed_at IS NOT NULL
-    //             AND software_project_id = $1
-    //             ORDER BY dispatched_at DESC
-    //             LIMIT 1;
-    //         `,
-    //         [softwareProjectId]
-    //     );
+    static async getLatestSuccessfulScanByProjectId(softwareProjectId: number) {
+        const response = await db.query.ProjectScan.findFirst({
+            where: and(
+                eq(ProjectScan.softwareProjectId, softwareProjectId),
+                isNotNull(ProjectScan.completedAt),
+            ),
+            orderBy: desc(ProjectScan.completedAt),
+        });
 
-    //     return response.rows[0]
-    // }
+        return response;
+    }
 
     static async markProjectScanAsCompleted(softwareProjectScanId: number) {
         const rows = await db.update(ProjectScan)

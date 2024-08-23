@@ -1,6 +1,7 @@
 import { ProjectCommit, ProjectLanguage, ProjectScan, ProjectTag } from "@/database/schemas";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { ProjectScanContributorRecord } from "./contributor";
+import { ProjectScanLanguageRecord } from "./languages";
 
 export type ProjectScanRecord = InferSelectModel<typeof ProjectScan>;
 
@@ -14,6 +15,7 @@ export type ProjectScanRecordWithRelations = ProjectScanRecord & {
     tags: ProjectScanTagRecord[],
     commits: ProjectScanCommitRecord[],
     contributors: ProjectScanContributorRecord[],
+    languages: ProjectScanLanguageRecord[],
 };
 
 export type CreateProjectScanRecord = InferInsertModel<typeof ProjectScan>;

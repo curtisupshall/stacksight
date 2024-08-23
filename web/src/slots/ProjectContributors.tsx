@@ -1,49 +1,27 @@
 'use server'
 
-import { DbConnection } from "@/server/database/db";
-import { ContributorService } from "@/server/services/contributor-service";
-import { IProjectScanContributor } from "@/types/contributor";
-import { ISoftwareProject } from "@/types/software-project";
+import { ProjectScanContributorRecord } from "@/types/contributor";
 import { Avatar, AvatarGroup, Stack, avatarClasses } from "@mui/material"
-import axios from "axios";
 import Link from "next/link";
 
-// interface IProjectContributorsProps {
-//     projectScanId: number
-// }
+interface IProjectContributorsProps {
+    contributors: ProjectScanContributorRecord[]
+}
 
-export default async function ProjectContributors(props: ISoftwareProject) {
-    const connection = new DbConnection();
-    
-    try {
-        await connection.open();
-        const contributorService = new ContributorService(connection);
+export default async function ProjectContributors(props: IProjectContributorsProps) {
 
-        let contributors: IProjectScanContributor[] = [];
-
-        if (props.last_scan) {
-            contributors = await contributorService.getContributorsByProjectScanId(props.last_scan?.software_project_scan_id)
-        }
-
-        return (
-            <Stack direction='row' flexWrap='wrap' flexDirection='row' gap={1}>
-                {contributors.map(async (contributor) => {
-                    return (
-                        <Avatar
-                            key={contributor.login}
-                            component={Link}
-                            href={contributor.html_url}
-                            // src={(await axios.get(`https://api.github.com/users/${contributor.login}`)).data.avatar_url}
-                            src={contributor.avatar_url}
-                        />
-                    )
-                })}
-            </Stack>
-        )
-    } catch (error) {
-        connection.rollback();
-        throw error
-    } finally {
-        connection.release();
-    }
+    return (
+        <Stack direction='row' flexWrap='wrap' flexDirection='row' gap={1}>
+            {props.contributors.map(async (contributor) => {
+                return (
+                    <Avatar
+                        key={contributor.login}
+                        component={Link}
+                        href={contributor.htmlUrl}
+                        src={contributor.avatarUrl}
+                    />
+                )
+            })}
+        </Stack>
+    )
 }

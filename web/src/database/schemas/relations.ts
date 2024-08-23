@@ -2,6 +2,7 @@ import { relations } from 'drizzle-orm';
 import { Project } from './projects';
 import { ProjectCommit, ProjectScan, ProjectTag } from './scans';
 import { ProjectScanContributor } from './contributors';
+import { ProjectLanguage } from './languages';
 
 export const ProjectRelations = relations(Project, ({ many }) => {
     return {
@@ -14,6 +15,7 @@ export const ProjectScanRelations = relations(ProjectScan, ({ one, many }) => {
         tags: many(ProjectTag),
         commits: many(ProjectCommit),
         contributors: many(ProjectScanContributor),
+        languages: many(ProjectLanguage),
         project: one(Project, {
             fields: [ProjectScan.softwareProjectId],
             references: [Project.softwareProjectId]
@@ -43,6 +45,15 @@ export const ProjectScanContributorRelations = relations(ProjectScanContributor,
     return {
         scan: one(ProjectScan, {
             fields: [ProjectScanContributor.softwareProjectScanId],
+            references: [ProjectScan.softwareProjectScanId]
+        }),
+    }
+});
+
+export const ProjectScanLanguageRelations = relations(ProjectLanguage, ({ one }) => {
+    return {
+        scan: one(ProjectScan, {
+            fields: [ProjectLanguage.softwareProjectScanId],
             references: [ProjectScan.softwareProjectScanId]
         }),
     }

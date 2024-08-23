@@ -15,9 +15,13 @@ export class SoftwareProjectService {
     //     return this.softwareProjectRepository.getProjectById(softwareProjectId);
     // }
 
-    // async getProjectByFullName(fullName: string): Promise<ISoftwareProject | undefined> {
-    //     return this.softwareProjectRepository.getProjectByFullName(fullName);
-    // }
+    static async getProjectByFullName(fullName: string) {
+        return SoftwareProjectRepository.getProjectByFullName(fullName);
+    }
+
+    static async getProjectWithLatestScanByFullName(fullName: string) {
+        return SoftwareProjectRepository.getProjectWithLatestScanByFullName(fullName);
+    }
 
     static async getProjectRecordById(softwareProjectId: number) {
         return SoftwareProjectRepository.getProjectRecordById(softwareProjectId);

@@ -1,6 +1,7 @@
 import type { CreateSoftwareProjectRecord, SoftwareProjectWithLatestScan } from "../../types/software-project";
 import db from "@/database/client";
 import { Project, ProjectScan } from "@/database/schemas";
+import { ProjectScanRecordWithRelations } from "@/types/project-scan";
 import { asc, desc, eq } from "drizzle-orm";
 
 export class SoftwareProjectRepository {
@@ -74,6 +75,7 @@ export class SoftwareProjectRepository {
                         tags: true,
                         commits: true,
                         contributors: true,
+                        languages: true,
                     }
                 }
             }
@@ -113,6 +115,33 @@ export class SoftwareProjectRepository {
         return db.query.Project.findFirst({
             where: eq(Project.fullName, repoFullName),
         });
+    }
+
+    static async getProjectWithLatestScanByFullName(repoFullName: string): Promise<SoftwareProjectWithLatestScan | undefined> {
+        const response = await db.query.Project.findFirst({
+            where: eq(Project.fullName, repoFullName),
+            with: {
+                scans: {
+                    orderBy: [desc(ProjectScan.dispatchedAt)],
+                    limit: 1,
+                    with: {
+                        tags: true,
+                        commits: true,
+                        contributors: true,
+                        languages: true,
+                    }
+                }
+            }
+        });
+
+        if (!response) {
+            return undefined;
+        }
+
+        return {
+            ...response,
+            scan: response.scans[0] ?? null,
+        }
     }
 
     // async searchProjectsByFullName(repoFullName: string): Promise<ISoftwareProject[]> {
