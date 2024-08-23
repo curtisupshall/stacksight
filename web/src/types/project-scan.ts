@@ -1,20 +1,14 @@
-export interface IProjectScanRecord {
-    software_project_scan_id: number;
-    software_project_id: number;
-    dispatched_at: string;
-    completed_at: string | null;
-    aborted_at: string | null;
-}
+import { ProjectScan } from "@/database/schemas";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-// @TODO this intereface could be removed.
-export type ICreateProjectScanRecord = Pick<IProjectScanRecord,
-    | 'software_project_id'
->
+export type ProjectScanRecord = InferSelectModel<typeof ProjectScan>;
 
-export interface IProjectScan extends IProjectScanRecord {
-    tags: string[] | null;
-    languages: IProjectLanguage[] | null;
-}
+export type CreateProjectScanRecord = InferInsertModel<typeof ProjectScan>;
+
+// export interface IProjectScan extends IProjectScanRecord {
+//     tags: string[] | null;
+//     languages: IProjectLanguage[] | null;
+// }
 
 export interface IProjectLanguageRecord {
     software_project_language_id: number;
