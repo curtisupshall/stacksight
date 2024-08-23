@@ -33,8 +33,8 @@ export class ProjectScanService extends BaseService {
     //     return this.projectScanRepository.listScansByProjectId(softwareProjectId);
     // }
 
-    static async getLatestSuccessfulScanByProjectId(softwareProjectId: number) {
-        return ProjectScanRepository.getLatestSuccessfulScanByProjectId(softwareProjectId);
+    static async getLatestSuccessfulScanWithRelationsByProjectId(softwareProjectId: number) {
+        return ProjectScanRepository.getLatestSuccessfulScanWithRelationsByProjectId(softwareProjectId);
     }
 
     static async disaptchProjectScan(projectRecord: SoftwareProjectRecord) {

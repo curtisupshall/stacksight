@@ -8,7 +8,8 @@ import CircularProgress, {
 import { Box, Chip, SxProps } from '@mui/material';
 import { getProjectStatus, getRelativeTime } from '@/utils/Utils';
 import Link from 'next/link';
-import { SoftwareProjectWithLatestScan } from '@/types/software-project';
+import { SoftwareProjectRecord, SoftwareProjectWithLatestScan } from '@/types/software-project';
+import { ProjectScanRecordWithRelations } from '@/types/project-scan';
 
 const StatusDot = (props: { color: string }) => {
     return (
@@ -24,7 +25,12 @@ const StatusDot = (props: { color: string }) => {
     )
 }
 
-export default function ProjectStatusIndicator(props: SoftwareProjectWithLatestScan) {
+interface IProjectStatusIndicatorProps {
+    project: SoftwareProjectRecord;
+    scan: ProjectScanRecordWithRelations | null;
+}
+
+export default function ProjectStatusIndicator(props: IProjectStatusIndicatorProps) {
     const status = getProjectStatus(props.scan);
 
     let icon = <StatusDot color='action' />
@@ -102,7 +108,7 @@ export default function ProjectStatusIndicator(props: SoftwareProjectWithLatestS
             icon={icon}
             label={label}
             component={Link}
-            href={`/projects/${props.fullName}/scans`}
+            href={`/projects/${props.project.fullName}/scans`}
             sx={{
                 ...sxProps,
                 cursor: 'pointer'

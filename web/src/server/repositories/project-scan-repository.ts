@@ -1,7 +1,7 @@
 import db from "@/database/client";
 import { ProjectCommit, ProjectLanguage, ProjectScan, ProjectTag } from "@/database/schemas";
 import { CreateProjectScanLanguageRecord } from "@/types/languages";
-import { CreateProjectScanCommitRecord, CreateProjectScanRecord, CreateProjectScanTagRecord, } from "@/types/project-scan";
+import { CreateProjectScanCommitRecord, CreateProjectScanRecord, CreateProjectScanTagRecord, ProjectScanRecordWithRelations, } from "@/types/project-scan";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 
 
@@ -22,13 +22,19 @@ export class ProjectScanRepository {
     //     return response.rows;
     // }
 
-    static async getLatestSuccessfulScanByProjectId(softwareProjectId: number) {
+    static async getLatestSuccessfulScanWithRelationsByProjectId(softwareProjectId: number): Promise<ProjectScanRecordWithRelations | undefined> {
         const response = await db.query.ProjectScan.findFirst({
             where: and(
                 eq(ProjectScan.softwareProjectId, softwareProjectId),
                 isNotNull(ProjectScan.completedAt),
             ),
             orderBy: desc(ProjectScan.completedAt),
+            with: {
+                tags: true,
+                commits: true,
+                contributors: true,
+                languages: true,
+            }
         });
 
         return response;

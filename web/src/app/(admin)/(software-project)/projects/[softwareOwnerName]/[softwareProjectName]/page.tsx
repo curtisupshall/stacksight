@@ -22,9 +22,12 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
         return notFound();
     }
 
-    const lastSuccessfulScan = await ProjectScanService.getLatestSuccessfulScanByProjectId(project?.softwareProjectId);
+    const lastSuccessfulScan = await ProjectScanService.getLatestSuccessfulScanWithRelationsByProjectId(project?.softwareProjectId)
+        ?? null;
     
     const showResultsOutdatedAlert = project.scan?.softwareProjectScanId !== lastSuccessfulScan?.softwareProjectScanId;
+
+    console.log('last_successful_scan', lastSuccessfulScan);
 
     return (
         <>
@@ -33,7 +36,7 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                 <Box mb={3}>
                     <Typography variant='h3' mb={2}>{repoFullName}</Typography>
                     <Stack direction='row' gap={1}>
-                        <ProjectStatusIndicator {...project} />
+                        <ProjectStatusIndicator project={project} scan={lastSuccessfulScan} />
                         <ProjectBranch {...project} />
                         {/* {project.last_scan && (
                             <ProjectCommitHash {...project.last_scan} />
