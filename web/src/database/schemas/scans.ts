@@ -8,7 +8,8 @@ export const ProjectScan = pgTable('software_project_scan', {
         .references(() => Project.softwareProjectId),
     dispatchedAt: timestamp('dispatched_at').notNull().defaultNow(),
     completedAt: timestamp('completed_at'),
-    updatedAt: timestamp('aborted_at'),
+    abortedAt: timestamp('aborted_at'),
+    updatedAt: timestamp('updated_at'),
 });
 
 export const ProjectTag = pgTable('software_project_scan_tag', {
