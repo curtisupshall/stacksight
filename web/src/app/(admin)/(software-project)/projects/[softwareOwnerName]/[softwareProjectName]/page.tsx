@@ -37,7 +37,7 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
                 <Box mb={3}>
                     <Typography variant='h3' mb={2}>{repoFullName}</Typography>
                     <Stack direction='row' gap={1}>
-                        <ProjectStatusIndicator project={project} scan={lastSuccessfulScan} />
+                        <ProjectStatusIndicator project={project} scan={project.scan} />
                         <ProjectBranch project={project} />
                         <ProjectCommitHash commit={project.scan?.commit ?? null} />
                     </Stack>
