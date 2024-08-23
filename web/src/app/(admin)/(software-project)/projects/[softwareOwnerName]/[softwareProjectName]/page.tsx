@@ -28,8 +28,6 @@ export default async function SoftwareProjectPage({ params }: { params: { softwa
     
     const showResultsOutdatedAlert = project.scan?.softwareProjectScanId !== lastSuccessfulScan?.softwareProjectScanId;
 
-    console.log('last_successful_scan', lastSuccessfulScan);
-
     return (
         <>
             <section>

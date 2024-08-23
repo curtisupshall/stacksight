@@ -1,4 +1,4 @@
-'use client'
+'use se'
 
 import { languages } from "../../constants/linguist";
 import { useMemo } from "react";
@@ -11,7 +11,7 @@ interface IProjectLanguagesProps {
 }
 
 export default function ProjectLanguages(props: IProjectLanguagesProps) {
-    const languageData = useMemo(() => {
+    const getLanguageData = () => {
         const languageDetails: { name: string, color: string, percentage: number }[] = [];
         const chartData: { flex: number, color: string }[] = [];
         
@@ -70,8 +70,9 @@ export default function ProjectLanguages(props: IProjectLanguagesProps) {
             languageDetails,
             // otherPercentage: otherPercentage > 0.5 ? otherPercentage : undefined
         }
-    }, [props.languages])
+    }
 
+    const languageData = getLanguageData();
     
     return (
         <Box>        
