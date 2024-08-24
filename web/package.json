@@ -3,32 +3,26 @@
   "module": "index.ts",
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/knex": "^0.16.1",
     "@types/pg": "^8.11.6",
-    "@types/react": "^18.2.79",
     "dotenv-cli": "^7.4.1",
-    "sass": "^1.75.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "sass": "^1.75.0",
+    "typescript": "5.5.4"
   },
   "dependencies": {
-    "@auth/pg-adapter": "^1.1.0",
-    "@aws-sdk/client-sqs": "^3.577.0",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
+    "@aws-sdk/client-sqs": "^3.637.0",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
     "@mui/icons-material": "^5.15.16",
     "@mui/material": "^5.15.16",
-    "axios": "^1.7.2",
+    "axios": "^1.7.5",
     "dayjs": "^1.11.11",
     "drizzle-kit": "^0.24.0",
     "drizzle-orm": "^0.33.0",
     "lucia": "^3.2.0",
-    "next": "^14.2.2",
+    "next": "latest",
+    "npm": "^10.8.2",
     "pg": "^8.11.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "zod": "^3.23.5"
   },
   "scripts": {
