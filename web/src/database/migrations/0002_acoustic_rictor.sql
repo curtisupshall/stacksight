@@ -1,0 +1,1 @@
+ALTER TABLE "software_project_scan" ADD COLUMN "status_message" varchar(1023);

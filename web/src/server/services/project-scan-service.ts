@@ -44,35 +44,39 @@ export class ProjectScanService {
             softwareProjectId
         });
 
-        // Step 2. Dispatch the scan to the repo scan queue
-        const sqsClient = new SQSClient(sqsConfig);
-        if (!process.env.AWS_REPO_SCAN_QUEUE_URL) {
-            throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
-        }
-
-        const { softwareProjectScanId } = scanRecord;
-
-        const messageBody: IProjectScanSqsMessage = {
-            project: {
-                repoFullName: `${projectRecord.ownerName}/${projectRecord.projectName}`,
-                branchName: projectRecord.branchName
-            },
-            api: {
-                successEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}`,
-                errorEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}/error'`,
-            }
-        }
-
-        const messageRequest: SendMessageRequest = {
-            QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL,
-            MessageBody: JSON.stringify(messageBody),
-        }
-
         try {
+
+            // Step 2. Dispatch the scan to the repo scan queue
+            const sqsClient = new SQSClient(sqsConfig);
+            if (!process.env.AWS_REPO_SCAN_QUEUE_URL) {
+                throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
+            }
+
+            const { softwareProjectScanId } = scanRecord;
+
+            const messageBody: IProjectScanSqsMessage = {
+                project: {
+                    repoFullName: `${projectRecord.ownerName}/${projectRecord.projectName}`,
+                    branchName: projectRecord.branchName
+                },
+                api: {
+                    successEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}`,
+                    errorEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}/error'`,
+                }
+            }
+
+            const messageRequest: SendMessageRequest = {
+                QueueUrl: process.env.AWS_REPO_SCAN_QUEUE_URL,
+                MessageBody: JSON.stringify(messageBody),
+            }
+
             const sqsResponse = await sqsClient.send(new SendMessageCommand(messageRequest));
             console.log(sqsResponse);
         } catch (error: any) {
-            throw new Error('Failed to dispatch message to SQS:', error);
+            ProjectScanRepository.markProjectScanAsAborted(
+                scanRecord.softwareProjectScanId,
+                `Failed to dispatch message to SQS: ${error}`
+            );
         }
 
         return scanRecord;
@@ -89,27 +93,34 @@ export class ProjectScanService {
             commitHtmlUrl: body.last_commit.html_url,
         }
 
-        await ProjectScanRepository.createProjectScanCommit(commitRecord);
+        try {
+            await ProjectScanRepository.createProjectScanCommit(commitRecord);
 
-        // Step 2. Persist contributor details in the database
-        const contributors: CreateProjectScanContributorRecord[] = body.contributors.map((record: any): CreateProjectScanContributorRecord => ({
-            softwareProjectScanId,
-            login: record.login,
-            htmlUrl: record.html_url,
-            contributions: record.contributions,
-            avatarUrl: record.avatar_url,
-        }));
+            // Step 2. Persist contributor details in the database
+            const contributors: CreateProjectScanContributorRecord[] = body.contributors.map((record: any): CreateProjectScanContributorRecord => ({
+                softwareProjectScanId,
+                login: record.login,
+                htmlUrl: record.html_url,
+                contributions: record.contributions,
+                avatarUrl: record.avatar_url,
+            }));
 
-        await ContributorService.createProjectScanContributors(contributors);
+            await ContributorService.createProjectScanContributors(contributors);
 
-        // Step 3. Record the current language statistics for the repo
-        await ProjectScanRepository.addLanguagesToProjectScan(softwareProjectScanId, body.languages);
+            // Step 3. Record the current language statistics for the repo
+            await ProjectScanRepository.addLanguagesToProjectScan(softwareProjectScanId, body.languages);
 
-        // Step 4. Persist the software tags in the database
-        await ProjectScanRepository.addTagsToProjectScan(softwareProjectScanId, body.tags);
+            // Step 4. Persist the software tags in the database
+            await ProjectScanRepository.addTagsToProjectScan(softwareProjectScanId, body.tags);
 
-        // Step 5. End-date the current scan
-        await ProjectScanRepository.markProjectScanAsCompleted(softwareProjectScanId)
+            // Step 5. End-date the current scan
+            await ProjectScanRepository.markProjectScanAsCompleted(softwareProjectScanId)
+        } catch (error: any) {
+            ProjectScanRepository.markProjectScanAsAborted(
+                softwareProjectScanId,
+                `Failed to patch project scan record: ${error}`
+            );
+        }
     }
 
     // async deleteProjectScansByProjectId(softwareProjectId: number): Promise<void> {

@@ -54,6 +54,18 @@ export class ProjectScanRepository {
             
     }
 
+    static async markProjectScanAsAborted(softwareProjectScanId: number, errorMessage?: string) {
+        const rows = await db.update(ProjectScan)
+            .set({
+                abortedAt: new Date(),
+                statusMessage: errorMessage
+            })
+            .where(eq(ProjectScan.softwareProjectScanId, softwareProjectScanId))
+            .returning();
+
+        return rows[0];
+    }
+
     static async addTagsToProjectScan(softwareProjectScanId: number, tags: string[]) {
         const queryValues = tags.map((tag: string): CreateProjectScanTagRecord => {
             return {
