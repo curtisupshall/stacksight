@@ -1,5 +1,7 @@
+import { ProjectScanRecordWithRelations } from "@/types/project-scan";
 import { SoftwareProjectRepository } from "../repositories/software-project-repository";
 import { ProjectScanService } from "./project-scan-service";
+import { SoftwareProjectWithLatestScan } from "@/types/software-project";
 
 export class SoftwareProjectService {
 
@@ -64,7 +66,7 @@ export class SoftwareProjectService {
     //     return this.softwareProjectRepository.deleteProjectRecordByProjectId(softwareProjectId);
     // }
 
-    // async listProjectsByTag(tag: string): Promise<ISoftwareProject[]> {
-    //     return this.softwareProjectRepository.listProjectsByTag(tag);
-    // }
+    static async listProjectsWithLatestScanByTag(tag: string): Promise<SoftwareProjectWithLatestScan[]> {
+        return SoftwareProjectRepository.listProjectsWithLatestScanByTag(tag);
+    }
 }

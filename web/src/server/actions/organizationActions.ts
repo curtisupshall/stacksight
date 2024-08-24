@@ -1,7 +1,6 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
-import { DbConnection } from "../database/db";
 import { OrganizationService } from "../services/organization-service";
 
 export async function addNewOrganization(formData: FormData) {
@@ -11,24 +10,24 @@ export async function addNewOrganization(formData: FormData) {
         throw new Error('No org name was given.')
     }
 
-    const connection = new DbConnection();
+    throw new Error('Not implemented yet. See https://github.com/curtisupshall/stacksight/pull/13');
 
-    try {
-        await connection.open();
+    // try {
+    //     await connection.open();
 
-        const softwareOrganizationService = new OrganizationService(connection);
+    //     const softwareOrganizationService = new OrganizationService(connection);
 
-        await softwareOrganizationService.addOrganizationByName(String(orgName));
+    //     await softwareOrganizationService.addOrganizationByName(String(orgName));
 
-        await connection.commit();
+    //     await connection.commit();
 
-        revalidatePath('/orgs');
-    } catch (error) {
-        connection.rollback();
-        throw error;
-    } finally {
-        connection.release();
-    }
+    //     revalidatePath('/orgs');
+    // } catch (error) {
+    //     connection.rollback();
+    //     throw error;
+    // } finally {
+    //     connection.release();
+    // }
 }
 
 export async function scanOrganization(formData: FormData) {
@@ -38,27 +37,29 @@ export async function scanOrganization(formData: FormData) {
         throw new Error('A software organization ID must be provided.')
     }
 
-    const softwareOrganizationId = Number(softwareOrganizationIdFormValue);
+    throw new Error('Not implemented yet. See https://github.com/curtisupshall/stacksight/pull/13');
 
-    const connection = new DbConnection();
+    // const softwareOrganizationId = Number(softwareOrganizationIdFormValue);
 
-    try {
-        // Open database connection
-        await connection.open();
+    // const connection = new DbConnection();
+
+    // try {
+    //     // Open database connection
+    //     await connection.open();
         
-        const organizationService = new OrganizationService(connection);
-        await organizationService.scanOrganizationById(softwareOrganizationId);
+    //     const organizationService = new OrganizationService(connection);
+    //     await organizationService.scanOrganizationById(softwareOrganizationId);
 
-        // Commit the transaction
-        await connection.commit();
+    //     // Commit the transaction
+    //     await connection.commit();
 
-        revalidatePath('/projects');
-    } catch (error) {
-        connection.rollback();
-        throw error;
-    } finally {
-        connection.release();
-    }
+    //     revalidatePath('/projects');
+    // } catch (error) {
+    //     connection.rollback();
+    //     throw error;
+    // } finally {
+    //     connection.release();
+    // }
 }
 
 // export async function deleteProject(formData: FormData) {

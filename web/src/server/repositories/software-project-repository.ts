@@ -135,18 +135,22 @@ export class SoftwareProjectRepository {
     //     return response.rows[0]
     // }
 
-    // async listProjectsByTag(tag: string): Promise<ISoftwareProject[]> {
-    //     const query = this._getListProjectsQuery()
-    //         .whereExists(function () {
-    //             // Nested query to check existence of the tag within the current project's scans
-    //             this.select('*')
-    //                 .from('software_project_scan_tag as spt')
-    //                 .whereRaw('spt.software_project_scan_id = latest_scan_details.software_project_scan_id')
-    //                 .andWhere('spt.tag', '=', tag);
-    //         });
+    /**
+     * To be fixed by STAC-39.
+     */
+    static async listProjectsWithLatestScanByTag(tag: string): Promise<SoftwareProjectWithLatestScan[]> {
+        // const query = this._getListProjectsQuery()
+        //     .whereExists(function () {
+        //         // Nested query to check existence of the tag within the current project's scans
+        //         this.select('*')
+        //             .from('software_project_scan_tag as spt')
+        //             .whereRaw('spt.software_project_scan_id = latest_scan_details.software_project_scan_id')
+        //             .andWhere('spt.tag', '=', tag);
+        //     });
     
-    //     const response = await this.connection.knex(query);
+        // const response = await this.connection.knex(query);
 
-    //     return response.rows;
-    // }
+        // return response.rows;
+        return [];
+    }
 }
