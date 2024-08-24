@@ -7,9 +7,9 @@ export class SoftwareProjectService {
         return SoftwareProjectRepository.listProjectsWithLatestScan();
     }
 
-    // async listProjectsByOwnerName(ownerName: string) {
-    //     return this.softwareProjectRepository.listProjectsByOwnerName(ownerName);
-    // }
+    static async listProjectsWithLatestScanByOwnerName(ownerName: string) {
+        return SoftwareProjectRepository.listProjectsWithLatestScanByOwnerName(ownerName);
+    }
 
     // async getProjectById(softwareProjectId: number): Promise<ISoftwareProject | undefined> {
     //     return this.softwareProjectRepository.getProjectById(softwareProjectId);
