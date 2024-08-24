@@ -14,7 +14,7 @@ abstract class DatabaseTableSeeder {
         const startTime = Date.now();
         let endTime = Date.now();
         let statusIndicator = '✅'
-        let seedError = null;
+        let seedError: any = null;
 
         try {
             await this.seed();
@@ -35,7 +35,6 @@ abstract class DatabaseTableSeeder {
         if (seedError) {
             console.error(seedError.detail)
         }
-        // console.log('\n');
     }
 }
 

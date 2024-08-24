@@ -1,5 +1,4 @@
 import { ProjectScanRepository } from "../repositories/project-scan-repository";
-import { BaseService } from "./base-service";
 import { SQSClient, SendMessageCommand, SendMessageRequest } from "@aws-sdk/client-sqs";
 import { SoftwareProjectRecord } from "@/types/software-project";
 import { IProjectScanLambdaResponse, IProjectScanSqsMessage } from "@/types/python";
@@ -90,7 +89,6 @@ export class ProjectScanService {
             commitHtmlUrl: body.last_commit.html_url,
         }
 
-        console.log('inserting commit record', commitRecord);
         await ProjectScanRepository.createProjectScanCommit(commitRecord);
 
         // Step 2. Persist contributor details in the database
@@ -102,19 +100,15 @@ export class ProjectScanService {
             avatarUrl: record.avatar_url,
         }));
 
-        console.log('inserting contributors', contributors);
         await ContributorService.createProjectScanContributors(contributors);
 
         // Step 3. Record the current language statistics for the repo
-        console.log('inserting languages', body.languages);
         await ProjectScanRepository.addLanguagesToProjectScan(softwareProjectScanId, body.languages);
 
         // Step 4. Persist the software tags in the database
-        console.log('inserting tags', body.tags);
         await ProjectScanRepository.addTagsToProjectScan(softwareProjectScanId, body.tags);
 
         // Step 5. End-date the current scan
-        console.log('marking scan as completed', softwareProjectScanId);
         await ProjectScanRepository.markProjectScanAsCompleted(softwareProjectScanId)
     }
 

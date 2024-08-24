@@ -9,7 +9,7 @@ export default async function ProjectsPage() {
 
     const projects = await listProjectsWithLatestScan();
 
-    console.log('PROJECTS:', JSON.stringify(projects));
+    // console.log('PROJECTS:', JSON.stringify(projects));
 
     return (
         <section>
