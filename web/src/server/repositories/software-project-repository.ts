@@ -2,7 +2,7 @@ import type { CreateSoftwareProjectRecord, SoftwareProjectWithLatestScan } from 
 import db from "@/database/client";
 import { Project, ProjectScan } from "@/database/schemas";
 import { ProjectScanRecordWithRelations } from "@/types/project-scan";
-import { asc, desc, eq } from "drizzle-orm";
+import { asc, desc, eq, like } from "drizzle-orm";
 
 export class SoftwareProjectRepository {
     // _getListProjectsQuery(): Knex.QueryBuilder {
@@ -144,14 +144,28 @@ export class SoftwareProjectRepository {
         }
     }
 
-    // async searchProjectsByFullName(repoFullName: string): Promise<ISoftwareProject[]> {
-    //     const query = this._getListProjectsQuery()
-    //         .where('sp.full_name', 'ilike', `%${repoFullName}%`)
+    static async searchProjectsWithLatestScanByFullName(repoFullName: string): Promise<SoftwareProjectWithLatestScan[]> {
+        const projects = await db.query.Project.findMany({
+            where: like(Project.fullName, `%${repoFullName}%`),
+            with: {
+                scans: {
+                    orderBy: [desc(ProjectScan.dispatchedAt)],
+                    limit: 1,
+                    with: {
+                        tags: true,
+                        commit: true,
+                        contributors: true,
+                        languages: true,
+                    }
+                }
+            }
+        })
 
-    //     const response = await this.connection.knex(query);
-
-    //     return response.rows
-    // }
+        return projects.map((project) => ({
+            ...project,
+            scan: project.scans[0] ?? null,
+        }));
+    }
 
     static async addNewProject(project: CreateSoftwareProjectRecord) {
         const rows = await db.insert(Project).values(project).returning();

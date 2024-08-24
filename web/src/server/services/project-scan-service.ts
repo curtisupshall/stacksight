@@ -16,7 +16,7 @@ const sqsConfig = {
     }
 }
 
-export class ProjectScanService extends BaseService {
+export class ProjectScanService {
     static async scanProjectById(softwareProjectId: number) {
         // Step 1. Check if the project exists before scanning
         const softwareProjectRecord = await SoftwareProjectService.getProjectRecordById(softwareProjectId);

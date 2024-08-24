@@ -38,10 +38,10 @@ export default function Search() {
                 label: 'Owners',
                 items: results.owners.map((owner) => {
                     return {
-                        key: owner.owner_name,
-                        label: owner.owner_name,
+                        key: owner.ownerName,
+                        label: owner.ownerName,
                         description: undefined,
-                        link: `/projects/${owner.owner_name}`
+                        link: `/projects/${owner.ownerName}`
                     }
                 })
             })
@@ -51,10 +51,10 @@ export default function Search() {
                 label: 'Projects',
                 items: results.projects.map((project) => {
                     return {
-                        key: project.software_project_id,
-                        label: project.full_name,
+                        key: project.softwareProjectId,
+                        label: project.fullName,
                         description: project.description,
-                        link: `/projects/${project.full_name}`
+                        link: `/projects/${project.fullName}`
                     }
                 })
             })

@@ -5,7 +5,7 @@ import { ICreateSoftwareOrganizationRecord, ISoftwareOrganizationRecord } from "
 
 const ORG_NUM_REPOS_PER_PAGE = 100;
 
-export class OrganizationService extends BaseService {
+export class OrganizationService {
     organizationRepository: OrganizationRepository;
 
     constructor(connection: DbConnection) {

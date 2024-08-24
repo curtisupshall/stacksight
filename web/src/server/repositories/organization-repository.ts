@@ -2,7 +2,7 @@ import { DbConnection } from "../database/db";
 import { BaseRepository } from "./base-repository";
 import { ICreateSoftwareOrganizationRecord, ISoftwareOrganizationRecord } from "@/types/organization";
 
-export class OrganizationRepository extends BaseRepository {
+export class OrganizationRepository {
     
     constructor(connection: DbConnection) {
         super(connection);
