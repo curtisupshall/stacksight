@@ -1,14 +1,11 @@
-import { revalidatePath } from "next/cache";
-import { DbConnection } from "../database/db";
 import { ProjectScanRepository } from "../repositories/project-scan-repository";
-import { BaseService } from "./base-service";
 import { SQSClient, SendMessageCommand, SendMessageRequest } from "@aws-sdk/client-sqs";
-import { SoftwareProjectService } from "./software-project-service";
-import { ISoftwareProjectRecord } from "@/types/software-project";
-import { IProjectCommitRecord, IProjectScanRecord } from "@/types/project-scan";
-import { ContributorService } from "./contributor-service";
-import { IProjectScanContributor } from "@/types/contributor";
+import { SoftwareProjectRecord } from "@/types/software-project";
 import { IProjectScanLambdaResponse, IProjectScanSqsMessage } from "@/types/python";
+import { CreateProjectScanCommitRecord } from "@/types/project-scan";
+import { CreateProjectScanContributorRecord } from "@/types/contributor";
+import { ContributorService } from "./contributor-service";
+import { SoftwareProjectService } from "./software-project-service";
 
 const sqsConfig = {
     region: process.env.AWS_SQS_REGION ?? '',
@@ -18,21 +15,10 @@ const sqsConfig = {
     }
 }
 
-export class ProjectScanService extends BaseService {
-    projectScanRepository: ProjectScanRepository;
-
-    constructor(connection: DbConnection) {
-        super(connection);
-
-        this.projectScanRepository = new ProjectScanRepository(connection);
-    }
-
-
-    async scanProjectById(softwareProjectId: number) {
-        const softwareProjectService = new SoftwareProjectService(this.connection);
-
+export class ProjectScanService {
+    static async scanProjectById(softwareProjectId: number) {
         // Step 1. Check if the project exists before scanning
-        const softwareProjectRecord = await softwareProjectService.getProjectRecordById(softwareProjectId);
+        const softwareProjectRecord = await SoftwareProjectService.getProjectRecordById(softwareProjectId);
 
         if (!softwareProjectRecord) {
             throw new Error(`Failed to find project with ID: ${softwareProjectId}`)
@@ -42,18 +28,20 @@ export class ProjectScanService extends BaseService {
         return await this.disaptchProjectScan(softwareProjectRecord);
     }
 
-    async listScansByProjectId(softwareProjectId: number) {
-        return this.projectScanRepository.listScansByProjectId(softwareProjectId);
+    static async listScansWithRelationsByProjectId(softwareProjectId: number) {
+        return ProjectScanRepository.listScansWithRelationsByProjectId(softwareProjectId);
     }
 
-    async getLatestSuccessfulScanByProjectId(softwareProjectId: number): Promise<IProjectScanRecord | undefined> {
-        return this.projectScanRepository.getLatestSuccessfulScanByProjectId(softwareProjectId);
+    static async getLatestSuccessfulScanWithRelationsByProjectId(softwareProjectId: number) {
+        return ProjectScanRepository.getLatestSuccessfulScanWithRelationsByProjectId(softwareProjectId);
     }
 
-    async disaptchProjectScan(projectRecord: ISoftwareProjectRecord): Promise<IProjectScanRecord>{
+    static async disaptchProjectScan(projectRecord: SoftwareProjectRecord) {
+        const { softwareProjectId } = projectRecord;
+
         // Step 1. Persist the scan in the database
-        const scanRecord = await this.projectScanRepository.createProjectScanRecord({
-            software_project_id: projectRecord.software_project_id,
+        const scanRecord = await ProjectScanRepository.createProjectScanRecord({
+            softwareProjectId
         });
 
         // Step 2. Dispatch the scan to the repo scan queue
@@ -62,13 +50,12 @@ export class ProjectScanService extends BaseService {
             throw new Error('Could not find AWS_REPO_SCAN_QUEUE_URL')
         }
 
-        const softwareProjectId = projectRecord.software_project_id;
-        const softwareProjectScanId = scanRecord.software_project_scan_id;
+        const { softwareProjectScanId } = scanRecord;
 
         const messageBody: IProjectScanSqsMessage = {
             project: {
-                repoFullName: `${projectRecord.owner_name}/${projectRecord.project_name}`,
-                branchName: projectRecord.branch_name
+                repoFullName: `${projectRecord.ownerName}/${projectRecord.projectName}`,
+                branchName: projectRecord.branchName
             },
             api: {
                 successEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}`,
@@ -91,43 +78,45 @@ export class ProjectScanService extends BaseService {
         return scanRecord;
     }
 
-    async patchProjectScan(softwareProjectScanId: number, body: IProjectScanLambdaResponse) {
-        const contributorService = new ContributorService(this.connection);
-
+    static async patchProjectScan(softwareProjectScanId: number, body: IProjectScanLambdaResponse) {
         // Step 1. Collect commit details
-        const commitRecord: IProjectCommitRecord = {
-            'commit_sha': body.last_commit.sha,
-            'commit_message': body.last_commit.commit.message,
-            'author_name': body.last_commit.commit.author.name,
-            'commit_date': body.last_commit.commit.committer.date,
-            'commit_html_url': body.last_commit.html_url,
+        const commitRecord: CreateProjectScanCommitRecord = {
+            softwareProjectScanId,
+            commitSha: body.last_commit.sha,
+            commitMessage: body.last_commit.commit.message,
+            authorName: body.last_commit.commit.author.name,
+            commitDate: new Date(body.last_commit.commit.committer.date),
+            commitHtmlUrl: body.last_commit.html_url,
         }
-        await this.projectScanRepository.addCommitToProjectScan(softwareProjectScanId, commitRecord);
+
+        await ProjectScanRepository.createProjectScanCommit(commitRecord);
 
         // Step 2. Persist contributor details in the database
-        const contributors: IProjectScanContributor[] = body.contributors.map((record) => ({
+        const contributors: CreateProjectScanContributorRecord[] = body.contributors.map((record: any): CreateProjectScanContributorRecord => ({
+            softwareProjectScanId,
             login: record.login,
-            html_url: record.html_url,
+            htmlUrl: record.html_url,
             contributions: record.contributions,
-            avatar_url: record.avatar_url
+            avatarUrl: record.avatar_url,
         }));
-        await contributorService.addContributorsToProjectScan(softwareProjectScanId, contributors);
+
+        await ContributorService.createProjectScanContributors(contributors);
 
         // Step 3. Record the current language statistics for the repo
-        await this.projectScanRepository.addLanguagesToProjectScan(softwareProjectScanId, body.languages);
+        await ProjectScanRepository.addLanguagesToProjectScan(softwareProjectScanId, body.languages);
 
         // Step 4. Persist the software tags in the database
-        await this.projectScanRepository.addTagsToProjectScan(softwareProjectScanId, body.tags);
+        await ProjectScanRepository.addTagsToProjectScan(softwareProjectScanId, body.tags);
 
         // Step 5. End-date the current scan
-        await this.projectScanRepository.updateProjectScanRecordEndDate(softwareProjectScanId)
+        await ProjectScanRepository.markProjectScanAsCompleted(softwareProjectScanId)
     }
 
-    async deleteProjectScansByProjectId(softwareProjectId: number): Promise<void> {
-        const contributorService = new ContributorService(this.connection);
-        await contributorService.deleteContributorsByProjectId(softwareProjectId)
-        await this.projectScanRepository.deleteProjectLanguagesByProjectId(softwareProjectId);
-        await this.projectScanRepository.deleteProjectTagsByProjectId(softwareProjectId);
-        await this.projectScanRepository.deleteProjectScansByProjectId(softwareProjectId);
-    }
+    // async deleteProjectScansByProjectId(softwareProjectId: number): Promise<void> {
+    //     const contributorService = new ContributorService(this.connection);
+    //     await contributorService.deleteContributorsByProjectId(softwareProjectId)
+    //     await this.projectScanRepository.deleteProjectLanguagesByProjectId(softwareProjectId);
+    //     await this.projectScanRepository.deleteProjectTagsByProjectId(softwareProjectId);
+    //     await this.projectScanRepository.deleteProjectScansByProjectId(softwareProjectId);
+    // }
 }

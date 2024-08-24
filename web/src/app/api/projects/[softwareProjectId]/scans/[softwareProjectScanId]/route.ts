@@ -1,5 +1,4 @@
 import { revalidatePath } from "next/cache";
-import { DbConnection } from "../../../../../../server/database/db";
 import { ProjectScanService } from "@/server/services/project-scan-service";
 import { NextRequest } from "next/server";
 import { IProjectScanLambdaResponse } from "@/types/python";
@@ -13,24 +12,9 @@ export async function PATCH(
 
     const softwareProjectScanId = Number(params.softwareProjectScanId);
 
-    const connection = new DbConnection();
+    await ProjectScanService.patchProjectScan(softwareProjectScanId, body);
 
-    try {
-        await connection.open();
+    revalidatePath('/projects');
 
-        const projectScanService = new ProjectScanService(connection);
-        
-        await projectScanService.patchProjectScan(softwareProjectScanId, body);
-
-        revalidatePath('/projects');
-
-        connection.commit();
-
-        return Response.json({ data: 'Success' });
-    } catch (error) {
-        connection.rollback();
-        throw error;
-    } finally {
-        connection.release();
-    }
+    return Response.json({ data: 'Success' });
 }

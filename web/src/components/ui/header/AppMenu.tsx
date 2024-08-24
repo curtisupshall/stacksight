@@ -6,10 +6,6 @@ import Link from "next/link";
 import AddIcon from "@mui/icons-material/Add";
 import { useContext, useState } from "react";
 
-import { auth } from "@/auth"
-import { Session } from "next-auth";
-import { GetServerSidePropsContext } from "next";
-import { signIn, signOut, useSession } from "next-auth/react";
 import UserAvatar from "@/components/auth/UserAvatar";
 import SignInButton from "@/components/auth/SignInButton";
 import SignOutButton from "@/components/auth/SignOutButton";
@@ -17,10 +13,9 @@ import SignOutButton from "@/components/auth/SignOutButton";
 const AppMenu = () => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     
-    const session = useSession();
 
-    const isSignedIn = session.status === 'authenticated'
-    const avatarSrc = session.data?.user?.image ?? undefined
+    const isSignedIn = false // session.status === 'authenticated'
+    const avatarSrc = '' // session.data?.user?.image ?? undefined
 
     const handleClose = () => {
         setAnchorEl(null);

@@ -2,51 +2,17 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:16.2
+    build:
+      context: ./database
+      dockerfile: Dockerfile
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      TZ: America/Los_Angeles
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-  # web:
-  #   build:
-  #     context: ./web
-  #     dockerfile: Dockerfile
-  #   container_name: web
-  #   restart: always
-  #   volumes:
-  #     - .:/app
-  #     # - /app/src
-  #     # - /app/node_modules
-  #     # - /app/.next
-  #   ports:
-  #     - "3692:3692"
-  #   environment:
-  #     - POSTGRES_DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}:5432/${POSTGRES_DB}
-  #     - WATCHPACK_POLLING=true
-  #     - CHOKIDAR_USEPOLLING=true
-  #   depends_on:
-  #     - postgres
-
-  localstack:
-    image: localstack/localstack
-    environment:
-      SERVICES: sqs,lambda
-      DEFAULT_REGION: us-west-1
-      EDGE_PORT: 4566
-      DEBUG: 1
-      DATA_DIR: /tmp/localstack/data
-    volumes:
-      - "./localstack_data:/var/lib/localstack" # Mounts the local directory to the container
-      - "/var/run/docker.sock:/var/run/docker.sock" # Mounts the docker socke
-    ports:
-      - "4566:4566"
-      - "4571:4571" # Legacy port for SQS
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres-data:
+  postgres_data:

@@ -1,28 +1,14 @@
-import { IProjectLanguage, IProjectScan, IProjectScanRecord } from "./project-scan";
+import { Project } from "@/database/schemas";
+import { InferInsertModel, type InferSelectModel } from 'drizzle-orm'
+import { ProjectScanRecordWithRelations } from "./project-scan";
 
-export interface ISoftwareProjectRecord {
-    software_project_id: number;
-    owner_name: string;
-    project_name: string;
-    branch_name: string;
-    full_name: string;
-    description: string;
-    html_url: string;
-}
+export type SoftwareProjectRecord = InferSelectModel<typeof Project>;
 
-// Desired response type:
-export interface ISoftwareProject extends ISoftwareProjectRecord {
-    last_scan: IProjectScan | null;
-}
+export type SoftwareProjectWithLatestScan = SoftwareProjectRecord & {
+    scan: ProjectScanRecordWithRelations | null;
+};
 
-export type ICreateSoftwareProjectRecord = Pick<ISoftwareProjectRecord,
-    | 'owner_name'
-    | 'project_name'
-    | 'branch_name'
-    | 'full_name'
-    | 'description'
-    | 'html_url'
->
+export type CreateSoftwareProjectRecord = InferInsertModel<typeof Project>;
 
 export type SoftwareProjectStatus =
     | 'SCANNING'
