@@ -1,9 +1,9 @@
-import { handleSignIn } from "@/server/actions/authActions"
+// import { handleSignIn } from "@/server/actions/authActions"
 import { MenuItem } from "@mui/material"
  
 export default function SignInButton() {
   return (
-    <form action={handleSignIn}>
+    <form>
       <MenuItem component='button' type='submit' sx={{ width: '100%' }}>Sign in with GitHub</MenuItem>
     </form>
   )

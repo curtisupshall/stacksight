@@ -24,22 +24,22 @@ dayjs.updateLocale('en', {
     }
 });
 
-import { IProjectScan } from "@/types/project-scan";
+import { ProjectScanRecord } from "@/types/project-scan";
 import { SOFTWARE_CATEGORIES, SOFTWARE_LIBRARIES, SOFTWARE_LIBRARIES_BY_CATEGORY, SoftwareCategory, SoftwareCategorySlug, SoftwareLibrary, SoftwareLibrarySlug } from "../constants/libs";
 import { SoftwareProjectStatus } from "../types/software-project";
 
-export const getProjectStatus = (scan?: IProjectScan | null): SoftwareProjectStatus => {
+export const getProjectStatus = (scan?: ProjectScanRecord | null): SoftwareProjectStatus => {
     let status: SoftwareProjectStatus = 'PENDING';
 
-    if (scan?.dispatched_at) {
+    if (scan?.dispatchedAt) {
         status = 'SCANNING'
     }
 
-    if (scan?.completed_at) {
+    if (scan?.completedAt) {
         status = 'SUCCEEDED'
     }
 
-    if (scan?.aborted_at) {
+    if (scan?.abortedAt) {
         status = 'FAILED'
     }
 

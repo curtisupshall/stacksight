@@ -1,12 +1,12 @@
 'use client'
 
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
-import type { ISoftwareProject } from "../../types/software-project";
 import { MoreVert } from "@mui/icons-material";
 import { useState } from "react";
-import { deleteProject, scanProject } from "../../server/actions/projectActions";
+import { SoftwareProjectWithLatestScan } from "@/types/software-project";
+import { scanProject } from "../../server/actions/projectActions";
 
-export default function ProjectsListCardActions(props: ISoftwareProject) {
+export default function ProjectsListCardActions(props: SoftwareProjectWithLatestScan) {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
     const handleClose = () => {
@@ -21,11 +21,12 @@ export default function ProjectsListCardActions(props: ISoftwareProject) {
                 onClose={() => handleClose()}
             >
                 <form action={scanProject}>
-                    <input type='hidden' name='softwareProjectId' value={props.software_project_id} />
+                    <input type='hidden' name='softwareProjectId' value={props.softwareProjectId} />
                     <MenuItem component='button' type='submit'>Scan Now</MenuItem>
                 </form>
-                <form action={deleteProject}>
-                    <input type='hidden' name='softwareProjectId' value={props.software_project_id} />
+                {/* <form action={deleteProject}> */}
+                <form>
+                    <input type='hidden' name='softwareProjectId' value={props.softwareProjectId} />
                     <MenuItem component='button' type='submit'>Delete Project</MenuItem>
                 </form>
             </Menu>
