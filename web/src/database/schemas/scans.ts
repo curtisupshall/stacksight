@@ -7,6 +7,7 @@ export const ProjectScan = pgTable('software_project_scan', {
         .notNull()
         .references(() => Project.softwareProjectId),
     dispatchedAt: timestamp('dispatched_at').notNull().defaultNow(),
+    statusMessage: varchar('status_message', { length: 1023 }),
     completedAt: timestamp('completed_at'),
     abortedAt: timestamp('aborted_at'),
     updatedAt: timestamp('updated_at'),
