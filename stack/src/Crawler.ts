@@ -45,6 +45,9 @@ class Crawler {
 		});
 	}
 
+	/**
+	 * Recursively collects all absoltue file paths under the given directory
+	 */
 	private collectFilePaths(dir: string): void {
 		try {
 			const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -86,14 +89,11 @@ class Crawler {
 			console.log(matcher)
 			for (let i in this._filePaths) {
 				const filePath = this._filePaths[i];
-				console.log(filePath)
 
 				if (!fileRegex.test(filePath)) {
 					// Filename does not match
 					continue;
 				}
-
-				console.log('FILE REGEX MATCH')
 
 				if (contentRegex) {
 					const [lineNumber, line] = this.testFileContent(filePath, contentRegex);
@@ -109,7 +109,6 @@ class Crawler {
 				}
 
 				this._scores[tag] += score;
-				console.log('break;')
 				break;
 			}
 

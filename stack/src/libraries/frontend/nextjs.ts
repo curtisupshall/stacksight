@@ -4,7 +4,7 @@ const NextJs: Library = {
     metadata: {
         name: 'next',
         label: 'Next.js',
-        description: "A framework for building React apps",
+        description: "A framework for building React apps.",
         website: "https://nextjs.org/",
     },
 
@@ -64,6 +64,10 @@ const NextJs: Library = {
                 }
             ]
         }
+    ],
+
+    subtags: [
+        'react'
     ]
 
 }

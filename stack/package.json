@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "crawl": "ts-node src/Crawler.ts"
+    "crawl": "tsx src/Crawler.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.14.11",
-    "ts-node": "^10.9.2"
+    "tsx": "^4.19.0"
   }
 }

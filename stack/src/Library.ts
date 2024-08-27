@@ -23,20 +23,24 @@ type VersionConfig = {
 
 export type Tag = string;
 
+/**
+ * A tuple used for matching file pattern regexes
+ */
 export type Matcher = [
-    // Regex for file
+    // Regex pattern to match a particualr file
     RegExp,
-    // Regex for file contents
+    // Regex pattern to match a particular line within a file
     RegExp | undefined,
-    // Tag
+    // Tag associated with the match
     Tag,
-    // Score
+    // Probability score
     number
 ]
 
 export type LibraryOutput = {
     tag: Tag
     parentTag: string | null
+    subtags: Tag[]
     metadata: Metadata
     matchers: Matcher[]
 }
@@ -53,6 +57,8 @@ export default interface Library {
     version?: VersionConfig;
 
     children?: Library[];
+
+    subtags?: Tag[];
 }
 
 export const compile = (library: Library, parentTag: string| null = null): LibraryOutput[] => {
@@ -63,6 +69,7 @@ export const compile = (library: Library, parentTag: string| null = null): Libra
     const children = library.children ?? [];
 
     const tag = [parentTag, metadata.name].filter(Boolean).join('.');
+    const subtags = library.subtags?.map((subtag) => [parentTag, subtag].filter(Boolean).join('.')) ?? [];
 
     const sourceMatchers: Matcher[] = sources.map((source) => [
         source.file,
@@ -100,6 +107,7 @@ export const compile = (library: Library, parentTag: string| null = null): Libra
     return [
         {
             tag,
+            subtags,
             metadata,
             parentTag,
             matchers,
