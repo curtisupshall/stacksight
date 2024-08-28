@@ -19,7 +19,7 @@ const VueJs: Library = {
         {
             file: /.*\/main\.(ts|js)$/,
             score: 0.50,
-            linetext: /import .* from (\"|\')\vue(\"|\')(;|$)/
+            linetext: /import .* from (\"|\')vue(\"|\')(;|$)/
         },
         {
             file: /.*\.vue$/,
@@ -41,7 +41,7 @@ const VueJs: Library = {
             metadata: {
                 name: 'vue-typescript',
                 label: 'TypeScript Vue',
-                description: 'Vue with TypeScript',
+                description: 'Vue.js with TypeScript',
                 website: 'https://vuejs.org/guide/typescript/overview',
             },
             artifacts: [
@@ -64,7 +64,78 @@ const VueJs: Library = {
                     linetext: /"\@vue\/tsconfig":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
                 }
             ],
-        }
+        },
+        {
+            metadata: {
+                name: 'vue-jsx',
+                label: 'Vue JSX',
+                description: 'Vue.js with JSX support',
+                website: 'https://vuejs.org/guide/extras/render-function',
+            },
+            sources: [
+                {
+                    file: /.*\/tsconfig.json$/,
+                    score: 1,
+                    linetext: /"jsx": "preserve"/
+                }
+            ],
+            packages: [
+                {
+                    file: /.*\/package.json/,
+                    score: 1,
+                    linetext: /"(\@vue\/babel-preset-jsx|\@vitejs\/plugin-vue-jsx)":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
+                }
+            ],
+        },
+        {
+            metadata: {
+                name: 'pinia',
+                label: 'Pinia',
+                description: 'State management for Vue.js',
+                website: 'https://pinia.vuejs.org/',
+            },
+            sources: [
+                {
+                    file: /.*\/main\.(js|ts)$/,
+                    score: 0.75,
+                    linetext: /app\.use\(createPinia\(\)\)/
+                },
+                {
+                    file: /.(ts|js)$/,
+                    score: 0.50,
+                    linetext: /import .* from (\"|\')pinia(\"|\')(;|$)/
+                },
+            ],
+            packages: [
+                {
+                    file: /.*\/package.json/,
+                    score: 0.95,
+                    linetext: /"pinia":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
+                }
+            ],
+        },
+        {
+            metadata: {
+                name: 'vue-router',
+                label: 'Vue Router',
+                description: 'The official Router for Vue.js',
+                website: 'https://router.vuejs.org/',
+            },
+            sources: [
+                {
+                    file: /.(ts|js)$/,
+                    score: 0.75,
+                    linetext: /import .* from (\"|\')vue-router(\"|\')(;|$)/
+                },
+            ],
+            packages: [
+                {
+                    file: /.*\/package.json/,
+                    score: 0.75,
+                    linetext: /"vue-router":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
+                }
+            ],
+        },
     ]
 }
 
