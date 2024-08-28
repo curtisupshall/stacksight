@@ -46,18 +46,54 @@ export type LibraryOutput = {
 }
 
 export default interface Library {
+    /**
+     * Metadata about the library
+     *
+     * @type {Metadata}
+     * @memberof Library
+     */
     metadata: Metadata;
 
+    /**
+     * Known files associated with the library
+     *
+     * @type {ArtifactConfig[]}
+     * @memberof Library
+     */
     artifacts?: ArtifactConfig[];
 
+    /**
+     * Known source code associated with the library
+     *
+     * @type {SourceConfig[]}
+     * @memberof Library
+     */
     sources?: SourceConfig[];
 
+    /**
+     * Known dependencies associated with the library
+     *
+     * @type {PackageConfig[]}
+     * @memberof Library
+     */
     packages?: PackageConfig[];
 
-    version?: VersionConfig;
+    // version?: VersionConfig;
 
+    /**
+     * Child libraries, which are sub-libraries of the current library
+     *
+     * @type {Library[]}
+     * @memberof Library
+     */
     children?: Library[];
 
+    /**
+     * Tags for libraries which are matched if the current library is matched
+     *
+     * @type {Tag[]}
+     * @memberof Library
+     */
     subtags?: Tag[];
 }
 

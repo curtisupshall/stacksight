@@ -86,9 +86,10 @@ class Crawler {
 				score
 			] = matcher;
 
-			console.log(matcher)
+			// console.log(matcher)
 			for (let i in this._filePaths) {
 				const filePath = this._filePaths[i];
+
 
 				if (!fileRegex.test(filePath)) {
 					// Filename does not match
@@ -99,14 +100,16 @@ class Crawler {
 					const [lineNumber, line] = this.testFileContent(filePath, contentRegex);
 					if (lineNumber > -1) {
 						// TODO report line number
-						console.log(tag)
-						console.log(filePath);
-						console.log(lineNumber)
-						console.log(line);
+						// console.log(tag)
+						// console.log(filePath);
+						// console.log(lineNumber)
+						// console.log(line);
 					} else {
 						continue;
 					}
 				}
+				
+				// console.log('MATCH:', matcher)
 
 				this._scores[tag] += score;
 				break;
@@ -132,7 +135,7 @@ class Crawler {
 }
 
 // Usage
-const projectPath = './.projects/hipo-uni/';
+const projectPath = './.projects/moh-pipd/';
 const crawler = new Crawler(projectPath);
 
 Object.entries(allLibraries).forEach(([categorySlug, libraries]) => {

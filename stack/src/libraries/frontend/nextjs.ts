@@ -29,7 +29,7 @@ const NextJs: Library = {
 
     packages: [
         {
-            file: /.*\/package.json/,
+            file: /.*\/package\.json/,
             score: 1.0,
             linetext: /"next":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
         }

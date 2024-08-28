@@ -3,14 +3,14 @@ import Library from "../../Library";
 const ReactJs: Library = {
     metadata: {
         name: 'react',
-        label: 'React.js',
+        label: 'React',
         description: "The library for web and native user interfaces. Build user interfaces out of individual pieces called components written in JavaScript.",
         website: "https://react.dev/",
     },
 
     artifacts: [
         {
-            file: /.\/index.(tsx|jsx)$/,
+            file: /.\/index\.(tsx|jsx)$/,
             score: 0.50,
         }
     ],
@@ -25,7 +25,7 @@ const ReactJs: Library = {
 
     packages: [
         {
-            file: /.*\/package.json/,
+            file: /.*\/package\.json/,
             score: 0.5,
             linetext: /"react":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
         },
