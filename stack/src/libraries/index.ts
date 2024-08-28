@@ -1,9 +1,11 @@
 import Library from "../Library";
-import NextJs from "./frontend/nextjs";
+import ReactJs from "./frontend/react";
+import NextJs from "./frontend/react";
 
 const allLibraries: Record<string, Library[]> = {
     'frontend': [
-        NextJs
+        NextJs,
+        ReactJs,
     ]
 }
 

@@ -1,6 +1,6 @@
 import Library from "../../Library";
 
-const NextJs: Library = {
+const ReactJs: Library = {
     metadata: {
         name: 'react',
         label: 'React.js',
@@ -66,4 +66,4 @@ const NextJs: Library = {
     ]
 }
 
-export default NextJs;
+export default ReactJs;

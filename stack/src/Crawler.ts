@@ -39,7 +39,7 @@ class Crawler {
 	public observe(library: Library) {
 		const outputs = compile(library);
 		
-		outputs.forEach((output) => {
+		outputs.forEach((output: LibraryOutput) => {
 			this._scores[output.tag] = 0;
 			this._outputs.push(output)
 		});
