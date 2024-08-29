@@ -53,12 +53,12 @@ const ReactJs: Library = {
             packages: [
                 {
                     file: /.*\/package.json/,
-                    score: 0.5,
+                    score: 1,
                     linetext: /"\@types\/react":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
                 },
                 {
                     file: /.*\/package.json/,
-                    score: 0.5,
+                    score: 1,
                     linetext: /"\@types\/react-dom":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
                 }
             ],

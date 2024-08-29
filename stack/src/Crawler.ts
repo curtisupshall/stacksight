@@ -96,7 +96,7 @@ class Crawler {
 					}
 				}
 				
-				console.log('MATCH:', matcher)
+				// console.log('MATCH:', matcher)
 
 				this._scores[tag] += score;
 				break;
@@ -119,6 +119,34 @@ class Crawler {
 			console.error(`Error reading file ${filePath}:`, err);
 		}
 		return [-1, null];
+	}
+
+	public tags(): Tag[] {
+		const scores = this.scores()
+		const tags = Object.entries(scores)
+			.filter(([tag, score]) => {
+				if (score < 1.0) {
+					return false;
+				}
+				const parentTag = this._outputs[tag].parentTag
+				if (parentTag && this._scores[parentTag] < 1.0) {
+					return false;
+				}
+			    return score >= 1.0;
+			})
+			.map(([tag, _score]) => tag);
+		
+		const tagSet = new Set<Tag>(tags);
+
+		tags.forEach((tag) => {
+			if (this._outputs[tag].subtags) {
+				this._outputs[tag].subtags.forEach((subtag) => {
+					tagSet.add(subtag);
+				})
+			}
+		});
+
+		return Array.from(tagSet);
 	}
 }
 

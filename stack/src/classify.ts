@@ -12,12 +12,9 @@ export const classify = async (projectPath: string): Promise<Tag[]> => {
         })
     })
 
-    const scores = crawler.crawl(projectPath);
-    const tags = Object.entries(scores)
-        // .filter(([tag, score]) => {
-        //     return score >= 1.0;
-        // })
-        .map(([tag, score]) => `${tag}(${score})`);
+    crawler.crawl(projectPath);
+    console.log(crawler.scores());
+    const tags = crawler.tags();
 
     return tags;
 }
