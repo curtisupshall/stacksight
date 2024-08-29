@@ -1,4 +1,3 @@
-// vue
 // vite
 // tanstack query
 
@@ -20,3 +19,12 @@
 
 // Authentication:
 // keycloak
+
+// Testing
+// jest
+// cypress
+
+// Static Analysis:
+// sonarqube
+// eslint
+// prettier
