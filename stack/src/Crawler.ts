@@ -1,35 +1,22 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 
-import allLibraries from './libraries/index'
 import Library, { compile, LibraryOutput, Matcher, Tag } from './Library';
-
-// interface LibraryStats {
-//   metadata: Metadata;
-//   score: number;
-// }
 
 const IGNORE_DIRS: string[] = [
 	'.git',
 	'node_modules',
 ]
 
-
 class Crawler {
-	private _projectPath: string;
-	private _outputs: LibraryOutput[];
+	private _outputs: Record<Tag, LibraryOutput>;
 	private _scores: Record<Tag, number>;
 	private _filePaths: string[];
 
-	constructor(projectPath: string) {
-		this._projectPath = projectPath;
+	constructor() {
 		this._filePaths = [];
-		this._outputs = [];
+		this._outputs = {};
 		this._scores = {};
-	}
-
-	public run(): void {
-		this.crawl(this._projectPath);
 	}
 
 	public scores() {
@@ -41,19 +28,19 @@ class Crawler {
 		
 		outputs.forEach((output: LibraryOutput) => {
 			this._scores[output.tag] = 0;
-			this._outputs.push(output)
+			this._outputs[output.tag] = output;
 		});
 	}
 
 	/**
 	 * Recursively collects all absoltue file paths under the given directory
 	 */
-	private collectFilePaths(dir: string): void {
+	private collectFilePaths(projectPath: string): void {
 		try {
-			const entries = fs.readdirSync(dir, { withFileTypes: true });
+			const entries = fs.readdirSync(projectPath, { withFileTypes: true });
 
 			entries.forEach((entry) => {
-				const fullPath = path.join(dir, entry.name);
+				const fullPath = path.join(projectPath, entry.name);
 
 				if (entry.isDirectory()) {
 					if (IGNORE_DIRS.includes(entry.name)) {
@@ -66,15 +53,15 @@ class Crawler {
 				}
 			});
 		} catch (err) {
-			console.error(`Error reading directory ${dir}:`, err);
+			console.error(`Error reading directory ${projectPath}:`, err);
 		}
 	}
 
 
-	private crawl(dir: string): void {
-		this.collectFilePaths(this._projectPath);
+	public crawl(projectPath: string) {
+		this.collectFilePaths(projectPath);
 
-		const matchers = this._outputs.reduce((acc: Matcher[], output) => {
+		const matchers = Object.values(this._outputs).reduce((acc: Matcher[], output) => {
 			return [...acc, ...output.matchers];
 		}, [])
 
@@ -109,7 +96,7 @@ class Crawler {
 					}
 				}
 				
-				// console.log('MATCH:', matcher)
+				console.log('MATCH:', matcher)
 
 				this._scores[tag] += score;
 				break;
@@ -117,6 +104,7 @@ class Crawler {
 
 		});
 
+		return this.scores();
 	}
 
 	private testFileContent(filePath: string, contentRegex: RegExp): [number, string | null] {
@@ -134,17 +122,4 @@ class Crawler {
 	}
 }
 
-// Usage
-const projectPath = './.projects/moh-pipd/';
-const crawler = new Crawler(projectPath);
-
-Object.entries(allLibraries).forEach(([categorySlug, libraries]) => {
-	libraries.forEach((library) => {
-
-		crawler.observe(library);
-	})
-})
-
-crawler.run();
-
-console.log(crawler.scores())
+export default Crawler;
