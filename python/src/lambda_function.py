@@ -22,7 +22,7 @@ def lambda_handler(event, context):
         error_endpoint = endpoints_body.get('errorEndpoint')
 
         # Clone the repo
-        destination_folder = os.environ.get('PYTHON_LOCAL_DESTINATION_FOLDER')
+        destination_folder = os.environ.get('PROCESSING_LOCAL_DESTINATION_FOLDER')
         path_to_repo = download_and_unzip_repo(repo_fullname, branch, destination_folder)
 
         # Process the repos
