@@ -19,7 +19,8 @@ export async function sendResults(successEndpoint: string, results: IProjectScan
     //     headers,
     //     body: JSON.stringify(results), 
     // });
-    console.log(results);
+    const { tags } = results;
+    console.log({ tags });
 }
 
 // def send_error(request_url, errorMessage):

@@ -34,6 +34,40 @@ const Angular: Library = {
             score: 0.75,
             linetext: /"\@angular\/core":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
         },
+    ],
+
+    children: [
+        {
+            metadata: {
+                name: 'angular-ssr',
+                label: 'Angular SSR',
+                description: 'Angular with server-side rendering',
+                website: 'https://angular.dev/guide/ssr',
+            },
+            packages: [
+                {
+                    file: /.*\/package.json/,
+                    score: 1,
+                    linetext: /"\@angular\/ssr":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
+                },
+            ],
+        },
+        {
+            metadata: {
+                name: 'angular-ngrx',
+                label: 'NGRX',
+                description: 'Reactive state for Angular',
+                website: 'https://ngrx.io/',
+            },
+            packages: [
+                {
+                    file: /.*\/package.json/,
+                    score: 1,
+                    linetext: /"\@ngrx\/store":\s*(?:"latest"|"[~^<>=]*\d+(\.\d+)*[~^<>=\s\d.\-\|]*")/
+                },
+            ],
+        },
+
     ]
 }
 
