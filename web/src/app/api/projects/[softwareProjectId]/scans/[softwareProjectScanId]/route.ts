@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { ProjectScanService } from "@/server/services/project-scan-service";
 import { NextRequest } from "next/server";
-import { IProjectScanLambdaResponse } from "@/types/python";
+import { IProjectScanLambdaResponse } from "@/types/sqs";
 
 export async function PATCH(
     request: NextRequest,

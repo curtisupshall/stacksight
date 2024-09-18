@@ -1,7 +1,7 @@
 import { ProjectScanRepository } from "../repositories/project-scan-repository";
 import { SQSClient, SendMessageCommand, SendMessageRequest } from "@aws-sdk/client-sqs";
 import { SoftwareProjectRecord } from "@/types/software-project";
-import { IProjectScanLambdaResponse, IProjectScanSqsMessage } from "@/types/python";
+import { IProjectScanLambdaResponse, IProjectScanSqsMessage } from "@/types/sqs";
 import { CreateProjectScanCommitRecord } from "@/types/project-scan";
 import { CreateProjectScanContributorRecord } from "@/types/contributor";
 import { ContributorService } from "./contributor-service";
@@ -60,8 +60,8 @@ export class ProjectScanService {
                     branchName: projectRecord.branchName
                 },
                 api: {
-                    successEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}`,
-                    errorEndpoint: `${process.env.PYTHON_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}/error'`,
+                    successEndpoint: `${process.env.PROCESSING_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}`,
+                    errorEndpoint: `${process.env.PROCESSING_UPLOAD_API_HOST}/api/projects/${softwareProjectId}/scans/${softwareProjectScanId}/error'`,
                 }
             }
 
